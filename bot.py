@@ -168,3 +168,12 @@ async def war_update():
     printable_message += f"```$Last update at {datetime.now()} UTC time"
     printable_online = printable_online.replace("$", "\n")
     await message.edit(content=printable_online)
+
+try: 
+    # Run the bot with the provided Discord token
+    bot.run(DISCORD_TOKEN)
+except discord.HTTPException as e: 
+    if e.status == 429: 
+        logging.error("The Discord servers denied the connection for making too many requests") 
+    else: 
+        raise e
