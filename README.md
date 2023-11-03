@@ -20,6 +20,9 @@ pip install -r requirements.txt
   - `discord`
 
 ## Usage
+```bash
+python bot.py
+```
 
 ## License
 This project is open-source and available under the [MIT License](LICENSE).
