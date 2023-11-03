@@ -56,6 +56,8 @@ def war_track():
         # Extract the war counts for online players
         warcountOnlineList = [player.get("globalData").get("wars") for player in playerData]
 
+        logging.info(warcountOnlineList)
+
         # Fetch territory data
         territories = fetch_data(TERRITORIES_URL)
 
@@ -63,7 +65,7 @@ def war_track():
         teritories_updated = []
         for territory in territories.items():
             if territory[1].get("guild") != None:
-                if territory[1].get("guild").get("name"):
+                if territory[1].get("guild").get("name") == GUILD_NAME:
                     teritories_updated.append(territory[0])
 
         # Creates territories.json if it doesnt exist
@@ -125,13 +127,15 @@ def war_track():
                 # Update war data for each player
                 for i, player in enumerate(listOfPlayers):
                     if player not in data_1:
-                        data[player] = [0, 0, warcountOnlineList[i]]
+                        logging.info(f"{player} not in war_data.json")
+                        data_1[player] = [0, 0, warcountOnlineList[i]]
+                        logging.info(f"{player} added to war_data.json")
                     else:
                         my_data = data_1[player]
                         if my_data[2] != warcountOnlineList[i]:
                             if gained_territory:
                                 my_data[0] += 1
-                            my_data[1] += 1
+                            my_data[1] += warcountOnlineList[i] - data_1[player][2]
                             my_data[2] = warcountOnlineList[i]
                         data_1[player] = my_data
         except FileNotFoundError as e:
