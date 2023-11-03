@@ -130,8 +130,8 @@ async def war_tracking():
 @tasks.loop(hours=24)
 async def war_update():
     try:
-        channel = bot.get_channel()  # Need to send a message to update
-        message = await channel.fetch_message()
+        channel = bot.get_channel(1131996950548467782)  # Need to send a message to update
+        message = await channel.fetch_message(1170050710948294687)
     except (discord.Forbidden, discord.NotFound) as e:
         logging.error(f"Error: Failed to get channel or message. {e}")
         return
