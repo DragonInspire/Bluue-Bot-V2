@@ -10,7 +10,7 @@ from war import war_track, getWarData
 # Logging setup
 logging.basicConfig(level=logging.INFO, format=' %(asctime)s - %(levelname)s - %(message)s')
 
-DISCORD_TOKEN = ""
+DISCORD_TOKEN = "MTEwMTUzMDMxODIyMzE4MzkxMg.GNHt62.qAjgit7pVetE0RaGA7jQR-qwEaZhpT388wL1G4"
 
 # Initialize the bot
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -130,8 +130,8 @@ async def war_tracking():
 @tasks.loop(hours=24)
 async def war_update():
     try:
-        channel = bot.get_channel()  # Need to send a message to update
-        message = await channel.fetch_message()
+        channel = bot.get_channel(1131996950548467782)  # Need to send a message to update
+        message = await channel.fetch_message(1170050710948294687)
     except (discord.Forbidden, discord.NotFound) as e:
         logging.error(f"Error: Failed to get channel or message. {e}")
         return
