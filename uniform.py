@@ -56,8 +56,8 @@ def get_skin_image(username):
         raise SkinImageError(f"Error fetching skin image: {e}")
 
 def overlay_images(username, rank):
-    skin = get_skin_image(username)
-    if skin is None:
+    background = get_skin_image(username)
+    if background is None:
         raise OverlayImageError("Failed to get the user's skin image.")
 
     overlay_url = SKIN_URLS.get(rank)
@@ -69,8 +69,32 @@ def overlay_images(username, rank):
         overlay_response.raise_for_status()
         overlay = Image.open(BytesIO(overlay_response.content))
 
-        result = Image.alpha_composite(skin.convert("RGBA"), overlay.convert("RGBA"))
-        return result
+        # Create a new image with RGBA mode and dimensions (64x64)
+        new_img = Image.new("RGBA", (64, 64))
+
+        # Paste the top-left quadrant (head) (32x16) of the user's skin onto the new image
+        new_img.paste(background.crop((0, 0, 32, 16)))
+
+        # Paste the bottom-left quadrant (hat) (32x5) of the user's skin onto the new image,
+        # starting from coordinates (32, 11) on the new image
+        new_img.paste(background.crop((32, 11, 64, 16)), (32, 11, 64, 16))
+
+        # Create a new image with transparency (RGBA mode) to combine the background and overlay
+        result = Image.new("RGBA", overlay.size)
+
+        # Paste the background image onto the new image
+        result.paste(new_img, (0, 0))
+
+        # Paste the overlay image onto the new image with transparency using the overlay as a mask
+        result.paste(overlay, (0, 0), mask=overlay)
+
+        # Save the resulting image to a BytesIO stream in PNG format
+        image_stream = BytesIO()
+        result.save(image_stream, format="PNG")
+        image_stream.seek(0)
+
+        # Return the resulting image stream
+        return image_stream
     except (requests.RequestException, ValueError) as e:
         raise OverlayImageError(f"Error fetching overlay image: {e}")
 

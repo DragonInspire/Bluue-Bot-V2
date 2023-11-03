@@ -1,4 +1,4 @@
-from discord.ext import commands
+from discord.ext import commands, tasks
 import discord
 import logging
 from discord import app_commands
@@ -6,11 +6,12 @@ from discord.ui import Select, View
 from uniform import overlay_images
 from online import get_online_players_with_data, FetchDataException, GuildDataException
 from war import war_track, getWarData
+from datetime import datetime
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format=' %(asctime)s - %(levelname)s - %(message)s')
 
-DISCORD_TOKEN = "MTEwMTUzMDMxODIyMzE4MzkxMg.GNHt62.qAjgit7pVetE0RaGA7jQR-qwEaZhpT388wL1G4"
+DISCORD_TOKEN = ""
 
 # Initialize the bot
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -74,7 +75,7 @@ async def uniform(interaction: discord.Interaction, username: str):
     logging.debug("Choose rank message sent")
 
 # Background task: Fetch and display online players
-@tasks.loop(minutes=1)
+@tasks.loop(minutes=10)
 async def farplane_online():
     try:
         channel = bot.get_channel(1131996950548467782)
@@ -161,13 +162,13 @@ async def war_update():
     printable_message = "**Farplane War Leaderboard**$```$"
 
     for player in data:
-        printable_message += player
-        printable_message += f" {data[player][0]} successful wars " 
-        printable_message += f"{data[player][1]} total wars$"
+        printable_message += player[0]
+        printable_message += f" {player[1][0]} successful wars " 
+        printable_message += f"{player[1][1]} total wars$"
     
     printable_message += f"```$Last update at {datetime.now()} UTC time"
-    printable_online = printable_online.replace("$", "\n")
-    await message.edit(content=printable_online)
+    printable_message = printable_message.replace("$", "\n")
+    await message.edit(content=printable_message)
 
 try: 
     # Run the bot with the provided Discord token
