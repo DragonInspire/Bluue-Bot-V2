@@ -9,7 +9,7 @@ from war import war_track, getWarData
 from datetime import datetime
 
 # Logging setup
-logging.basicConfig(level=logging.INFO, format=' %(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
 DISCORD_TOKEN = ""
 

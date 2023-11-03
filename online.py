@@ -6,7 +6,7 @@ GUILD_NAME = "The Farplane"
 GUILD_MEMBERS_URL = f"https://api.wynncraft.com/v3/guild/{GUILD_NAME}"
 
 # Logging setup
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
 class GuildDataException(Exception):
     def __init__(self, message, original_exception=None):

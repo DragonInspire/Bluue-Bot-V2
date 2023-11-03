@@ -10,7 +10,7 @@ GUILD_MEMBERS_URL = f"https://api.wynncraft.com/v3/guild/{GUILD_NAME}"  # Guild 
 TERRITORIES_URL = 'https://api.wynncraft.com/v3/guild/list/territory'  # Territories API URL
 
 # Logging setup
-logging.basicConfig(level=logging.INFO, format=' %(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
 # Function to fetch data from a URL using requests library
 def fetch_data(url):
