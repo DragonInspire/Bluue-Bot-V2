@@ -56,8 +56,6 @@ def war_track():
         # Extract the war counts for online players
         warcountOnlineList = [player.get("globalData").get("wars") for player in playerData]
 
-        logging.info(warcountOnlineList)
-
         # Fetch territory data
         territories = fetch_data(TERRITORIES_URL)
 

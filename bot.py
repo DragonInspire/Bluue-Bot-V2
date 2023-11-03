@@ -157,14 +157,14 @@ async def war_update():
         # This block is executed if no exceptions occur
         logging.debug("File operations completed successfully")
 
-    data = sorted(data.items(), key=lambda x: x[1][0])
-
+    sorted_data = sorted(data, key=lambda x: x[1][0])
+    
     printable_message = "**Farplane War Leaderboard**$```$"
 
-    for player in data:
-        printable_message += player[0]
-        printable_message += f" {player[1][0]} successful wars " 
-        printable_message += f"{player[1][1]} total wars$"
+    for player in sorted_data:
+        printable_message += player
+        printable_message += f" {data[player][0]} successful wars " 
+        printable_message += f"{data[player][1]} total wars$"
     
     printable_message += f"```$Last update at {datetime.now()} UTC time"
     printable_message = printable_message.replace("$", "\n")
