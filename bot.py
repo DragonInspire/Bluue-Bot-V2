@@ -128,7 +128,7 @@ async def war_tracking():
     war_track()
 
 # Background task: Update war data
-@tasks.loop(hours=24)
+@tasks.loop(minutes=10)
 async def war_update():
     try:
         channel = bot.get_channel(1131996950548467782)  # Need to send a message to update
@@ -158,6 +158,8 @@ async def war_update():
         logging.debug("File operations completed successfully")
 
     sorted_data = sorted(data, key=lambda x: x[1][0])
+    if len(sorted_data) > 10:
+        sorted_data = sorted_data[:10]
     
     printable_message = "**Farplane War Leaderboard**$```$"
 
