@@ -4,18 +4,20 @@
 ## Overview
 This Discord bot is designed to collect and manage data related to a specific guild and its members in the Wynncraft Minecraft server. It gathers information about the guild's online members and their territories. It also keeps track of war-related data for each player.
 
-## Requirements
+## Installation
+
+Before using the script, make sure to install the required dependencies listed in the `requirements.txt` file. You can do this using `pip`:
+
+```bash
+pip install -r requirements.txt
+```
+### Alternatively
 - Python 3.7+
 - Required Python packages (install them using `pip`):
   - `requests`
   - `aiohttp`
   - `PIL` (Python Imaging Library)
-  - `json`
-  - `logging`
-
-## Installation
-1. Clone or download the repository to your local machine.
-2. Install the required Python packages if you haven't already:
+  - `discord`
 
 ## Usage
 1. Open a terminal and navigate to the directory containing your bot code.
