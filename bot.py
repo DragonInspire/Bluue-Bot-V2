@@ -10,7 +10,7 @@ from war import war_track, getWarData
 # Logging setup
 logging.basicConfig(level=logging.INFO, format=' %(asctime)s - %(levelname)s - %(message)s')
 
-DISCORD_TOKEN = "MTEwMTUzMDMxODIyMzE4MzkxMg.GNHt62.qAjgit7pVetE0RaGA7jQR-qwEaZhpT388wL1G4"
+DISCORD_TOKEN = ""
 
 # Initialize the bot
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
