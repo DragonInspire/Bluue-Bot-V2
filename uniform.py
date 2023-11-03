@@ -3,6 +3,7 @@ from io import BytesIO
 from PIL import Image
 import json
 import base64
+import logging
 
 # Constants for skin URLs
 SKIN_URLS = {
@@ -13,24 +14,28 @@ SKIN_URLS = {
     "yako": "https://media.discordapp.net/attachments/566768030995054613/1131341747134406717/mailmanyako.png",
 }
 
+# Logging setup
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+class MojangUUIDError(Exception):
+    pass
+
+class SkinImageError(Exception):
+    pass
+
+class OverlayImageError(Exception):
+    pass
+
 def get_mojang_uuid(username):
-    """
-    Get the Mojang UUID for a given username.
-    """
     try:
         response = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{username}")
         response.raise_for_status()
         data = response.json()
         return data.get("id")
-    except requests.exceptions.RequestException as e:
-        raise ValueError(f"Error fetching Mojang UUID: {e}")
-    except (KeyError, TypeError):
-        raise ValueError("Failed to retrieve the UUID for the given username.")
+    except (requests.RequestException, ValueError) as e:
+        raise MojangUUIDError(f"Error fetching Mojang UUID: {e}")
 
 def get_skin_image(username):
-    """
-    Get the user's skin image.
-    """
     uuid = get_mojang_uuid(username)
     if uuid is None:
         return None
@@ -47,22 +52,17 @@ def get_skin_image(username):
             skin_response.raise_for_status()
             return Image.open(BytesIO(skin_response.content))
         return None
-    except requests.exceptions.RequestException as e:
-        raise ValueError(f"Error fetching skin image: {e}")
-    except (KeyError, TypeError):
-        raise ValueError("Failed to retrieve the skin image data.")
+    except (requests.RequestException, ValueError) as e:
+        raise SkinImageError(f"Error fetching skin image: {e}")
 
 def overlay_images(username, rank):
-    """
-    Overlay the user's skin with the given rank.
-    """
     skin = get_skin_image(username)
     if skin is None:
-        raise ValueError("Failed to get the user's skin image.")
+        raise OverlayImageError("Failed to get the user's skin image.")
 
     overlay_url = SKIN_URLS.get(rank)
     if overlay_url is None:
-        raise ValueError("Invalid rank.")
+        raise OverlayImageError("Invalid rank.")
 
     try:
         overlay_response = requests.get(overlay_url)
@@ -71,18 +71,11 @@ def overlay_images(username, rank):
 
         result = Image.alpha_composite(skin.convert("RGBA"), overlay.convert("RGBA"))
         return result
-    except requests.exceptions.RequestException as e:
-        raise ValueError(f"Error fetching overlay image: {e}")
+    except (requests.RequestException, ValueError) as e:
+        raise OverlayImageError(f"Error fetching overlay image: {e}")
 
 def save_image(image, filename):
-    """
-    Save an image to a file.
-    """
-    image.save(filename, format="PNG")
-
-# # Example usage
-# try:
-#     result_image = overlay_images("u89hsadwamifw", "resident")
-#     save_image(result_image, "output_image.png")
-# except ValueError as e:
-#     print(f"Error: {e}")
+    try:
+        image.save(filename, format="PNG")
+    except Exception as e:
+        logging.error(f"Error saving image to file: {e}")
