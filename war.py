@@ -37,7 +37,7 @@ async def get_all_player_data(player_list):
     return await asyncio.gather(*tasks)
 
 # Main function
-def main():
+def war_track():
     try:
         # Fetch guild members' data
         members = fetch_data(GUILD_MEMBERS_URL).get("members")
@@ -160,3 +160,8 @@ def main():
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         # Handle the error or raise an exception as needed.
+
+def getWarData():
+    with open("war_data.json", "r") as file:
+        data = json.load(file)
+    return data
