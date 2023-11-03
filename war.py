@@ -1,6 +1,6 @@
 import requests
-import asyncio
-import aiohttp
+#import asyncio
+#import aiohttp
 import json
 import logging
 
@@ -60,7 +60,11 @@ def war_track():
         territories = fetch_data(TERRITORIES_URL)
 
         # Filter territories data for the guild of interest
-        teritories_updated = [territory for territory, data in territories.items() if data["guild"]["name"] == GUILD_NAME]
+        teritories_updated = []
+        for territory in territories.items():
+            if territory[1].get("guild") != None:
+                if territory[1].get("guild").get("name"):
+                    teritories_updated.append(territory[0])
 
         # Creates territories.json if it doesnt exist
         with open("territories.json", "a+"):
@@ -113,23 +117,23 @@ def war_track():
             # Load the existing war data from a JSON file
             with open("war_data.json", "r") as storedWarData:
                 try:
-                    data = json.load(storedWarData)
+                    data_1 = json.load(storedWarData)
                 except json.JSONDecodeError as e:
                     logging.error(f"Error loading JSON data: {e}")
-                    data = {}
+                    data_1 = {}
                     
                 # Update war data for each player
                 for i, player in enumerate(listOfPlayers):
-                    if player not in data:
+                    if player not in data_1:
                         data[player] = [0, 0, warcountOnlineList[i]]
                     else:
-                        my_data = data[player]
+                        my_data = data_1[player]
                         if my_data[2] != warcountOnlineList[i]:
                             if gained_territory:
                                 my_data[0] += 1
                             my_data[1] += 1
                             my_data[2] = warcountOnlineList[i]
-                        data[player] = my_data
+                        data_1[player] = my_data
         except FileNotFoundError as e:
             # Handle the case where the file doesn't exist
             logging.error(f"File not found: {e}")
@@ -146,7 +150,7 @@ def war_track():
         try:
             # Update the war data in the JSON file
             with open("war_data.json", "w") as storedWarData:
-                json.dump(data, storedWarData)
+                json.dump(data_1, storedWarData)
         except FileNotFoundError as e:
             # Handle the case where the file doesn't exist
             logging.error(f"File not found: {e}")
