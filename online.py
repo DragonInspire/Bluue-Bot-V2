@@ -27,26 +27,21 @@ def fetch_data(url):
         raise FetchDataException(f"Error fetching data from {url}: {e}", original_exception=e)
 
 def get_online_players_with_data():
-    try:
-        guild_data = fetch_data(GUILD_MEMBERS_URL)
-        members = guild_data.get("members", {})
+    guild_data = fetch_data(GUILD_MEMBERS_URL)
+    members = guild_data.get("members", {})
 
-        if "total" in members:
-            del members["total"]
+    if "total" in members:
+        del members["total"]
 
-        online_players = []
+    online_players = []
 
-        for rank, rank_data in members.items():
-            for player, player_data in rank_data.items():
-                if player_data.get("online"):
-                    world = player_data.get("world")
-                    online_players.append({"player": player, "world": world, "rank": rank})
+    for rank, rank_data in members.items():
+        for player, player_data in rank_data.items():
+            if player_data.get("online"):
+                world = player_data.get("world")
+                online_players.append({"player": player, "world": world, "rank": rank})
 
-        if not online_players:
-            raise GuildDataException("No online players found")
+    if not online_players:
+        raise GuildDataException("No online players found")
 
-        return online_players
-
-    except GuildDataException as e:
-        logging.error(f"Error processing guild data: {e}")
-        raise
+    return online_players
