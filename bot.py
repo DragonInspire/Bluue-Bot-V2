@@ -112,6 +112,11 @@ async def farplane_online():
 
         world_players[world].append({"rank": rank, "player": player})
 
+        sorted_worlds = sorted(world_players)
+
+        new_list = [world_players[world] for world in sorted_worlds]
+        world_players = dict(zip(sorted_worlds, new_list))
+
     # Iterate through the dictionary and print the players in each world
     for world, players in world_players.items():
         printable_online += (f'World {world} $')
