@@ -1,9 +1,9 @@
 import requests
 import logging
+import json
 
 # Configuration
-GUILD_NAME = "The Farplane"
-GUILD_MEMBERS_URL = f"https://api.wynncraft.com/v3/guild/{GUILD_NAME}"
+ONLINE_PLAYERS_URL = f"https://api.wynncraft.com/v3/player"
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
@@ -27,21 +27,17 @@ def fetch_data(url):
         raise FetchDataException(f"Error fetching data from {url}: {e}", original_exception=e)
 
 def get_online_players_with_data():
-    guild_data = fetch_data(GUILD_MEMBERS_URL)
-    members = guild_data.get("members", {})
+    online_players_worlds = fetch_data(ONLINE_PLAYERS_URL)
+    online_players_worlds.pop("total")
+    online_players_worlds = online_players_worlds.get("players")
+    online_players = list(online_players_worlds.keys())
 
-    if "total" in members:
-        del members["total"]
+    with open("guild_members.json", "r") as file:
+        guild_members = json.load(file)
 
-    online_players = []
+    online_guild_players = [{"player": player.get("player"), "world": online_players_worlds.get(player.get("player")), "rank": player.get("rank") } for player in guild_members if player.get("player") in online_players]
 
-    for rank, rank_data in members.items():
-        for player, player_data in rank_data.items():
-            if player_data.get("online"):
-                world = player_data.get("server")
-                online_players.append({"player": player, "world": world, "rank": rank})
-
-    if not online_players:
+    if not online_guild_players:
         raise GuildDataException("No online players found")
 
-    return online_players
+    return online_guild_players

@@ -75,7 +75,7 @@ async def uniform(interaction: discord.Interaction, username: str):
     logging.debug("Choose rank message sent")
 
 # Background task: Fetch and display online players
-@tasks.loop(minutes=10)
+@tasks.loop(seconds=30)
 async def farplane_online():
     try:
         channel = bot.get_channel(1131996950548467782)
@@ -165,8 +165,8 @@ async def war_update():
 
     for player in sorted_data:
         printable_message += player
-        printable_message += f" {data[player][0]} successful wars " 
-        printable_message += f"{data[player][1]} total wars$"
+        printable_message += f" | successful wars {data[player][0]} | " 
+        printable_message += f"total wars {data[player][1]}$"
     
     printable_message += f"```$Last update at {datetime.now()} UTC time"
     printable_message = printable_message.replace("$", "\n")

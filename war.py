@@ -46,6 +46,28 @@ def war_track():
         # Create a list of online players in the guild
         listOfPlayers = [player for rank in members for player, data in members[rank].items() if data.get("online")]
 
+        try:
+            with open("guild_members.json", "w") as file:
+                player_list = []
+                for rank, rank_data in members.items():
+                    for player, player_data in rank_data.items():
+                        world = player_data.get("server")
+                        player_list.append({"player": player, "world": world, "rank": rank})
+                json.dump(player_list, file)
+        except FileNotFoundError as e:
+            # Handle the case where the file doesn't exist
+            logging.error(f"File not found: {e}")
+        except IOError as e:
+            # Handle other input/output errors
+            logging.error(f"IO Error: {e}")
+        except Exception as e:
+            # Handle other exceptions
+            logging.error(f"An error occurred: {e}")
+        else:
+            # This block is executed if no exceptions occur
+            logging.debug("File operations completed successfully")
+            
+
         # # Initialize an event loop for asynchronous operations
         # loop = asyncio.get_event_loop()
         # # Fetch data for all online players concurrently
