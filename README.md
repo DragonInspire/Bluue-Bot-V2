@@ -5,8 +5,8 @@
 This Discord bot is designed to collect and manage data related to a specific guild and its members in the Wynncraft Minecraft server. It gathers information about the guild's online members and their territories. It also keeps track of war-related data for each player.
 
 ## Commands
-Blue is built with only one command `/uniform` after which you will be prompted to enter a minecraft username and select a rank `/uniform Username: Rank: `.
-upon calling the command the bot will send a message containing your minecraft skin with the farplane uniform.
+Blue is built with only one command `/uniform` after which you will be prompted to enter a minecraft username and select a rank `/uniform Username:`.
+upon calling the command the bot will send a message containing your minecraft skin with the appropriate farplane uniform.
 
 ## Installation
 
