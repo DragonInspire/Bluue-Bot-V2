@@ -19,7 +19,6 @@ pip install -r requirements.txt
 - Python 3.7+
 - Required Python packages (install them using `pip`):
   - `requests`
-  - `aiohttp`
   - `PIL` (Python Imaging Library)
   - `discord`
 
