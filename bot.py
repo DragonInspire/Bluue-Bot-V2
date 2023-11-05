@@ -194,10 +194,10 @@ async def xp_leaderboard():
     
     channel = bot.get_channel(1170580235998208072)
 
-    printable_message = "**Farplane top 10 XP Contributions**$```$"
+    printable_message = "**Farplane daily top 10 XP Contributions**$```$"
     for key in list_10:
         printable_message += f"{key} {list_10[key]}$"
-    printable_message += f"```$Last update at {datetime.now()} UTC time"
+    printable_message += f"```"
     printable_message = printable_message.replace("$", "\n")
     await channel.send(content=printable_message)
     

@@ -15,14 +15,20 @@ def contributions():
     with open("guild_members_xp.json", "r") as file:
         old_list_of_xp_contributions = json.load(file)
 
-    change = [{player:(list_of_xp_contributions[player] - old_list_of_xp_contributions[player])} for rank in members  for player in members[rank] ]
+    for player in list_of_xp_contributions:
+        try:
+            old_list_of_xp_contributions[player]
+        except:
+            old_list_of_xp_contributions[player] = 0
+
+    change = [{player:(list_of_xp_contributions[player] - old_list_of_xp_contributions[player])} for rank in members for player in members[rank] ]
 
     with open("guild_members_xp.json", "w") as file:
         json.dump(list_of_xp_contributions, file)
 
-    object_change = {}
-    for key in change:
-        if change[key] != 0:
-            object_change[key] = change[key]
+    top_10 = {}
+    for player in change:
+        if list(player.values())[0] != 0:
+            top_10[list(player.keys())[0]] = list(player.values())[0]
 
-    return(object_change)
+    return(top_10)
