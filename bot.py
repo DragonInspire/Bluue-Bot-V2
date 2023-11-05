@@ -180,7 +180,7 @@ async def war_update():
     printable_message = printable_message.replace("$", "\n")
     await message.edit(content=printable_message)
 
-@taks.loop(hours=24)
+@tasks.loop(hours=24)
 async def xp_leaderboard():
     daily_contributions = contributions()
     if len(daily_contributions) == 0:
