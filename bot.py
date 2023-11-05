@@ -7,6 +7,7 @@ from uniform import overlay_images
 from online import get_online_players_with_data, FetchDataException, GuildDataException
 from war import war_track, getWarData
 from datetime import datetime
+from xp_tracking import contributions
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
@@ -37,6 +38,8 @@ async def on_ready():
     logging.info("War tracking task started")
     war_update.start()
     logging.info("War update task started")
+    xp_leaderboard.start()
+    logging.info("xp leaderboard task started")
 
 # Command: Choose a uniform rank
 @bot.tree.command(name="uniform")
@@ -176,6 +179,29 @@ async def war_update():
     printable_message += f"```$Last update at {datetime.now()} UTC time"
     printable_message = printable_message.replace("$", "\n")
     await message.edit(content=printable_message)
+
+@taks.loop(hours=24)
+async def xp_leaderboard():
+    daily_contributions = contributions()
+    if len(daily_contributions) == 0:
+        return
+    list_10 = {}
+    for i, key in enumerate(daily_contributions):
+        if i > 9:
+            break
+
+        list_10[key] = daily_contributions[key]
+    
+    channel = bot.get_channel(1170580235998208072)
+
+    printable_message = "**Farplane top 10 XP Contributions**$```$"
+    for key in list_10:
+        printable_message += f"{key} {list_10[key]}$"
+    printable_message += f"```$Last update at {datetime.now()} UTC time"
+    printable_message = printable_message.replace("$", "\n")
+    await channel.send(content=printable_message)
+    
+
 
 try: 
     # Run the bot with the provided Discord token
