@@ -32,8 +32,11 @@ async def on_ready():
         logging.error(e)
 
     # Start background tasks
-    farplane_online.start()
-    logging.info("Farplane online task started")
+    if not farplane_online.is_running():
+        farplane_online.start()
+        logging.info("Farplane online task started")
+    else:
+        logging.info("farplane online already started")
     war_tracking.start()
     logging.info("War tracking task started")
     war_update.start()
