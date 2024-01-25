@@ -2,7 +2,7 @@
 ### Discord Bot for Gathering Guild and Player Data
 
 ## Overview
-This Discord bot is designed to collect and manage data related to a specific guild and its members in the Wynncraft Minecraft server. It gathers information about the guild's online members and their territories. It also keeps track of war-related data for each player. <a href="https://github.com/DragonInspire/Bluue-Bot">It is a continuation of Bluue-Bot updated to the v3 wynncraft api and better error handling.</a>
+This Discord bot is designed to collect and manage data related to a specific guild and its members in the Wynncraft Minecraft server. It gathers information about the guild's online members and their territories. It also keeps track of war-related data for each player. It is a continuation of <a href="https://github.com/DragonInspire/Bluue-Bot">Bluue-Bot</a> updated to the v3 wynncraft api and better error handling.
 
 ## Commands
 Blue is built with only one command `/uniform` after which you will be prompted to enter a minecraft username and select a rank `/uniform Username:`.
