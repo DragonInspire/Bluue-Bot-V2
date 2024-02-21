@@ -1,4 +1,4 @@
-import requests
+import aiohttp
 import logging
 import json
 
@@ -18,16 +18,17 @@ class FetchDataException(Exception):
         super().__init__(message)
         self.original_exception = original_exception
 
-def fetch_data(url):
+async def fetch_data(url):
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        raise FetchDataException(f"Error fetching data from {url}: {e}", original_exception=e)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                response.raise_for_status()
+                return await response.json()
+    except aiohttp.ClientError as e:
+        raise FetchDataException(f"Error fetching data from {url}: {e}") from e
 
-def get_online_players_with_data():
-    online_players_worlds = fetch_data(ONLINE_PLAYERS_URL)
+async def get_online_players_with_data():
+    online_players_worlds = await fetch_data(ONLINE_PLAYERS_URL)
     online_players_worlds.pop("total")
     online_players_worlds = online_players_worlds.get("players")
     online_players = list(online_players_worlds.keys())

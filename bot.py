@@ -106,7 +106,7 @@ async def farplane_online():
             return
 
         try:
-            online_peoples = get_online_players_with_data()
+            online_peoples = await get_online_players_with_data()
         except FetchDataException as e:
             logging.error(f"Error: Failed to get online players from Wynncraft API. {e}")
             await message.edit(content="Failed to fetch online players from Wynncraft")
