@@ -64,7 +64,7 @@ def writeData(data):
         # This block is executed if no exceptions occur
         logging.debug("File operations completed successfully")
 
-def bought(playerName, mythicName, overall=None, cost="", status="in bank", notes=None, date=datetime.today().strftime('%Y-%m-%d')):
+def bought(playerName, mythicName, overall="", cost="", status="in bank", notes=None, date=datetime.today().strftime('%Y-%m-%d')):
     data = loadData()
 
     if " ".join((playerName, mythicName, overall)) in data:
@@ -74,7 +74,7 @@ def bought(playerName, mythicName, overall=None, cost="", status="in bank", note
     writeData(data)
     return "added"
      
-def update(playerName, mythicName, overall=None, cost=None, status=None, notes=None, date=None):
+def update(playerName, mythicName, overall="", cost=None, status=None, notes=None, date=None):
     data = loadData()
 
     if " ".join((playerName, mythicName, overall)) not in data:
@@ -93,7 +93,7 @@ def update(playerName, mythicName, overall=None, cost=None, status=None, notes=N
     writeData(data)
     return "updated"
 
-def rename(playerName, mythicName, overall=None, newMythicName=None, newPlayerName=None, newOverall=None):
+def rename(playerName, mythicName, overall="", newMythicName=None, newPlayerName=None, newOverall=None):
     data = loadData()
 
     if " ".join((playerName, mythicName, overall)) not in data:
@@ -107,7 +107,7 @@ def rename(playerName, mythicName, overall=None, newMythicName=None, newPlayerNa
             newMythicName = mythicName
         if newPlayerName is None:
             newPlayerName = playerName
-        if overall is None:
+        if newOverall is None:
             newOverall = overall
         
         del data[" ".join((playerName, mythicName, overall))]
@@ -116,7 +116,7 @@ def rename(playerName, mythicName, overall=None, newMythicName=None, newPlayerNa
     writeData(data)
     return "renamed"
 
-def sold(playerName, mythicName, overall=None, price=""):
+def sold(playerName, mythicName, overall="", price=""):
     data = loadData()
 
     if " ".join((playerName, mythicName, overall)) not in data:
@@ -132,7 +132,7 @@ def sold(playerName, mythicName, overall=None, price=""):
     writeData(data)
     return "profit: " + profit
 
-def view(playerName, mythicName, overall=None):
+def view(playerName, mythicName, overall=""):
     data = loadData()
 
     if " ".join((playerName, mythicName, overall)) not in data:
