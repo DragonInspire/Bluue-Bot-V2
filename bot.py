@@ -9,13 +9,17 @@ from online import get_online_players_with_data, FetchDataException, GuildDataEx
 from war import war_track, getWarData
 from datetime import datetime
 from xp_tracking import contributions
+from dotenv import load_dotenv
+import os
 
 import zaibatsu
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
-DISCORD_TOKEN = "MTEwMTUzMDMxODIyMzE4MzkxMg.GJEqwI.KkdoTcySV6XiF3-RMkna41nlQqSHRnDsMsXUEI"
+# Load environment variables from a .env file
+load_dotenv()
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
 # Initialize the bot
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
