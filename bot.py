@@ -66,7 +66,7 @@ async def on_ready():
 @app_commands.describe(cost="cost of buying 0 if looted")
 @app_commands.describe(status="in bank out of bank or other")
 @app_commands.describe(notes="anything else")
-async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = None, 
+async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                           cost: typing.Optional[str] = "0", status: typing.Optional[str] = "in bank",
                            notes: typing.Optional[str] = ""):
     out = zaibatsu.bought(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes)
@@ -79,7 +79,7 @@ async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, playe
 @app_commands.describe(cost="cost of buying 0 if looted")
 @app_commands.describe(status="in bank out of bank or other")
 @app_commands.describe(notes="anything else")
-async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = None, 
+async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                           cost: typing.Optional[str] = "0", status: typing.Optional[str] = "in bank",
                            notes: typing.Optional[str] = ""):
     out = zaibatsu.update(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes)
@@ -92,7 +92,7 @@ async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, pl
 @app_commands.describe(new_mythic_name="playerName:")
 @app_commands.describe(new_player_name="playerName:")
 @app_commands.describe(new_overall="item percent or other unique id")
-async def zaibatsu_rename(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = None, 
+async def zaibatsu_rename(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                 new_mythic_name: typing.Optional[str] = None, new_player_name: typing.Optional[str] = None, new_overall: typing.Optional[str] = None):
     out = zaibatsu.rename(player_name, mythic_name, overall=overall, new_mythic_name=new_mythic_name, new_player_name=new_player_name, new_overall=new_overall)
     await interaction.response.send_message(out)
@@ -102,7 +102,7 @@ async def zaibatsu_rename(interaction: discord.Interaction, mythic_name: str, pl
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
 @app_commands.describe(price="sell price")
-async def zaibatsu_sell(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = None, 
+async def zaibatsu_sell(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                           price: typing.Optional[str] = "0"):
     out = zaibatsu.sold(player_name, mythic_name, overall=overall, price=price)
     await interaction.response.send_message(out)
@@ -111,7 +111,7 @@ async def zaibatsu_sell(interaction: discord.Interaction, mythic_name: str, play
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
-async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = None):
+async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = ""):
     out = zaibatsu.view(player_name, mythic_name, overall=overall)
     await interaction.response.send_message(out)
 
