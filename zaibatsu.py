@@ -93,25 +93,25 @@ def update(playerName, mythicName, overall="", cost=None, status=None, notes=Non
     writeData(data)
     return "updated"
 
-def rename(playerName, mythicName, overall="", newMythicName=None, newPlayerName=None, newOverall=None):
+def rename(playerName, mythicName, overall="", new_mythic_name=None, new_player_name=None, new_overall=None):
     data = loadData()
 
     if " ".join((playerName, mythicName, overall)) not in data:
         return "this mythic is not in bank"
     
     # change id tuple
-    if (newMythicName is not None) or (newPlayerName is not None) or (newOverall is not None):
+    if (new_mythic_name is not None) or (new_player_name is not None) or (new_overall is not None):
         item = data[" ".join((playerName, mythicName, overall))]
         
-        if newMythicName is None:
-            newMythicName = mythicName
-        if newPlayerName is None:
-            newPlayerName = playerName
-        if newOverall is None:
-            newOverall = overall
+        if new_mythic_name is None:
+            new_mythic_name = mythicName
+        if new_player_name is None:
+            new_player_name = playerName
+        if new_overall is None:
+            new_overall = overall
         
         del data[" ".join((playerName, mythicName, overall))]
-        data[" ".join((newPlayerName, newMythicName, newOverall))] = item
+        data[" ".join((new_player_name, new_mythic_name, new_overall))] = item
 
     writeData(data)
     return "renamed"
