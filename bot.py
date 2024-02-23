@@ -133,7 +133,13 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
 @app_commands.describe(nori_command="check weigh pricecheck or any other nori command that takes wynntils string")
 async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", nori_command: typing.Optional[str] = "weigh"):
     wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
-    await interaction.response.send_message(f"/item {nori_command} {wynntils}")
+    guild = bot.get_guild(555318916344184834)
+    commands = await guild.application_commands()
+    for command in commands:
+        if command.name == item:
+            break
+    await command.invoke(nori_command, wynntils)
+    #await interaction.response.send_message(f"/item {nori_command} {wynntils}")
 
 # Command: Display help information
 @bot.tree.command(name="help")
