@@ -34,7 +34,8 @@ async def on_ready():
     try:
         # Attempt to sync the commands with the server
         synced = await bot.tree.sync()
-        logging.info(f"Synced {len(synced)} command(s)")
+        for synced_command in synced:
+            logging.info(f"Synced {synced_command} command")
     except Exception as e:
         logging.error(e)
 
@@ -137,18 +138,18 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
 # Command: Display help information
 @bot.tree.command(name="help")
 async def help(interaction: discord.Interaction):
-    await interaction.response.send_message(
-        '''```
+    await interaction.response.send_message('''
+```
 Commands
-    /uniform        \tyour minecraft skin with your farplane uniform!
-    /zaibatsu_buy   \tadd a mythic to the mythic bank
-    /zaibatsu_update\tupdate cost, status, notes based on the player name and mythic name
-    /zaibatsu_rename\tupdates the player name, mythic name and overall of an existing mythic
-    /zaibatsu_sell  \tremove a mythic from the mythic bank
-    /zaibatsu_view  \tview the data of a mythic in the mythic bank
-    /zaibatsu_list  \tview all mythics in the bank
-        ```
-        ''')
+/uniform        \t-your minecraft skin with your farplane uniform!
+/zaibatsu_buy   \t-add a mythic to the mythic bank
+/zaibatsu_update\t-updates cost, status, notes based on the player name and mythic name
+/zaibatsu_rename\t-updates player name, mythic name of an existing mythic
+/zaibatsu_sell  \t-remove a mythic from the mythic bank
+/zaibatsu_view  \t-view the data of a mythic in the mythic bank
+/zaibatsu_list  \t-view all mythics in the bank
+```
+''')
 
 # Command: Choose a uniform rank
 @bot.tree.command(name="uniform")
