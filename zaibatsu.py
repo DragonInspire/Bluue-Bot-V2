@@ -23,9 +23,13 @@ def parsePrice(priceStr):
     
 
 def toPriceStr(priceInt):
+    n = ""
+    if (priceInt < 0):
+        n = "-"
+        priceInt *= -1
     le = priceInt % 64
     stx = priceInt // 64
-    return f"{stx} stx {le} le"
+    return f"{n}{stx} stx {n}{le} le"
 
 
 def loadData():
@@ -64,17 +68,17 @@ def writeData(data):
         # This block is executed if no exceptions occur
         logging.debug("File operations completed successfully")
 
-def bought(playerName, mythicName, overall="", cost="", status="in bank", notes=None, date=datetime.today().strftime('%Y-%m-%d')):
+def bought(playerName, mythicName, overall="", cost="", status="in bank", notes=None, date=datetime.today().strftime('%Y-%m-%d'), wynntils=""):
     data = loadData()
 
     if " ".join((playerName, mythicName, overall)) in data:
         return "this mythic is already in bank"
-    data[" ".join((playerName, mythicName, overall))] = { "cost": cost, "status": status, "notes": notes, "date": date }
+    data[" ".join((playerName, mythicName, overall))] = { "cost": cost, "status": status, "notes": notes, "date": date, "wynntils": wynntils }
 
     writeData(data)
     return "added"
      
-def update(playerName, mythicName, overall="", cost=None, status=None, notes=None, date=None):
+def update(playerName, mythicName, overall="", cost=None, status=None, notes=None, date=None, wynntils=None):
     data = loadData()
 
     if " ".join((playerName, mythicName, overall)) not in data:
@@ -89,6 +93,8 @@ def update(playerName, mythicName, overall="", cost=None, status=None, notes=Non
         data[" ".join((playerName, mythicName, overall))]["notes"] = notes
     if date is not None:
         data[" ".join((playerName, mythicName, overall))]["date"] = cost
+    if wynntils is not None:
+        data[" ".join((playerName, mythicName, overall))]["wynntils"] = wynntils
 
     writeData(data)
     return "updated"
@@ -140,12 +146,19 @@ def view(playerName, mythicName, overall=""):
     
     return json.dumps(" ".join((playerName, mythicName, overall))) + " : " + json.dumps(data[" ".join((playerName, mythicName, overall))])
 
-def list():
+def list(detailed=False):
     data = loadData()
     out = ""
     mythics = sorted(data.keys())
 
     for mythic in mythics:
         out = out + mythic + "\n"
+        if detailed:
+            out = out + json.dumps(data[mythic]) + "\n"
     
     return out
+
+def getWynntils(playerName, mythicName, overall=""):
+    data = loadData()
+    wynntils = data[" ".join((playerName, mythicName, overall))].get("wynntils", "no wynntils string")
+    return wynntils

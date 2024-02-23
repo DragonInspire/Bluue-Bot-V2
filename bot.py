@@ -120,9 +120,19 @@ async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, play
     await interaction.response.send_message(out)
 
 @bot.tree.command(name="zaibatsu_list")
-async def zaibatsu_list(interaction: discord.Interaction):
-    out = zaibatsu.list()
+@app_commands.describe(detailed="include data fields")
+async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
+    out = zaibatsu.list(detailed=detailed)
     await interaction.response.send_message(out)
+
+@bot.tree.command(name="zaibatsu_display")
+@app_commands.describe(mythic_name="mythicName:")
+@app_commands.describe(player_name="playerName:")
+@app_commands.describe(overall="item percent or other unique id")
+@app_commands.describe(nori_command="check weigh pricecheck or any other nori command that takes wynntils string")
+async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", nori_command: typing.Optional[str] = "weigh"):
+    wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
+    await interaction.response.send_message(f"/item {nori_command} {wynntils}")
 
 # Command: Display help information
 @bot.tree.command(name="help")
@@ -132,8 +142,8 @@ async def help(interaction: discord.Interaction):
 Commands
     /uniform        \tyour minecraft skin with your farplane uniform!
     /zaibatsu_buy   \tadd a mythic to the mythic bank
-    /zaibatsu_update\tupdate overall, cost, status, notes based on the player name and mythic name
-    /zaibatsu_rename\tupdates the player name and mythic name of an existing mythic
+    /zaibatsu_update\tupdate cost, status, notes based on the player name and mythic name
+    /zaibatsu_rename\tupdates the player name, mythic name and overall of an existing mythic
     /zaibatsu_sell  \tremove a mythic from the mythic bank
     /zaibatsu_view  \tview the data of a mythic in the mythic bank
     /zaibatsu_list  \tview all mythics in the bank
