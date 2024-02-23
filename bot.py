@@ -1,3 +1,4 @@
+import typing
 from discord.ext import commands, tasks
 import discord
 import logging
@@ -10,6 +11,8 @@ from datetime import datetime
 from xp_tracking import contributions
 from dotenv import load_dotenv
 import os
+
+import zaibatsu
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
@@ -31,7 +34,8 @@ async def on_ready():
     try:
         # Attempt to sync the commands with the server
         synced = await bot.tree.sync()
-        logging.info(f"Synced {len(synced)} command(s)")
+        for synced_command in synced:
+            logging.info(f"Synced {synced_command} command")
     except Exception as e:
         logging.error(e)
 
@@ -59,6 +63,99 @@ async def on_ready():
             logging.info("xp leaderboard already running")
     except Exception as e:
         logging.exception(f"unhandled exception while starting tasks {e}")
+
+@bot.tree.command(name="zaibatsu_buy")
+@app_commands.describe(mythic_name="mythicName:")
+@app_commands.describe(player_name="playerName:")
+@app_commands.describe(overall="item percent or other unique id")
+@app_commands.describe(cost="cost of buying 0 if looted")
+@app_commands.describe(status="in bank out of bank or other")
+@app_commands.describe(notes="anything else")
+async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
+                          cost: typing.Optional[str] = "0", status: typing.Optional[str] = "in bank",
+                           notes: typing.Optional[str] = ""):
+    out = zaibatsu.bought(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes)
+    await interaction.response.send_message(out)
+
+@bot.tree.command(name="zaibatsu_update")
+@app_commands.describe(mythic_name="mythicName:")
+@app_commands.describe(player_name="playerName:")
+@app_commands.describe(overall="item percent or other unique id")
+@app_commands.describe(cost="cost of buying 0 if looted")
+@app_commands.describe(status="in bank out of bank or other")
+@app_commands.describe(notes="anything else")
+async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
+                          cost: typing.Optional[str] = "0", status: typing.Optional[str] = "in bank",
+                           notes: typing.Optional[str] = ""):
+    out = zaibatsu.update(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes)
+    await interaction.response.send_message(out)
+
+@bot.tree.command(name="zaibatsu_rename")
+@app_commands.describe(mythic_name="mythicName:")
+@app_commands.describe(player_name="playerName:")
+@app_commands.describe(overall="item percent or other unique id")
+@app_commands.describe(new_mythic_name="playerName:")
+@app_commands.describe(new_player_name="playerName:")
+@app_commands.describe(new_overall="item percent or other unique id")
+async def zaibatsu_rename(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
+                new_mythic_name: typing.Optional[str] = None, new_player_name: typing.Optional[str] = None, new_overall: typing.Optional[str] = None):
+    out = zaibatsu.rename(player_name, mythic_name, overall=overall, new_mythic_name=new_mythic_name, new_player_name=new_player_name, new_overall=new_overall)
+    await interaction.response.send_message(out)
+
+@bot.tree.command(name="zaibatsu_sell")
+@app_commands.describe(mythic_name="mythicName:")
+@app_commands.describe(player_name="playerName:")
+@app_commands.describe(overall="item percent or other unique id")
+@app_commands.describe(price="sell price")
+async def zaibatsu_sell(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
+                          price: typing.Optional[str] = "0"):
+    out = zaibatsu.sold(player_name, mythic_name, overall=overall, price=price)
+    await interaction.response.send_message(out)
+
+@bot.tree.command(name="zaibatsu_view")
+@app_commands.describe(mythic_name="mythicName:")
+@app_commands.describe(player_name="playerName:")
+@app_commands.describe(overall="item percent or other unique id")
+async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = ""):
+    out = zaibatsu.view(player_name, mythic_name, overall=overall)
+    await interaction.response.send_message(out)
+
+@bot.tree.command(name="zaibatsu_list")
+@app_commands.describe(detailed="include data fields")
+async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
+    out = zaibatsu.list(detailed=detailed)
+    await interaction.response.send_message(out)
+
+@bot.tree.command(name="zaibatsu_display")
+@app_commands.describe(mythic_name="mythicName:")
+@app_commands.describe(player_name="playerName:")
+@app_commands.describe(overall="item percent or other unique id")
+@app_commands.describe(nori_command="check weigh pricecheck or any other nori command that takes wynntils string")
+async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", nori_command: typing.Optional[str] = "weigh"):
+    wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
+    guild = bot.get_guild(555318916344184834)
+    commands = await guild.application_commands()
+    for command in commands:
+        if command.name == item:
+            break
+    await command.invoke(nori_command, wynntils)
+    #await interaction.response.send_message(f"/item {nori_command} {wynntils}")
+
+# Command: Display help information
+@bot.tree.command(name="help")
+async def help(interaction: discord.Interaction):
+    await interaction.response.send_message('''
+```
+Commands
+/uniform        \t-your minecraft skin with your farplane uniform!
+/zaibatsu_buy   \t-add a mythic to the mythic bank
+/zaibatsu_update\t-updates cost, status, notes based on the player name and mythic name
+/zaibatsu_rename\t-updates player name, mythic name of an existing mythic
+/zaibatsu_sell  \t-remove a mythic from the mythic bank
+/zaibatsu_view  \t-view the data of a mythic in the mythic bank
+/zaibatsu_list  \t-view all mythics in the bank
+```
+''')
 
 # Command: Choose a uniform rank
 @bot.tree.command(name="uniform")
