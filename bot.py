@@ -71,10 +71,11 @@ async def on_ready():
 @app_commands.describe(cost="cost of buying 0 if looted")
 @app_commands.describe(status="in bank out of bank or other")
 @app_commands.describe(notes="anything else")
+@app_commands.describe(wynntils="wynntils string")
 async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                           cost: typing.Optional[str] = "0", status: typing.Optional[str] = "in bank",
-                           notes: typing.Optional[str] = ""):
-    out = zaibatsu.bought(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes)
+                           notes: typing.Optional[str] = "", wynntils: typing.Optional[str] = ""):
+    out = zaibatsu.bought(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
 @bot.tree.command(name="zaibatsu_update")
@@ -84,10 +85,11 @@ async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, playe
 @app_commands.describe(cost="cost of buying 0 if looted")
 @app_commands.describe(status="in bank out of bank or other")
 @app_commands.describe(notes="anything else")
+@app_commands.describe(wynntils="wynntils string")
 async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                           cost: typing.Optional[str] = "0", status: typing.Optional[str] = "in bank",
-                           notes: typing.Optional[str] = ""):
-    out = zaibatsu.update(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes)
+                           notes: typing.Optional[str] = "", wynntils: typing.Optional[str] = ""):
+    out = zaibatsu.update(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
 @bot.tree.command(name="zaibatsu_rename")
@@ -141,6 +143,14 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
     await command.invoke(nori_command, wynntils)
     #await interaction.response.send_message(f"/item {nori_command} {wynntils}")
 
+@bot.tree.command(name="zaibatsu_wynntils")
+@app_commands.describe(mythic_name="mythicName:")
+@app_commands.describe(player_name="playerName:")
+@app_commands.describe(overall="item percent or other unique id")
+async def zaibatsu_wynntils(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = ""):
+    wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
+    await interaction.response.send_message(f"{wynntils}")
+
 # Command: Display help information
 @bot.tree.command(name="help")
 async def help(interaction: discord.Interaction):
@@ -150,7 +160,7 @@ Commands
 /uniform        \t-your minecraft skin with your farplane uniform!
 /zaibatsu_buy   \t-add a mythic to the mythic bank
 /zaibatsu_update\t-updates cost, status, notes based on the player name and mythic name
-/zaibatsu_rename\t-updates player name, mythic name, mythic-id of an existing mythic
+/zaibatsu_rename\t-updates player name, mythic name of an existing mythic
 /zaibatsu_sell  \t-remove a mythic from the mythic bank
 /zaibatsu_view  \t-view the data of a mythic in the mythic bank
 /zaibatsu_list  \t-view all mythics in the bank
