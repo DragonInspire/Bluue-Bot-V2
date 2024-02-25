@@ -62,10 +62,12 @@ def get_item_percentages(wynntils_string) -> dict:
 
     # were going to do some shenanagins here because I dont know how to see the perminant stats so were just going to do list comprehension backwards
     ids.reverse()
-    logging.info(f"the identification margins are {identification_margins}")
+    #logging.info(f"the identification margins are {identification_margins}")
     reversed_identification_margins : dict= dict(reversed(list(identification_margins.items())))
     index : int = 0
     identification_percentages : list = []
+    actual_IDs : list = []
+    id_names : list = []
     for identification in reversed_identification_margins:
         #logging.info(identification_margins[identification])
         if type(identification_margins[identification]) is int:
@@ -73,21 +75,30 @@ def get_item_percentages(wynntils_string) -> dict:
         #logging.info(identification_margins[identification])
         id_min : int = identification_margins[identification]['min']
         id_max : int = identification_margins[identification]['max']
+        id_raw : int = identification_margins[identification]['raw']
         id_value : int = ids[index]
+        id_names.append(identification)
+
+
+        encoded_value : int = id_value // 4
+        actual_ID : int = ((encoded_value + 30) / 100) * id_raw if abs(id_raw) > 100 else encoded_value + id_min
+        actual_IDs.append(actual_ID)
         
-        relative_value : int = id_value - id_min
+        relative_value : int = actual_ID - id_min
         relative_max : int = id_max - id_min
         identification_percentage = round(relative_value / relative_max * 100, 2)
-        logging.info(f"id min: {id_min}, id max: {id_max}, id value: {id_value}, identification percentage: {identification_percentage}")
+        #logging.info(f"id min: {id_min}, id max: {id_max}, id value: {actual_ID}, identification percentage: {identification_percentage}")
         identification_percentages.append(identification_percentage)
         index += 1
     overall_percentage : float = round(sum(identification_percentages)/len(identification_percentages), 2)
 
     identification_percentages.reverse()
-    ids.reverse()
+    actual_IDs.reverse()
+    id_names.reverse()
     return {
         "name": name,
-        "identifications": ids,
+        "identification_names" : id_names,
+        "identifications": actual_IDs,
         "identification_percentages": identification_percentages,
         "overall_identification_percentages": overall_percentage
     }
@@ -104,7 +115,7 @@ for message in encoded_messages:
 #logging.info(api_identifications("Fantasia"))
 
 
-#logging.info(get_item_percentages("󵿰Fantasia󵿲󵁀󵀐󵀘󵁄󵀼󵁮󵁪󵿲󵂪󵀄󵿱"))
+logging.info(get_item_percentages("󵿰Fantasia󵿲󵁀󵀐󵀘󵁄󵀼󵁮󵁪󵿲󵂪󵀄󵿱"))
 
 '''
 -22 : 33.3%
