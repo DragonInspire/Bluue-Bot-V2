@@ -150,7 +150,7 @@ Commands
 /uniform        \t-your minecraft skin with your farplane uniform!
 /zaibatsu_buy   \t-add a mythic to the mythic bank
 /zaibatsu_update\t-updates cost, status, notes based on the player name and mythic name
-/zaibatsu_rename\t-updates player name, mythic name of an existing mythic
+/zaibatsu_rename\t-updates player name, mythic name, mythic-id of an existing mythic
 /zaibatsu_sell  \t-remove a mythic from the mythic bank
 /zaibatsu_view  \t-view the data of a mythic in the mythic bank
 /zaibatsu_list  \t-view all mythics in the bank
