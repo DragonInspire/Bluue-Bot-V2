@@ -20,9 +20,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Load environment variables from a .env file
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
-XP_LEADERBOARD_CHANNEL_ID = os.getenv('XP_LEADERBOARD_CHANNEL_ID')
-ONLINE_PLAYER_CHANNEL = os.getenv('ONLINE_PLAYER_CHANNEL')
-ONLINE_PLAYER_MESSAGE = os.getenv('ONLINE_PLAYER_MESSAGE')
+XP_LEADERBOARD_CHANNEL_ID = int(os.getenv('XP_LEADERBOARD_CHANNEL_ID'))
+ONLINE_PLAYER_CHANNEL = int(os.getenv('ONLINE_PLAYER_CHANNEL'))
+ONLINE_PLAYER_MESSAGE = int(os.getenv('ONLINE_PLAYER_MESSAGE'))
 
 
 # Initialize the bot
