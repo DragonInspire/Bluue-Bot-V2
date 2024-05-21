@@ -149,6 +149,10 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
     except ValueError as e: 
         out = "wynntils string out of date"
         await interaction.response.send_message(out)
+    except Error as e:
+        out = "something went wrong"
+        logging.error(e)
+        await interaction.response.send_message(out)
         
     
 
