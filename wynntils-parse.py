@@ -1,132 +1,100 @@
-'''
-Note - I am still trying to figure out how to calculate the actual values and percentages
-onces this is done I will parse it into a discord sendable message
-then I will add a file attatchment for the image of the mythic
-'''
-
 import requests
 import re
+#from items import item_search
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
-#decodes wynntils data
-def decode_item(encoded_string) -> dict:
-    # Current wynntils blocker format 
-    # Update once artemis makes any changes
-    START : str = "\U000F5FF0"
-    END : str = "\U000F5FF1"
-    SEPARATOR : str = "\U000F5FF2"
-    RANGE_PATTERN : str = "[" + "\U000F5000" + "-" + "\U000F5F00" + "]"
-    OFFSET : str = 0xF5000
+class ItemDecoder:
 
-    encoded_pattern : re.Pattern[str] = re.compile(
-        START + "(?P<Name>.+?)" + SEPARATOR + "(?P<Ids>"
-        + RANGE_PATTERN + "+)(?:" + SEPARATOR + "(?P<Powders>" + RANGE_PATTERN + "+))?(?P<Rerolls>" + RANGE_PATTERN + "+)" + END
-    )
+    def __init__(self):
+        self.stat_order_url = "https://raw.githubusercontent.com/RawFish69/Nori/main/data/mythic_weights.json"
+        self.stat_order = self.fetch_stat_order()
+        logging.debug(self.stat_order)
 
-    def decode_numbers(text) -> list:
-        return [ord(text[i]) - OFFSET for i in range(len(text))]
-
-    match = encoded_pattern.match(encoded_string)
-    if not match:
-        return None
-
-    name : str = match.group("Name")
-    ids : list = decode_numbers(match.group("Ids"))
-    powders : list = decode_numbers(match.group("Powders")) if match.group("Powders") else []
-    rerolls : list= decode_numbers(match.group("Rerolls")) if match.group("Rerolls") else []
-
-    return {
-        "name": name,
-        "identifications": ids,
-        "powders": powders,
-        "rerolls": rerolls
-    }
-
-def api_identifications(item_name) -> dict:
-    wynncraft_api_url : str = f"https://api.wynncraft.com/v3/item/search/{item_name}"
-    return requests.get(wynncraft_api_url).json()[item_name]["identifications"]
-
-
-def get_item_percentages(wynntils_string) -> dict:
-    # Stats matching and rate calculation
-    decoded_item : dict = decode_item(wynntils_string)
-    if not decoded_item:
-        return None
-    item_name : str = decoded_item["name"]
-    identification_margins : dict = api_identifications(item_name)
+    def wynntils_api(self, item_name):
+        wynncraft_api_url : str = f"https://api.wynncraft.com/v3/item/search/{item_name}"
+        identifications = requests.get(wynncraft_api_url).json()[item_name]["identifications"]
+        logging.debug(identifications)
+        return identifications
     
-    name = decoded_item['name']
-    ids = decoded_item['identifications']
 
-    # were going to do some shenanagins here because I dont know how to see the perminant stats so were just going to do list comprehension backwards
-    ids.reverse()
-    #logging.info(f"the identification margins are {identification_margins}")
-    reversed_identification_margins : dict= dict(reversed(list(identification_margins.items())))
-    index : int = 0
-    identification_percentages : list = []
-    actual_IDs : list = []
-    id_names : list = []
-    for identification in reversed_identification_margins:
-        #logging.info(identification_margins[identification])
-        if type(identification_margins[identification]) is int:
-            break
-        #logging.info(identification_margins[identification])
-        id_min : int = identification_margins[identification]['min']
-        id_max : int = identification_margins[identification]['max']
-        id_raw : int = identification_margins[identification]['raw']
-        id_value : int = ids[index]
-        id_names.append(identification)
+    def fetch_stat_order(self):
+        api_data = requests.get(self.stat_order_url)
+        return api_data.json()
+
+    def decode_gear_item(self, encoded_string):
+        # Current wynntils blocker format 
+        # Update once artemis makes any changes
+        START = "\U000F5FF0"
+        END = "\U000F5FF1"
+        SEPARATOR = "\U000F5FF2"
+        RANGE_PATTERN = "[" + "\U000F5000" + "-" + "\U000F5F00" + "]"
+        OFFSET = 0xF5000
+
+        encoded_pattern = re.compile(
+            START + "(?P<Name>.+?)" + SEPARATOR + "(?P<Ids>"
+            + RANGE_PATTERN + "+)(?:" + SEPARATOR + "(?P<Powders>" + RANGE_PATTERN + "+))?(?P<Rerolls>" + RANGE_PATTERN + "+)" + END
+        )
+
+        def decode_numbers(text):
+            return [ord(text[i]) - OFFSET for i in range(len(text))]
+
+        match = encoded_pattern.match(encoded_string)
+        if not match:
+            return None
+
+        name = match.group("Name")
+        ids = decode_numbers(match.group("Ids"))
+        powders = decode_numbers(match.group("Powders")) if match.group("Powders") else []
+        rerolls = decode_numbers(match.group("Rerolls")) if match.group("Rerolls") else []
+
+        return {
+            "name": name,
+            "identifications": ids,
+            "powders": powders,
+            "rerolls": rerolls
+        }
+
+    def decode_item(self, item_string):
+        # Stats matching and rate calculation
+        stat_order = self.stat_order
+        decoded_item = self.decode_gear_item(item_string)
+        if not decoded_item:
+            return None
+        name = decoded_item['name']
+        ids = decoded_item['identifications']
+        api_stats = self.wynntils_api(name)
+        stat_sorted = {name: {}, "rate": {}}
+        index = 0
+        this_items_stats = stat_order["Data"][name]
+        for tils_stat in this_items_stats:
+            if tils_stat not in api_stats or index >= len(ids):
+                continue
+            baseValue = api_stats[tils_stat]
+            logging.warning(baseValue)
+            logging.warning(tils_stat)
+
+            # id_max = baseValue * 1.3
+            # id_min = baseValue * 0.3 if baseValue >= 0 else baseValue * 1.3
+            # id_max = baseValue * 0.3 if baseValue < 0 else id_max
+            id_min = baseValue["min"]
+            id_max = baseValue["max"]
+            id_raw = baseValue["raw"]
+            encoded_value = ids[index] // 4
+            Actual_ID = ((encoded_value + 30) / 100) * id_raw if abs(id_raw) > 100 else encoded_value + id_min
+            percentage = ((Actual_ID - id_min) / (id_max - id_min)) * 100
+            stat_sorted[name].update({tils_stat: round(Actual_ID, 2)})
+            stat_sorted["rate"].update({tils_stat: min(max(round(percentage, 1), 0), 100)})
+            index += 1
+            logging.debug("stats sorted")
+        return stat_sorted
 
 
-        encoded_value : int = id_value // 4
-        actual_ID : int = ((encoded_value + 30) / 100) * id_raw if abs(id_raw) > 100 else encoded_value + id_min
-        actual_IDs.append(actual_ID)
-        
-        relative_value : int = actual_ID - id_min
-        relative_max : int = id_max - id_min
-        identification_percentage = round(relative_value / relative_max * 100, 2)
-        #logging.info(f"id min: {id_min}, id max: {id_max}, id value: {actual_ID}, identification percentage: {identification_percentage}")
-        identification_percentages.append(identification_percentage)
-        index += 1
-    overall_percentage : float = round(sum(identification_percentages)/len(identification_percentages), 2)
-
-    identification_percentages.reverse()
-    actual_IDs.reverse()
-    id_names.reverse()
-    return {
-        "name": name,
-        "identification_names" : id_names,
-        "identifications": actual_IDs,
-        "identification_percentages": identification_percentages,
-        "overall_identification_percentages": overall_percentage
-    }
 
 
-#stat_order_url : str = "https://raw.githubusercontent.com/RawFish69/Nori/main/data/mythic_weights.json"
-#stat_order : dict = fetch_stat_order()
+item_decoder = ItemDecoder()
 
-'''encoded_messages = ["󵿰Fantasia󵿲󵁀󵀐󵀘󵁄󵀼󵁮󵁪󵿲󵂪󵀄󵿱", "󵿰Imperious󵿲󵀄󵀵󵁑󵀄󵀀󵿱", "󵿰Procrastination󵿲󵀘󵁅󵀨󵀀󵀈󵀔󵀀󵿱", "󵿰Cancer󵿲󵅉󵁼󵿲󵀫󵀀󵿱", "󵿰Libra󵿲󵀄󵀺󵀤󵀤󵀱󵀠󵿲󵀫󵀀󵿱", "󵿰Anxiolytic󵿲󵁢󵀶󵀈󵀈󵀈󵿲󵄃󵀀󵿱", "󵿰Capricorn󵿲󵀔󵀮󵀄󵀈󵿲󵀫󵀀󵿱"]
-for message in encoded_messages:
-    logging.info(decode_gear_item(message))'''
+encoded_string = "󵿰Fantasia󵿲󵁀󵀐󵀘󵁄󵀼󵁮󵁪󵿲󵂪󵀄󵿱"
 
-#logging.info(decode_item("󵿰Fantasia󵿲󵁀󵀐󵀘󵁄󵀼󵁮󵁪󵿲󵂪󵀄󵿱")["identifications"])
-#logging.info(api_identifications("Fantasia"))
-
-
-logging.info(get_item_percentages("󵿰Fantasia󵿲󵁀󵀐󵀘󵁄󵀼󵁮󵁪󵿲󵂪󵀄󵿱"))
-
-'''
--22 : 33.3%
--20 : 50.0%
-
-+25 : 53.3%
-
--25 : 62.9%
--23 : 55.5%
--35 : 100%
--34 : 96.2%
-'''
-
-#[64, 16, 24, 68, 60, 110, 106]
+print(item_decoder.decode_item(encoded_string))
