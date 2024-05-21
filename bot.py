@@ -325,7 +325,7 @@ async def xp_leaderboard():
         daily_contributions = contributions()
         if len(daily_contributions) == 0:
             return
-        daily_contributions = dict(sorted(daily_contributions.items(), key=lambda item: item[1]))
+        daily_contributions = dict(reverse(sorted(daily_contributions.items(), key=lambda item: item[1])))
         list_10 = {}
         for i, key in enumerate(daily_contributions):
             if i > 9:
