@@ -152,7 +152,7 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
             return
         
         ids = {}
-        for id in decoded_item.identifications
+        for id in decoded_item.identifications:
             ids[id.id] = ids.value    
 
         api_ids = requests.get(f"https://api.wynncraft.com/v3/item/search/{name}").json()[name]["identifications"]
