@@ -11,7 +11,7 @@ from datetime import datetime
 from xp_tracking import contributions
 from dotenv import load_dotenv
 import os
-from wynntils-parse import decode_item
+from wynntils_parse import decode_item
 
 import zaibatsu
 
