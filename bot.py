@@ -12,7 +12,7 @@ from xp_tracking import contributions
 from dotenv import load_dotenv
 import os
 from wynntils_parse import decode_item
-
+import requests
 import zaibatsu
 
 # Logging setup
@@ -144,7 +144,40 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
     wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
     try:
         decoded_item = decode_item(wynntils)
-        out = decoded_item.name + " " + str(decoded_item.identifications)
+        name = decoded_item.name
+        try:
+            api_ids = await requests.get(f"https://api.wynncraft.com/v3/item/search/{name}").json()[name]["identifications"]
+        except:
+            await interaction.response.send_message("error fetching item from wynntils api")
+            return
+        
+        ids = {}
+        for id in decoded_item.identifications
+            ids[id.id] = ids.value    
+
+        api_ids = requests.get(f"https://api.wynncraft.com/v3/item/search/{name}").json()[name]["identifications"]
+
+        ids_percents = {}
+        for key in ids.keys():
+            values = api_ids[key]
+            if (type(values)) != type(1):
+                min = values["min"]
+                max = values["max"]
+                difference = max - min
+                value = ids[key]
+                value = value-min
+                percent = value/difference
+                ids_percents[key] = percent * 100
+            else:
+                ids_percents[key] = 100
+    
+        powder = decoded_item.powder
+        rerolls = decoded_item.rerolls
+        out = decoded_item.name + "\n"
+        for id in ids.keys():
+            out += id + ids[id] + ids_percents[id] + "\n"
+        out += powder + "\n"
+        out += "rerolls " + rerolls 
         await interaction.response.send_message(out)
     except ValueError as e: 
         out = "wynntils string out of date"
