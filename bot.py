@@ -142,9 +142,15 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
 @app_commands.describe(nori_command="check weigh pricecheck or any other nori command that takes wynntils string")
 async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", nori_command: typing.Optional[str] = "weigh"):
     wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
-    decoded_item = decode_item(wynntils)
-    out = decoded_item.name + " " + decoded_item.identifications
-    await interaction.response.send_message(out)
+    try:
+        decoded_item = decode_item(wynntils)
+        out = decoded_item.name + " " + decoded_item.identifications
+        await interaction.response.send_message(out)
+    except ValueError as e: 
+        out = "wynntils string out of date"
+        await interaction.response.send_message(out)
+        
+    
 
 @bot.tree.command(name="zaibatsu_wynntils")
 @app_commands.describe(mythic_name="mythicName:")
