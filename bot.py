@@ -51,11 +51,13 @@ async def on_ready():
             logging.info("War tracking task started")
         else:
             logging.info("war tracking already started")
+        '''
         if not war_update.is_running():
             war_update.start()
             logging.info("War update task started")
         else:
             logging.info("war update already started")
+        '''
         if not xp_leaderboard.is_running():
             xp_leaderboard.start()
             logging.info("xp leaderboard task started")
@@ -268,7 +270,7 @@ async def war_tracking():
         war_track()
     except Exception as e:
         logging.error(f"unhandled exception in war tracking {e}")
-
+'''
 # Background task: Update war data
 @tasks.loop(minutes=10)
 async def war_update():
@@ -316,7 +318,7 @@ async def war_update():
         await message.edit(content=printable_message)
     except Exception as e:
         logging.exception(f"unhandled exception in war update {e}")
-
+'''
 @tasks.loop(hours=24)
 async def xp_leaderboard():
     try:
