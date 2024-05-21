@@ -144,7 +144,7 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
     wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
     try:
         decoded_item = decode_item(wynntils)
-        out = decoded_item.name + " " + decoded_item.identifications
+        out = decoded_item.name + " " + string(decoded_item.identifications)
         await interaction.response.send_message(out)
     except ValueError as e: 
         out = "wynntils string out of date"
