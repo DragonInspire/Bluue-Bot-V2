@@ -20,6 +20,10 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Load environment variables from a .env file
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+XP_LEADERBOARD_CHANNEL_ID = os.getenv('XP_LEADERBOARD_CHANNEL_ID')
+ONLINE_PLAYER_CHANNEL = os.getenv('ONLINE_PLAYER_CHANNEL')
+ONLINE_PLAYER_MESSAGE = os.getenv('ONLINE_PLAYER_MESSAGE')
+
 
 # Initialize the bot
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -212,8 +216,8 @@ async def uniform(interaction: discord.Interaction, username: str):
 async def farplane_online():
     try:
         try:
-            channel = bot.get_channel(1131996950548467782)
-            message = await channel.fetch_message(1131998219673538640)
+            channel = bot.get_channel(ONLINE_PLAYER_CHANNEL)
+            message = await channel.fetch_message(ONLINE_PLAYER_MESSAGE)
         except (discord.Forbidden, discord.NotFound) as e:
             logging.error(f"Error: Failed to get channel or message. {e}")
             return
@@ -333,7 +337,7 @@ async def xp_leaderboard():
 
             list_10[key] = daily_contributions[key]
         
-        channel = bot.get_channel(1170580235998208072)
+        channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
 
         printable_message = "**Farplane daily top 10 XP Contributions**$```$"
         for key in list_10:
