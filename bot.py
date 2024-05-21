@@ -166,16 +166,22 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
                 difference = max - min
                 value = ids[key]
                 value = value-min
-                percent = value/difference
-                ids_percents[key] = percent * 100
+                try:
+                    percent = value/difference
+                    ids_percents[key] = round(percent * 100)
+                except ZeroDivisionError:
+                    ids_percents[key] = ""
             else:
-                ids_percents[key] = 100
+                ids_percents[key] = ""
     
         powder = decoded_item.powder
         rerolls = decoded_item.reroll
         out = decoded_item.name + "\n"
         for id in ids.keys():
-            out += str(id) + " " + str(ids[id]) + " (" + str(round(ids_percents[id])) + "%)" + "\n"
+            out += str(id) + " " + str(ids[id])
+            if type(ids_percents[id]) == type(1):
+                out += " (" + str(ids_percents[id]) + "%)" 
+            out += "\n"
         out += "powders: " + str(powder) + "\n"
         out += "rerolls: " + str(rerolls) 
         await interaction.response.send_message(out)
