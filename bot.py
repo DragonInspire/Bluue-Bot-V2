@@ -5,7 +5,7 @@ import logging
 from discord import app_commands
 from discord.ui import Select, View
 from uniform import overlay_images
-from online import get_online_players_with_data, FetchDataException, GuildDataException
+from online import get_online_players_with_data, FetchDataException, GuildDataException, fetch_data
 from war import war_track, getWarData
 from datetime import datetime
 from xp_tracking import contributions
@@ -146,16 +146,16 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
         decoded_item = decode_item(wynntils)
         name = decoded_item.name
         try:
-            api_ids = await requests.get(f"https://api.wynncraft.com/v3/item/search/{name}").json()[name]["identifications"]
-        except:
+            api_request = await fetch_data(f"https://api.wynncraft.com/v3/item/search/{name}")
+            api_ids = api_request[name]["identifications"]
+        except Exception as e:
             await interaction.response.send_message("error fetching item from wynntils api")
+            logging.info(e)
             return
         
         ids = {}
         for id in decoded_item.identifications:
-            ids[id.id] = ids.value    
-
-        api_ids = requests.get(f"https://api.wynncraft.com/v3/item/search/{name}").json()[name]["identifications"]
+            ids[id.id] = id.value    
 
         ids_percents = {}
         for key in ids.keys():
@@ -172,12 +172,12 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
                 ids_percents[key] = 100
     
         powder = decoded_item.powder
-        rerolls = decoded_item.rerolls
+        rerolls = decoded_item.reroll
         out = decoded_item.name + "\n"
         for id in ids.keys():
-            out += id + ids[id] + ids_percents[id] + "\n"
-        out += powder + "\n"
-        out += "rerolls " + rerolls 
+            out += str(id) + " " + str(ids[id]) + " (" + str(round(ids_percents[id])) + "%)" + "\n"
+        out += "powders: " + str(powder) + "\n"
+        out += "rerolls: " + str(rerolls) 
         await interaction.response.send_message(out)
     except ValueError as e: 
         out = "wynntils string out of date"
