@@ -20,6 +20,9 @@ def loadData():
     else:
         # This block is executed if no exceptions occur
         logging.debug("File operations completed successfully")
+        
+    if data == None:
+        logging.error("data is none type")
     return data
 
 def writeData(data):
@@ -45,10 +48,12 @@ def invest(player, amount):
         data = {}
     if player in data:
         player_money = data[player]
-        for i in range(3):
-            player_money[i] += amount[i]
-        player_money = autoConvert(player_money)
-        data[player] = player_money
+    else:
+        player_money = [0, 0, 0]
+    for i in range(3):
+        player_money[i] += amount[i]
+    player_money = autoConvert(player_money)
+    data[player] = player_money
     
     writeData(data)
 
@@ -58,10 +63,12 @@ def withdraw(player, amount):
         data = {}
     if player in data:
         player_money = data[player]
-        for i in range(3):
-            player_money[i] -= amount[i]
-        player_money = autoConvert(player_money)
-        data[player] = player_money
+    else:
+        player_money = [0, 0, 0]
+    for i in range(3):
+        player_money[i] -= amount[i]
+    player_money = autoConvert(player_money)
+    data[player] = player_money
     writeData(data)
 
 def autoConvert(money):
@@ -83,4 +90,4 @@ def autoConvert(money):
             return autoConvert(money)
 
 def getInvestments():
-    return loadData
+    return loadData()
