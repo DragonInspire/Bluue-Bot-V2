@@ -45,15 +45,15 @@ def writeData(data):
 
 def invest(player, amount):
     data = loadData()
+    player_money = [0, 0, 0]
     if data is None:
         data = {}
-    if player in data:
-        player_money = data[player]
-    else:
-        player_money = [0, 0, 0]
+    for stored_player in data.keys():
+        if stored_player == player:
+            player_money = data[player]
         
     logging.debug(player_money)
-    logging.debug(data)
+    
     for i in range(3):
         player_money[i] += amount[i]
     player_money = autoConvert(player_money)
@@ -63,16 +63,20 @@ def invest(player, amount):
 
 def withdraw(player, amount):
     data = loadData()
+    player_money = [0, 0, 0]
     if data is None:
         data = {}
-    if player in data:
-        player_money = data[player]
-    else:
-        player_money = [0, 0, 0]
+    for stored_player in data.keys():
+        if stored_player == player:
+            player_money = data[player]
+        
+    logging.debug(player_money)
+    
     for i in range(3):
         player_money[i] -= amount[i]
     player_money = autoConvert(player_money)
     data[player] = player_money
+    
     writeData(data)
 
 def autoConvert(money):
