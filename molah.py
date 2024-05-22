@@ -50,7 +50,8 @@ def invest(player, amount):
         data = {}
     for stored_player in data.keys():
         if stored_player == player:
-            player_money = data[player]
+            if data[player] != None:
+                player_money = data[player]
         
     logging.debug(player_money)
     
@@ -68,7 +69,8 @@ def withdraw(player, amount):
         data = {}
     for stored_player in data.keys():
         if stored_player == player:
-            player_money = data[player]
+            if data[player] != None:
+                player_money = data[player]
         
     logging.debug(player_money)
     
