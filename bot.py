@@ -83,12 +83,12 @@ async def on_ready():
 @app_commands.describe(liquid_invest="liquid investment")
 @app_commands.describe(emerald_invest="emerald investment: ")
 async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, stack_invest: typing.Optional[int]=0, liquid_invest: typing.Optional[int]=0, emerald_invest: typing.Optional[int]=0):
-    try:
-        invest(player_name, [emerald_invest, liquid_invest, stack_invest])
-        await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, liquid_invest, stack_invest]} sucessful")
-    except Exception as e:
-        logging.info(e)
-        await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, liquid_invest, stack_invest]} failed")
+    #try:
+    invest(player_name, [emerald_invest, liquid_invest, stack_invest])
+    await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, liquid_invest, stack_invest]} sucessful")
+    #except Exception as e:
+    #logging.info(e)
+    #await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, liquid_invest, stack_invest]} failed")
         
 @bot.tree.command(name="zaibatsu_withdraw")
 @app_commands.describe(player_name="player name: ")
