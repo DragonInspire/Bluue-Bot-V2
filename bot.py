@@ -258,7 +258,7 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
             colour = discord.Colour.blue(),
             title = name
         )
-        embed.set_thumbnail(mythicImage(name))
+        embed.set_thumbnail(url=mythicImage(name))
 
         for id in ids.keys():
             if type(ids_percents[id]) == type(1):
