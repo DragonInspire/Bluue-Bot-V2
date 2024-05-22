@@ -45,7 +45,7 @@ def writeData(data):
 
 def invest(player, amount):
     data = loadData()
-    player_money = [0, 0, 0]
+    player_money = [0, 0, 0, 0]
     if data is None:
         data = {}
     for stored_player in data.keys():
@@ -55,7 +55,7 @@ def invest(player, amount):
         
     logging.debug(player_money)
     
-    for i in range(3):
+    for i in range(4):
         player_money[i] += amount[i]
     player_money = autoConvert(player_money)
     data[player] = player_money
@@ -64,7 +64,7 @@ def invest(player, amount):
 
 def withdraw(player, amount):
     data = loadData()
-    player_money = [0, 0, 0]
+    player_money = [0, 0, 0, 0]
     if data is None:
         data = {}
     for stored_player in data.keys():
@@ -74,7 +74,7 @@ def withdraw(player, amount):
         
     logging.debug(player_money)
     
-    for i in range(3):
+    for i in range(4):
         player_money[i] -= amount[i]
     player_money = autoConvert(player_money)
     data[player] = player_money
@@ -92,6 +92,11 @@ def autoConvert(money):
             money[1] %= 64
             money[2] += 1 * multiplier
             return autoConvert(money)
+        if money[2] > 64:
+            multiplier = money[2] // 64
+            money[2] %= 64
+            money[3] += 1 * multiplier
+            return autoConvert(money)
         if money[0] < 0:
             money[0] = -money[0]
             multiplier = money[0] // 64
@@ -105,6 +110,13 @@ def autoConvert(money):
             money[1] = -money[1]
             money[2] -= 1 * multiplier
             money[1] += 64 * multiplier
+            return autoConvert(money)
+        if money[2] < 0:
+            money[2] = -money[2]
+            multiplier = money[2] // 64
+            money[2] = -money[1]
+            money[3] -= 1 * multiplier
+            money[2] += 64 * multiplier
             return autoConvert(money)
         return money
 
