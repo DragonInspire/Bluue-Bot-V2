@@ -133,8 +133,8 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
                 out += str(investments[player][i]) + " " + emerald_types[i] + " "
 
             out += " or " + str(emeraldTypesToEmeralds(investments[player])) + " em"
-        embed.add_field(name=player, value=out)
-        out = ""
+            embed.add_field(name=player, value=out)
+            out = ""
     await interaction.response.send_message(embed=embed)
     #except Exception as e:
     #    await interaction.response.send_message("list failed")
