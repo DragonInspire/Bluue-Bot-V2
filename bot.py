@@ -254,9 +254,9 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
         rerolls = decoded_item.reroll
 
         embed = discord.Embed(
-            colour = discord.Colour.blue()
+            colour = discord.Colour.blue(),
+            title = name
         )
-        embed.set_author(name=name)
 
         for id in ids.keys():
             if type(ids_percents[id]) == type(1):
