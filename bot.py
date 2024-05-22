@@ -219,7 +219,11 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
 @app_commands.describe(overall="item percent or other unique id")
 @app_commands.describe(nori_command="check weigh pricecheck or any other nori command that takes wynntils string")
 async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", nori_command: typing.Optional[str] = "weigh"):
-    wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
+    try:
+        wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
+    except:
+        await interaction.response.send_message("item not in mythic bank, make sure to be exact")
+        return
     try:
         decoded_item = decode_item(wynntils)
         name = decoded_item.name
