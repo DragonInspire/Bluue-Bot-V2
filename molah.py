@@ -98,25 +98,19 @@ def autoConvert(money):
             money[3] += 1 * multiplier
             return autoConvert(money)
         if money[0] < 0:
-            money[0] = -money[0]
-            multiplier = money[0] // 64
-            money[0] = -money[0]
-            money[1] -= 1 * multiplier
+            multiplier = (-money[0] + 63) // 64  
             money[0] += 64 * multiplier
+            money[1] -= multiplier
             return autoConvert(money)
         if money[1] < 0:
-            money[1] = -money[1]
-            multiplier = money[1] // 64
-            money[1] = -money[1]
-            money[2] -= 1 * multiplier
+            multiplier = (-money[1] + 63) // 64  
             money[1] += 64 * multiplier
+            money[2] -= multiplier
             return autoConvert(money)
         if money[2] < 0:
-            money[2] = -money[2]
-            multiplier = money[2] // 64
-            money[2] = -money[1]
-            money[3] -= 1 * multiplier
+            multiplier = (-money[2] + 63) // 64  
             money[2] += 64 * multiplier
+            money[3] -= multiplier
             return autoConvert(money)
         return money
 
