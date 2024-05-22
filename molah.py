@@ -98,6 +98,7 @@ def autoConvert(money):
             money[1] += 64
             money[2] -= 1
             return autoConvert(money)
+        return money
 
 def getInvestments():
     return loadData()
