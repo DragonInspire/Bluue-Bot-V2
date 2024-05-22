@@ -80,7 +80,7 @@ async def on_ready():
 @bot.tree.command(name="zaibatsu_invest")
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(stack_invest="stack investment: ")
-@app_commands.describe(liquid_invest_name="liquid investment")
+@app_commands.describe(liquid_invest="liquid investment")
 @app_commands.describe(emerald_invest="emerald investment: ")
 async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, stack_invest: typing.Optional[int], liquid_invest: typing.Optional[int], emerald_invest: typing.Optional[int]):
     try:
