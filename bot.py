@@ -103,11 +103,15 @@ async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, 
 
 @bot.tree.command(name="zaibatsu_investment_list")
 async def zaibatsu_investment_list(interaction: discord.Interaction):
+    emerald_types = ["emerald", "liquid emerald", "liquid stack emerald"]
     try:
         investments = getInvestments()
         out = ""
         for player in investments.keys():
-            out += player + " " + str(investments[player]) + "\n"
+            out += player + " "
+            for i in range(3):
+                out += str(investments[player][i]) + " " + emerald_types[i] + " "
+            out += "\n"
         await interaction.response.send_message(out)
     except Exception as e:
         await interaction.response.send_message("list failed")
