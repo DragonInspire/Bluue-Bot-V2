@@ -117,7 +117,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
                 out += player + " "
                 for i in reversed(range(4)):
                     out += str(investments[player][i]) + " " + emerald_types[i] + " "
-            out += "\n"
+                out += "\n"
         await interaction.response.send_message(out)
     except Exception as e:
         await interaction.response.send_message("list failed")
