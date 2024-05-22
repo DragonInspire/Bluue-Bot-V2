@@ -113,9 +113,10 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
         out = ""
         for player in investments.keys():
             logging.debug(player)
-            out += player + " "
-            for i in reversed(range(4)):
-                out += str(investments[player][i]) + " " + emerald_types[i] + " "
+            if !(investmemts[player][0] == 0 && investmemts[player][1] == 0 && investmemts[player][2] == 0 && investmemts[player][3] == 0):
+                out += player + " "
+                for i in reversed(range(4)):
+                    out += str(investments[player][i]) + " " + emerald_types[i] + " "
             out += "\n"
         await interaction.response.send_message(out)
     except Exception as e:
