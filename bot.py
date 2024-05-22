@@ -107,7 +107,7 @@ async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, 
 
 @bot.tree.command(name="zaibatsu_investment_list")
 async def zaibatsu_investment_list(interaction: discord.Interaction):
-    emerald_types = ["e", "eb", "le", "stx"]
+    emerald_types = ["em", "eb", "le", "stx"]
     try:
         investments = getInvestments()
         out = "```"
@@ -118,7 +118,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
                 for i in reversed(range(4)):
                     out += str(investments[player][i]) + " " + emerald_types[i] + " "
 
-                out += "\n or " str(emeraldTypesToEmeralds(investments[player])) + " emeralds"
+                out += " or " + str(emeraldTypesToEmeralds(investments[player])) + " em"
                 out += "\n"
         out += "```"
         await interaction.response.send_message(out)
