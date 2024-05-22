@@ -16,6 +16,7 @@ import requests
 import zaibatsu
 from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds
 import random
+from mythicImage import mythicImage
 
 devFlag = False
 
@@ -257,6 +258,7 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
             colour = discord.Colour.blue(),
             title = name
         )
+        embed.set_thumbnail(mythicImage(name))
 
         for id in ids.keys():
             if type(ids_percents[id]) == type(1):
