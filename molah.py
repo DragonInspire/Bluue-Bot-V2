@@ -2,6 +2,7 @@ import json
 import logging
 
 DATA_FILE = "molah.json"
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
 def loadData():
     data = None
@@ -50,6 +51,9 @@ def invest(player, amount):
         player_money = data[player]
     else:
         player_money = [0, 0, 0]
+        
+    logging.debug(player_money)
+    logging.debug(data)
     for i in range(3):
         player_money[i] += amount[i]
     player_money = autoConvert(player_money)
