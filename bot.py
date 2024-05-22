@@ -35,8 +35,12 @@ if (not devFlag):
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
+
 # Define rank options
 ranks = ["resident", "buke", "bushi", "shogun", "yako"]
+
+zaibatsu_group = app_commands.Group(name="zaibatsu", description="mythic bank related commands")
+bot.tree.add_command(zaibatsu_group)
 
 # Event: Bot is ready
 @bot.event
@@ -76,8 +80,7 @@ async def on_ready():
             logging.info("xp leaderboard already running")
     except Exception as e:
         logging.exception(f"unhandled exception while starting tasks {e}")
-
-@bot.tree.command(name="zaibatsu_invest")
+@zaibatsu_group.command(name="invest")
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(stack_invest="stack investment: ")
 @app_commands.describe(liquid_invest="liquid investment")
@@ -91,7 +94,7 @@ async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, st
         logging.info(e)
         await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, block_invest, liquid_invest, stack_invest]} failed")
         
-@bot.tree.command(name="zaibatsu_withdraw")
+@zaibatsu_group.command(name="withdraw")
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(stack_withdraw="stack withdraw: ")
 @app_commands.describe(liquid_withdraw="liquid withdraw")
@@ -105,7 +108,7 @@ async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, 
         logging.info(e)
         await interaction.response.send_message(f"{player_name} withdraw of {[emerald_withdraw, block_withdraw, liquid_withdraw, stack_withdraw]} failed")    
 
-@bot.tree.command(name="zaibatsu_investment_list")
+@zaibatsu_group.command(name="investmentlist")
 async def zaibatsu_investment_list(interaction: discord.Interaction):
     emerald_types = ["em", "eb", "le", "stx"]
     try:
@@ -128,7 +131,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
     
 
 
-@bot.tree.command(name="zaibatsu_buy")
+@zaibatsu_group.command(name="buy")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -142,7 +145,7 @@ async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, playe
     out = zaibatsu.bought(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
-@bot.tree.command(name="zaibatsu_update")
+@zaibatsu_group.command(name="update")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -156,7 +159,7 @@ async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, pl
     out = zaibatsu.update(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
-@bot.tree.command(name="zaibatsu_rename")
+@zaibatsu_group.command(name="rename")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -168,7 +171,7 @@ async def zaibatsu_rename(interaction: discord.Interaction, mythic_name: str, pl
     out = zaibatsu.rename(player_name, mythic_name, overall=overall, new_mythic_name=new_mythic_name, new_player_name=new_player_name, new_overall=new_overall)
     await interaction.response.send_message(out)
 
-@bot.tree.command(name="zaibatsu_sell")
+@zaibatsu_group.command(name="sell")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -178,7 +181,7 @@ async def zaibatsu_sell(interaction: discord.Interaction, mythic_name: str, play
     out = zaibatsu.sold(player_name, mythic_name, overall=overall, price=price)
     await interaction.response.send_message(out)
 
-@bot.tree.command(name="zaibatsu_view")
+@zaibatsu_group.command(name="view")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -186,13 +189,13 @@ async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, play
     out = zaibatsu.view(player_name, mythic_name, overall=overall)
     await interaction.response.send_message(out)
 
-@bot.tree.command(name="zaibatsu_list")
+@zaibatsu_group.command(name="list")
 @app_commands.describe(detailed="include data fields")
 async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
     out = zaibatsu.list(detailed=detailed)
     await interaction.response.send_message(out)
 
-@bot.tree.command(name="zaibatsu_display")
+@zaibatsu_group.command(name="display")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -252,7 +255,7 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
         
     
 
-@bot.tree.command(name="zaibatsu_wynntils")
+@zaibatsu_group.command(name="wynntils")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -266,17 +269,18 @@ async def help(interaction: discord.Interaction):
     await interaction.response.send_message('''
 ```
 Commands
-\t\t/uniform             \n-your minecraft skin with your farplane uniform!
-\t\t/zaibatsu_buy            \n-add a mythic to the mythic bank
-\t\t/zaibatsu_update         \n-updates a mythic in the mythic bank
-\t\t/zaibatsu_rename         \n-renames a mythic in the mythic bank
-\t\t/zaibatsu_sell           \n-remove a mythic from the mythic bank
-\t\t/zaibatsu_view           \n-view the data of a mythic in the mythic bank
-\t\t/zaibatsu_display        \n-view the stats of a mythic if it has a saved wynntils string
-\t\t/zaibatsu_list           \n-view all mythics in the bank
-\t\t/zaibatsu_invest         \n-invest emeralds in the mythic bank
-\t\t/zaibatsu_withdraw       \n-withdraw emeralds from the mythic bank
-\t\t/zaibatsu_investment_list\n-lists all emerald investments in the mythic bank
+/help					 \n\t-shows this list\n
+/uniform             	 \n\t-your minecraft skin with your farplane uniform!\n
+/zaibatsu buy            \n\t-add a mythic to the mythic bank\n
+/zaibatsu update         \n\t-updates a mythic in the mythic bank\n
+/zaibatsu rename         \n\t-renames a mythic in the mythic bank\n
+/zaibatsu sell           \n\t-remove a mythic from the mythic bank\n
+/zaibatsu view           \n\t-view the data of a mythic in the mythic bank\n
+/zaibatsu display        \n\t-view the stats of a mythic if it has a saved wynntils string\n
+/zaibatsu list           \n\t-view all mythics in the bank\n
+/zaibatsu invest         \n\t-invest emeralds in the mythic bank\n
+/zaibatsu withdraw       \n\t-withdraw emeralds from the mythic bank\n
+/zaibatsu investmentlist\n-\tlists all emerald investments in the mythic bank\n
 ```
 ''')
 
