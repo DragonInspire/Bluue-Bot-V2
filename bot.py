@@ -14,6 +14,7 @@ import os
 from wynntils_parse import decode_item
 import requests
 import zaibatsu
+from molah import invest, withdraw, getInvestments
 
 devFlag = True
 
@@ -75,6 +76,44 @@ async def on_ready():
             logging.info("xp leaderboard already running")
     except Exception as e:
         logging.exception(f"unhandled exception while starting tasks {e}")
+
+@bot.tree.command(name="zaibatsu_invest")
+@app_commands.describe(mythic_name="player name: ")
+@app_commands.describe(mythic_name="stack investment: ")
+@app_commands.describe(mythic_name="liquid investment")
+@app_commands.describe(mythic_name="emerald investment: ")
+async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, stack_invest: typing.Optional[int], liquid_invest: typing.Optional[int], emerald_invest: typing.Optional[int]):
+    try:
+        invest(player_name, [emerald_invest, liquid_invest, stack_invest])
+        await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, liquid_invest, stack_invest]} sucessful")
+    except:
+        await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, liquid_invest, stack_invest]} failed")
+        
+@bot.tree.command(name="zaibatsu_withdraw")
+@app_commands.describe(mythic_name="player name: ")
+@app_commands.describe(mythic_name="stack withdraw: ")
+@app_commands.describe(mythic_name="liquid withdraw")
+@app_commands.describe(mythic_name="emerald withdraw: ")
+async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, stack_withdraw: typing.Optional[int], liquid_withdraw: typing.Optional[int], emerald_withdraw: typing.Optional[int]):
+    try:
+        withdraw(player_name, [emerald_withdraw, liquid_withdraw, stack_withdraw])
+        await interaction.response.send_message(f"{player_name} withdraw of {[emerald_withdraw, liquid_withdraw, stack_withdraw]} sucessful")
+    except:
+        await interaction.response.send_message(f"{player_name} withdraw of {[emerald_withdraw, liquid_withdraw, stack_withdraw]} failed")    
+
+@bot.tree.command(name="zaibatsu_investment_list")
+async def zaibatsu_investment_list(interaction: discord.Interaction):
+    try:
+        investments = getInvestments()
+        out = ""
+        for player in investments.keys():
+            out += player + " " + str(investments[player]) + "\n"
+        await interaction.response.send_message(out)
+    except Exception as e:
+        await interaction.response.send_message("list failed")
+        logging.info(e)
+    
+
 
 @bot.tree.command(name="zaibatsu_buy")
 @app_commands.describe(mythic_name="mythicName:")
