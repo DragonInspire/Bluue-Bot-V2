@@ -154,7 +154,9 @@ def list(detailed=False):
     for mythic in mythics:
         out = out + mythic + "\n"
         if detailed:
-            out = out + json.dumps(data[mythic]) + "\n"
+            mythic_data = data[mythic]
+            del mythic_data["wynntils"]
+            out = out + json.dumps(mythic_data) + "\n"
     
     return out
 
