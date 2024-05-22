@@ -116,3 +116,6 @@ def autoConvert(money):
 
 def getInvestments():
     return loadData()
+
+def emeraldTypesToEmeralds(ems):
+    return (ems[3] * 262114) + (ems[2] * 4096) + (ems[1] * 64) + ems[0]
