@@ -57,6 +57,10 @@ async def on_ready():
 
     # Start background tasks
     try:
+        if not status_update.is_running():
+            status_update.start()
+        else:
+            logging.info("status update already started")
         if not farplane_online.is_running() and not devFlag:
             farplane_online.start()
             logging.info("Farplane online task started")
