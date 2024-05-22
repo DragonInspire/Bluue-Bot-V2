@@ -2,6 +2,8 @@ import json
 import logging
 from datetime import datetime
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
+
 DATA_FILE = "zaibatsu.json"
 
 def parsePrice(priceStr):
@@ -148,15 +150,14 @@ def view(playerName, mythicName, overall=""):
 
 def list(detailed=False):
     data = loadData()
-    out = ""
+    out = {}
     mythics = sorted(data.keys())
 
-    for mythic in mythics:
-        out = out + mythic + "\n"
+    for mythic_player in mythics:
+        out[mythic_player] = ""
         if detailed:
-            mythic_data = data[mythic]
-            del mythic_data["wynntils"]
-            out = out + json.dumps(mythic_data) + "\n"
+            out[mythic_player] = data[mythic_player]
+            del out[mythic_player]["wynntils"]
     
     return out
 
