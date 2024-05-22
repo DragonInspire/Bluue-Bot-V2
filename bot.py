@@ -117,23 +117,28 @@ async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, 
 @zaibatsu_group.command(name="investmentlist")
 async def zaibatsu_investment_list(interaction: discord.Interaction):
     emerald_types = ["em", "eb", "le", "stx"]
-    try:
-        investments = getInvestments()
-        out = "```"
-        for player in investments.keys():
-            logging.debug(player)
-            if not (investments[player][0] == 0 and investments[player][1] == 0 and investments[player][2] == 0 and investments[player][3] == 0):
-                out += "\t\t" + player + "\n"
-                for i in reversed(range(4)):
-                    out += str(investments[player][i]) + " " + emerald_types[i] + " "
+    #try:
+    investments = getInvestments()
+    embed=discord.Embed(
+        colour = discord.Colour.dark_teal(),
+        title = "Mythic Bank Investments"
+    )
+    out = ""
+    for player in investments.keys():
+        logging.debug(player)
+        if not (investments[player][0] == 0 and investments[player][1] == 0 and investments[player][2] == 0 and investments[player][3] == 0):
+            logging.debug(investments[player])
+            for i in reversed(range(4)):
+                logging.debug(investments[player][i])
+                out += str(investments[player][i]) + " " + emerald_types[i] + " "
 
-                out += " or " + str(emeraldTypesToEmeralds(investments[player])) + " em"
-                out += "\n"
-        out += "```"
-        await interaction.response.send_message(out)
-    except Exception as e:
-        await interaction.response.send_message("list failed")
-        logging.info(e)
+            out += " or " + str(emeraldTypesToEmeralds(investments[player])) + " em"
+        embed.add_field(name=player, value=out)
+        out = ""
+    await interaction.response.send_message(embed=embed)
+    #except Exception as e:
+    #    await interaction.response.send_message("list failed")
+    #    logging.info(e)
     
 
 
@@ -198,8 +203,14 @@ async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, play
 @zaibatsu_group.command(name="list")
 @app_commands.describe(detailed="include data fields")
 async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
-    out = zaibatsu.list(detailed=detailed)
-    await interaction.response.send_message(out)
+    embed = discord.Embed(
+        colour = discord.Colour.blue(),
+        title = "Mythic Bank"
+    )
+    mythic_list = zaibatsu.list(detailed=detailed)
+    for player in mythic_list.keys():
+        embed.add_field(name=player, value=mythic_list[player], inline=False)
+    await interaction.response.send_message(embed=embed)
 
 @zaibatsu_group.command(name="display")
 @app_commands.describe(mythic_name="mythicName:")
@@ -239,18 +250,22 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
                     ids_percents[key] = ""
             else:
                 ids_percents[key] = ""
-    
         powder = decoded_item.powder
         rerolls = decoded_item.reroll
-        out = decoded_item.name + "\n"
+
+        embed = discord.Embed(
+            colour = discord.Colour.blue()
+        )
+        embed.set_author(name=name)
+
         for id in ids.keys():
-            out += str(id) + " " + str(ids[id])
             if type(ids_percents[id]) == type(1):
-                out += " (" + str(ids_percents[id]) + "%)" 
-            out += "\n"
-        out += "powders: " + str(powder) + "\n"
-        out += "rerolls: " + str(rerolls) 
-        await interaction.response.send_message(out)
+                embed.add_field (name = str(id), value = str(ids[id]) + " (" + str(ids_percents[id]) + "%)")
+            else:
+                 embed.add_field (name = str(id), value = str(ids[id]))
+        embed.add_field(name = "powders: ", value = str(powder), inline = False)
+        embed.add_field(name = "rerolls: ", value = str(rerolls), inline = False)
+        await interaction.response.send_message(embed=embed)
     except ValueError as e: 
         out = "wynntils string out of date"
         await interaction.response.send_message(out)
