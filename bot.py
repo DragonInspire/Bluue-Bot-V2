@@ -78,10 +78,10 @@ async def on_ready():
         logging.exception(f"unhandled exception while starting tasks {e}")
 
 @bot.tree.command(name="zaibatsu_invest")
-@app_commands.describe(mythic_name="player name: ")
-@app_commands.describe(mythic_name="stack investment: ")
-@app_commands.describe(mythic_name="liquid investment")
-@app_commands.describe(mythic_name="emerald investment: ")
+@app_commands.describe(player_name="player name: ")
+@app_commands.describe(stack_invest="stack investment: ")
+@app_commands.describe(liquid_invest_name="liquid investment")
+@app_commands.describe(emerald_invest="emerald investment: ")
 async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, stack_invest: typing.Optional[int], liquid_invest: typing.Optional[int], emerald_invest: typing.Optional[int]):
     try:
         invest(player_name, [emerald_invest, liquid_invest, stack_invest])
@@ -90,10 +90,10 @@ async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, st
         await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, liquid_invest, stack_invest]} failed")
         
 @bot.tree.command(name="zaibatsu_withdraw")
-@app_commands.describe(mythic_name="player name: ")
-@app_commands.describe(mythic_name="stack withdraw: ")
-@app_commands.describe(mythic_name="liquid withdraw")
-@app_commands.describe(mythic_name="emerald withdraw: ")
+@app_commands.describe(player_name="player name: ")
+@app_commands.describe(stack_withdraw="stack withdraw: ")
+@app_commands.describe(liquid_withdraw="liquid withdraw")
+@app_commands.describe(emerald_withdraw="emerald withdraw: ")
 async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, stack_withdraw: typing.Optional[int], liquid_withdraw: typing.Optional[int], emerald_withdraw: typing.Optional[int]):
     try:
         withdraw(player_name, [emerald_withdraw, liquid_withdraw, stack_withdraw])
@@ -109,7 +109,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
         out = ""
         for player in investments.keys():
             out += player + " "
-            for i in range(3):
+            for i in reversed(range(3)):
                 out += str(investments[player][i]) + " " + emerald_types[i] + " "
             out += "\n"
         await interaction.response.send_message(out)
@@ -459,4 +459,3 @@ except Exception as e:
     import traceback
     logging.error(f"SOMETHING WENT WRONG STARTING THE BOT {e}")
     logging.error(''.join(traceback.TracebackException.from_exception(e).format()))
-
