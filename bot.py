@@ -15,18 +15,23 @@ from wynntils_parse import decode_item
 import requests
 import zaibatsu
 
+devFlag = True
+
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
 # Load environment variables from a .env file
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
-XP_LEADERBOARD_CHANNEL_ID = int(os.getenv('XP_LEADERBOARD_CHANNEL_ID'))
-ONLINE_PLAYER_CHANNEL = int(os.getenv('ONLINE_PLAYER_CHANNEL'))
-ONLINE_PLAYER_MESSAGE = int(os.getenv('ONLINE_PLAYER_MESSAGE'))
+
+if (not devFlag):
+    XP_LEADERBOARD_CHANNEL_ID = int(os.getenv('XP_LEADERBOARD_CHANNEL_ID'))
+    ONLINE_PLAYER_CHANNEL = int(os.getenv('ONLINE_PLAYER_CHANNEL'))
+    ONLINE_PLAYER_MESSAGE = int(os.getenv('ONLINE_PLAYER_MESSAGE'))
 
 
 # Initialize the bot
+
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
 # Define rank options
@@ -46,12 +51,12 @@ async def on_ready():
 
     # Start background tasks
     try:
-        if not farplane_online.is_running():
+        if not farplane_online.is_running() and not devFlag:
             farplane_online.start()
             logging.info("Farplane online task started")
         else:
             logging.info("farplane online already started")
-        if not war_tracking.is_running():
+        if not war_tracking.is_running() and not devFlag:
             war_tracking.start()
             logging.info("War tracking task started")
         else:
@@ -63,7 +68,7 @@ async def on_ready():
         else:
             logging.info("war update already started")
         '''
-        if not xp_leaderboard.is_running():
+        if not xp_leaderboard.is_running() and not devFlag:
             xp_leaderboard.start()
             logging.info("xp leaderboard task started")
         else:
@@ -404,4 +409,7 @@ except discord.HTTPException as e:
     else: 
         raise e
 except Exception as e:
+    import traceback
     logging.error(f"SOMETHING WENT WRONG STARTING THE BOT {e}")
+    logging.error(''.join(traceback.TracebackException.from_exception(e).format()))
+
