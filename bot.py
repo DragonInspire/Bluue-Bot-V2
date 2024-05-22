@@ -94,8 +94,8 @@ async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, playe
 @app_commands.describe(notes="anything else")
 @app_commands.describe(wynntils="wynntils string")
 async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
-                          cost: typing.Optional[str] = "0", status: typing.Optional[str] = "in bank",
-                           notes: typing.Optional[str] = "", wynntils: typing.Optional[str] = ""):
+                          cost: typing.Optional[str] = None, status: typing.Optional[str] = None,
+                           notes: typing.Optional[str] = None, wynntils: typing.Optional[str] = None):
     out = zaibatsu.update(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
