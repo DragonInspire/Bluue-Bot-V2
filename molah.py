@@ -83,25 +83,25 @@ def withdraw(player, amount):
 
 def autoConvert(money):
         if money[0] > 64:
-            multiplier = money[0] / 64
+            multiplier = money[0] // 64
             money[0] %= 64
             money[1] += 1 * multiplier
             return autoConvert(money)
         if money[1] > 64:
-            multiplier = money[1] / 64
+            multiplier = money[1] // 64
             money[1] %= 64
             money[2] += 1 * multiplier
             return autoConvert(money)
         if money[0] < 0:
             money[0] = -money[0]
-            multiplier = money[0] / 64
+            multiplier = money[0] // 64
             money[0] = -money[0]
             money[1] -= 1 * multiplier
             money[0] += 64 * multiplier
             return autoConvert(money)
         if money[1] < 0:
             money[1] = -money[1]
-            multiplier = money[1] / 64
+            multiplier = money[1] // 64
             money[1] = -money[1]
             money[2] -= 1 * multiplier
             money[1] += 64 * multiplier
