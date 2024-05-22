@@ -47,7 +47,9 @@ def invest(player, amount):
         player_money = data[player]
         for i in range(3):
             player_money[i] += amount[i]
+        player_money = autoConvert(player_money)
         data[player] = player_money
+    
     writeData(data)
 
 def withdraw(player, amount):
@@ -58,33 +60,27 @@ def withdraw(player, amount):
         player_money = data[player]
         for i in range(3):
             player_money[i] -= amount[i]
+        player_money = autoConvert(player_money)
         data[player] = player_money
     writeData(data)
 
-def autoConvert(player, data):
-    for player_key in data.keys():
-        if player_key == player:
-            money = data[player_key]
-            if money[0] > 64:
-                money[0] -= 64
-                money[1] += 1
-                data[player_key] = money
-                return autoConvert(player, data)
-            if money[1] > 64:
-                money[1] -= 64
-                money[2] += 1
-                data[player_key] = money
-                return autoConvert(player, data)
-            if money[0] < 0:
-                money[0] += 64
-                money[1] -= 1
-                data[player_key] = money
-                return autoConvert(player, data)
-            if money[1] < 0:
-                money[1] += 64
-                money[2] -= 1
-                data[player_key] = money
-                return autoConvert(player, data)
+def autoConvert(money):
+        if money[0] > 64:
+            money[0] -= 64
+            money[1] += 1
+            return autoConvert(money)
+        if money[1] > 64:
+            money[1] -= 64
+            money[2] += 1
+            return autoConvert(money)
+        if money[0] < 0:
+            money[0] += 64
+            money[1] -= 1
+            return autoConvert(money)
+        if money[1] < 0:
+            money[1] += 64
+            money[2] -= 1
+            return autoConvert(money)
 
 def getInvestments():
     return loadData
