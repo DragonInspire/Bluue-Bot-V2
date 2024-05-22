@@ -263,6 +263,7 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
             title = name
         )
         embed.set_thumbnail(url=mythicImage(name))
+        embed.set_footer(text="owned by: " + player_name)
 
         for id in ids.keys():
             if type(ids_percents[id]) == type(1):
