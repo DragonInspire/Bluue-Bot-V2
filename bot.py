@@ -81,7 +81,7 @@ async def on_ready():
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(stack_invest="stack investment: ")
 @app_commands.describe(liquid_invest="liquid investment")
-@app_commands.describe(block_withdraw="block investment")
+@app_commands.describe(block_invest="block investment")
 @app_commands.describe(emerald_invest="emerald investment: ")
 async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, stack_invest: typing.Optional[int]=0, liquid_invest: typing.Optional[int]=0, block_invest: typing.Optional[int]=0, emerald_invest: typing.Optional[int]=0):
     try:
