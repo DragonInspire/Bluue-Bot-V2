@@ -15,6 +15,7 @@ from wynntils_parse import decode_item
 import requests
 import zaibatsu
 from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds
+import random
 
 devFlag = False
 
@@ -458,6 +459,12 @@ async def xp_leaderboard():
         await channel.send(content=printable_message)
     except Exception as e:
         logging.exception(f"unhandled exception in xp leaderboard {e}")
+
+@tasks.loop(minutes=1)
+async def change_status():
+    messages = ["/uniform", "/zaibatsu"]
+    choice = random.choice(messages)
+    await bot.change_presence(status=discord.Status.Online, activity=discord.game(message))
 
 
 try: 
