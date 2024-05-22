@@ -14,7 +14,7 @@ import os
 from wynntils_parse import decode_item
 import requests
 import zaibatsu
-from molah import invest, withdraw, getInvestments
+from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds
 
 devFlag = False
 
@@ -110,14 +110,17 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
     emerald_types = ["emerald", "block emerald", "liquid emerald", "stack emerald"]
     try:
         investments = getInvestments()
-        out = ""
+        out = "```"
         for player in investments.keys():
             logging.debug(player)
             if not (investments[player][0] == 0 and investments[player][1] == 0 and investments[player][2] == 0 and investments[player][3] == 0):
-                out += player + " "
+                out += "\t\t" + player + "\n"
                 for i in reversed(range(4)):
                     out += str(investments[player][i]) + " " + emerald_types[i] + " "
+
+                out += "or" str(emeraldTypesToEmeralds(investments[player])) + "emeralds"
                 out += "\n"
+        out += "```"
         await interaction.response.send_message(out)
     except Exception as e:
         await interaction.response.send_message("list failed")
