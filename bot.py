@@ -57,8 +57,9 @@ async def on_ready():
 
     # Start background tasks
     try:
-        if not status_update.is_running():
-            status_update.start()
+        if not change_status.is_running():
+            change_status.start()
+            logging.info("status update task started")
         else:
             logging.info("status update already started")
         if not farplane_online.is_running() and not devFlag:
@@ -468,7 +469,7 @@ async def xp_leaderboard():
 async def change_status():
     messages = ["/uniform", "/zaibatsu"]
     choice = random.choice(messages)
-    await bot.change_presence(status=discord.Status.Online, activity=discord.game(message))
+    await bot.change_presence(activity=discord. Activity(type=discord.ActivityType.watching, name=choice))
 
 
 try: 
