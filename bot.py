@@ -16,7 +16,7 @@ import requests
 import zaibatsu
 from molah import invest, withdraw, getInvestments
 
-devFlag = True
+devFlag = False
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
@@ -257,13 +257,17 @@ async def help(interaction: discord.Interaction):
     await interaction.response.send_message('''
 ```
 Commands
-/uniform        \t-your minecraft skin with your farplane uniform!
-/zaibatsu_buy   \t-add a mythic to the mythic bank
-/zaibatsu_update\t-updates cost, status, notes based on the player name and mythic name
-/zaibatsu_rename\t-updates player name, mythic name of an existing mythic
-/zaibatsu_sell  \t-remove a mythic from the mythic bank
-/zaibatsu_view  \t-view the data of a mythic in the mythic bank
-/zaibatsu_list  \t-view all mythics in the bank
+\t\t/uniform             \n-your minecraft skin with your farplane uniform!
+\t\t/zaibatsu_buy            \n-add a mythic to the mythic bank
+\t\t/zaibatsu_update         \n-updates a mythic in the mythic bank
+\t\t/zaibatsu_rename         \n-renames a mythic in the mythic bank
+\t\t/zaibatsu_sell           \n-remove a mythic from the mythic bank
+\t\t/zaibatsu_view           \n-view the data of a mythic in the mythic bank
+\t\t/zaibatsu_display        \n-view the stats of a mythic if it has a saved wynntils string
+\t\t/zaibatsu_list           \n-view all mythics in the bank
+\t\t/zaibatsu_invest         \n-invest emeralds in the mythic bank
+\t\t/zaibatsu_withdraw       \n-withdraw emeralds from the mythic bank
+\t\t/zaibatsu_investment_list\n-lists all emerald investments in the mythic bank
 ```
 ''')
 
