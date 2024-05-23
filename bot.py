@@ -125,7 +125,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
         colour = discord.Colour.dark_teal(),
         title = "Mythic Bank Investments"
     )
-    out = ""
+    embed.set_thumbnail(url="https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414")
     for player in investments.keys():
         logging.debug(player)
         if not (investments[player][0] == 0 and investments[player][1] == 0 and investments[player][2] == 0 and investments[player][3] == 0):
@@ -134,7 +134,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
                 logging.debug(investments[player][i])
                 out += str(investments[player][i]) + " " + emerald_types[i] + " "
 
-            out += " or " + str(emeraldTypesToEmeralds(investments[player])) + " em"
+            out += "\n" + str(emeraldTypesToEmeralds(investments[player])) + " raw em"
             embed.add_field(name=player, value=out)
             out = ""
     await interaction.response.send_message(embed=embed)
