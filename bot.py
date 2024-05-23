@@ -477,13 +477,13 @@ async def xp_leaderboard():
             list_10[key] = daily_contributions[key]
         
         channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
-
-        printable_message = "**Farplane daily top 10 XP Contributions**$```$"
-        for key in list_10:
-            printable_message += f"{key} {list_10[key]}$"
-        printable_message += f"```"
-        printable_message = printable_message.replace("$", "\n")
-        await channel.send(content=printable_message)
+        embed = discord.Embed(
+            colour = discord.Colour.blue(),
+            title = "Farplane daily top 10 XP Contributions"
+        )
+        for player in list_10:
+            embed.add_filed(name = player, value = list_10[player])
+        await channel.send(embed=embed)
     except Exception as e:
         logging.exception(f"unhandled exception in xp leaderboard {e}")
 
