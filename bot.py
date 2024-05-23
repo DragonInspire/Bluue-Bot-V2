@@ -374,7 +374,10 @@ async def farplane_online():
             await message.edit(content=printable_online)
             return
 
-        printable_online = "**Online members of The Farplane guild**$```$"
+        embed = discord.Embed(
+            colour = discord.Colour.blue(),
+            title = "Online members of The Farplane guild"
+        )
 
         # Create a dictionary to group players by their worlds
         world_players = {}
@@ -394,11 +397,13 @@ async def farplane_online():
             new_list = [world_players[world] for world in sorted_worlds]
             world_players = dict(zip(sorted_worlds, new_list))
 
+        temp_message = ""
         # Iterate through the dictionary and print the players in each world
         for world, players in world_players.items():
-            printable_online += (f'World {world} $')
             for player_data in players:
-                printable_online += (f'{player_data["rank"]}: {player_data["player"]} $')
+                temp_message += (f'{player_data["rank"]}: {player_data["player"]}' + "\n")
+            embed.add_field(name = f'World {world} $', value = temp_message, inline = False)
+            temp_message = ""
 
         printable_online += f"```$Last update at {datetime.now()} UTC time"
         printable_online = printable_online.replace("$", "\n")
