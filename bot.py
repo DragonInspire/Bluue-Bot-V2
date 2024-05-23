@@ -370,9 +370,13 @@ async def farplane_online():
             return
         except GuildDataException as e:
             logging.debug(f"No online players found {e}")
-            printable_online = f"**Online members of The Farplane guild**$```$ No players online$```$Last update at {datetime.now()} UTC time"
-            printable_online = printable_online.replace("$", "\n")
-            await message.edit(content=printable_online)
+            embed = discord.Embed(
+                colour = discord.Colour.blue(),
+                title = "Online members of The Farplane guild"
+            )
+            embed.set_field(name = "no players online", value = "")
+            embed.set_footer(text = "last updated " + datetime.now(timezone('EST')).strftime('%Y-%m-%d %H:%M:%S') + " EST")
+            await message.edit(embed = embed)
             return
 
         embed = discord.Embed(
@@ -406,8 +410,9 @@ async def farplane_online():
             embed.add_field(name = f'World {world} $', value = temp_message, inline = False)
             temp_message = ""
 
-        embed.set_footer(text = datetime.now(timezone('EST')).strftime('%Y-%m-%d %H:%M:%S') + " EST")
+        embed.set_footer(text = "last updated " + datetime.now(timezone('EST')).strftime('%Y-%m-%d %H:%M:%S') + " EST")
         await message.edit(embed = embed)
+        await message.edit(content = "")
     except Exception as e:
         logging.exception(f"unhandled exception in farplane online {e}")
 
