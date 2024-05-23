@@ -8,6 +8,7 @@ from uniform import overlay_images
 from online import get_online_players_with_data, FetchDataException, GuildDataException, fetch_data
 from war import war_track, getWarData
 from datetime import datetime
+from pytz import timezone
 from xp_tracking import contributions
 from dotenv import load_dotenv
 import os
@@ -405,9 +406,8 @@ async def farplane_online():
             embed.add_field(name = f'World {world} $', value = temp_message, inline = False)
             temp_message = ""
 
-        printable_online += f"```$Last update at {datetime.now()} UTC time"
-        printable_online = printable_online.replace("$", "\n")
-        await message.edit(content=printable_online)
+        embed.set_footer(text = datetime.now(timezone('EST')).strftime('%Y-%m-%d %H:%M:%S') + " EST")
+        await message.edit(embed = embed)
     except Exception as e:
         logging.exception(f"unhandled exception in farplane online {e}")
 
