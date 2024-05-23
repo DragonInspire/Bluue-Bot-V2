@@ -374,7 +374,7 @@ async def farplane_online():
                 colour = discord.Colour.blue(),
                 title = "Online members of The Farplane guild"
             )
-            embed.set_field(name = "no players online", value = "")
+            embed.add_field(name = "no players online", value = "")
             embed.set_footer(text = "last updated " + datetime.now(timezone('EST')).strftime('%Y-%m-%d %H:%M:%S') + " EST")
             await message.edit(embed = embed)
             return
