@@ -135,7 +135,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction):
                 logging.debug(investments[player][i])
                 out += str(investments[player][i]) + " " + emerald_types[i] + " "
 
-            out += "\n" + str(emeraldTypesToEmeralds(investments[player])) + " raw em"
+            out += "\n" + f"{emeraldTypesToEmeralds(investments[player]):,}" + " raw em"
             embed.add_field(name=player, value=out)
             out = ""
     await interaction.response.send_message(embed=embed)
