@@ -482,7 +482,7 @@ async def xp_leaderboard():
             title = "Farplane daily top 10 XP Contributions"
         )
         for player in list_10:
-            embed.add_filed(name = player, value = list_10[player])
+            embed.add_field(name = player, value = f"{list_10[player]:,}", inline = False)
         await channel.send(embed=embed)
     except Exception as e:
         logging.exception(f"unhandled exception in xp leaderboard {e}")
