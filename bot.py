@@ -407,12 +407,11 @@ async def farplane_online():
         for world, players in world_players.items():
             for player_data in players:
                 temp_message += (f'{player_data["rank"]}: {player_data["player"]}' + "\n")
-            embed.add_field(name = f'World {world} $', value = temp_message, inline = False)
+            embed.add_field(name = f'World {world}', value = temp_message, inline = False)
             temp_message = ""
 
         embed.set_footer(text = "last updated " + datetime.now(timezone('EST')).strftime('%Y-%m-%d %H:%M:%S') + " EST")
         await message.edit(embed = embed)
-        await message.edit(content = "")
     except Exception as e:
         logging.exception(f"unhandled exception in farplane online {e}")
 
