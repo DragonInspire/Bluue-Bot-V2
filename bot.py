@@ -210,6 +210,7 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
         colour = discord.Colour.blue(),
         title = "Mythic Bank"
     )
+    embed.set_thumbnail(url="https://www.wynndata.tk/assets/images/items/v4/unidentified/mythic.png")
     mythic_list = zaibatsu.list(detailed=detailed)
     for player in mythic_list.keys():
         embed.add_field(name=player, value=mythic_list[player], inline=False)
