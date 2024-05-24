@@ -117,6 +117,9 @@ def rename(playerName, mythicName, overall="", new_mythic_name=None, new_player_
             new_player_name = playerName
         if new_overall is None:
             new_overall = overall
+
+        if new_overall.lower() == "none":
+            new_overall = ""
         
         del data[" ".join((playerName, mythicName, overall))]
         data[" ".join((new_player_name, new_mythic_name, new_overall))] = item
@@ -163,5 +166,9 @@ def list(detailed=False):
 
 def getWynntils(playerName, mythicName, overall=""):
     data = loadData()
+    
+    if " ".join((playerName, mythicName, overall)) in data:
+        return "this mythic is already in bank"
+
     wynntils = data[" ".join((playerName, mythicName, overall))].get("wynntils", "no wynntils string")
     return wynntils
