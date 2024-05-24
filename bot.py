@@ -214,7 +214,7 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
     mythic_list = zaibatsu.list(detailed=detailed)
     for player in mythic_list.keys():
         embed.add_field(name=player, value=mythic_list[player], inline=False)
-    embed.add_footer(text="be sure to include overall when using specific commands")
+    embed.set_footer(text="be sure to include overall when using specific commands")
     await interaction.response.send_message(embed=embed)
 
 @zaibatsu_group.command(name="display")
@@ -309,7 +309,7 @@ async def help(interaction: discord.Interaction):
     embed.add_field(name="/uniform", value = "your minecraft skin with your farplane uniform!", inline=False)
     embed.add_field(name="/zaibatsu buy", value = "add a mythic to the mythic bank", inline=False)
     embed.add_field(name="/zaibatsu update", value="updates a mythic in the mythic bank", inline=False)
-    embed.add_field(name="/zaibatsu rename", value="renames a mythic in the mythic bank", inline=False)
+    embed.add_field(name="/zaibatsu rename", value="changes owner, name, overall for a mythic in the mythic bank", inline=False)
     embed.add_field(name="/zaibatsu sell", value="remove a mythic from the mythic bank", inline=False)
     embed.add_field(name="/zaibatsu view", value="view the data of a mythic in the mythic bank", inline=False)
     embed.add_field(name="/zaibatsu display", value="view the stats of a mythic if it has a saved wynntils string", inline=False)
