@@ -19,7 +19,7 @@ from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds
 import random
 from mythicImage import mythicImage
 
-devFlag = True
+devFlag = False
 
 # Logging setup
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
