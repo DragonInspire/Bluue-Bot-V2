@@ -207,13 +207,14 @@ async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, play
 @app_commands.describe(detailed="include data fields")
 async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
     embed = discord.Embed(
-        colour = discord.Colour.blue(),
+        colour = discord.Colour.purple(),
         title = "Mythic Bank"
     )
     embed.set_thumbnail(url="https://www.wynndata.tk/assets/images/items/v4/unidentified/mythic.png")
     mythic_list = zaibatsu.list(detailed=detailed)
     for player in mythic_list.keys():
         embed.add_field(name=player, value=mythic_list[player], inline=False)
+    embed.add_footer(text="be sure to include overall when using specific commands")
     await interaction.response.send_message(embed=embed)
 
 @zaibatsu_group.command(name="display")
@@ -262,7 +263,7 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
         rerolls = decoded_item.reroll
 
         embed = discord.Embed(
-            colour = discord.Colour.blue(),
+            colour = discord.Colour.dark_magenta(),
             title = name
         )
         embed.set_thumbnail(url=mythicImage(name))
@@ -291,29 +292,34 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
 async def zaibatsu_wynntils(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = ""):
-    wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
-    await interaction.response.send_message(f"{wynntils}")
+    try:
+        wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
+        await interaction.response.send_message(f"{wynntils}")
+    except:
+        await interaction.response.send_message("mythic not in mythic bank")
 
 # Command: Display help information
 @bot.tree.command(name="help")
 async def help(interaction: discord.Interaction):
-    await interaction.response.send_message('''
-```
-Commands
-/help					 \n\t-shows this list\n
-/uniform             	 \n\t-your minecraft skin with your farplane uniform!\n
-/zaibatsu buy            \n\t-add a mythic to the mythic bank\n
-/zaibatsu update         \n\t-updates a mythic in the mythic bank\n
-/zaibatsu rename         \n\t-renames a mythic in the mythic bank\n
-/zaibatsu sell           \n\t-remove a mythic from the mythic bank\n
-/zaibatsu view           \n\t-view the data of a mythic in the mythic bank\n
-/zaibatsu display        \n\t-view the stats of a mythic if it has a saved wynntils string\n
-/zaibatsu list           \n\t-view all mythics in the bank\n
-/zaibatsu invest         \n\t-invest emeralds in the mythic bank\n
-/zaibatsu withdraw       \n\t-withdraw emeralds from the mythic bank\n
-/zaibatsu investmentlist\n-\tlists all emerald investments in the mythic bank\n
-```
-''')
+    embed = discord.Embed(
+        colour = discord.Colour.blue(),
+        title = "commands"
+    )
+    embed.add_field(name="/help", value="shows this list")
+    embed.add_field(name="/uniform", value = "your minecraft skin with your farplane uniform!")
+    embed.add_field(name="/zaibatsu buy", value = "add a mythic to the mythic bank")
+    embed.add_field(name="/zaibatsu update", value="updates a mythic in the mythic bank")
+    embed.add_field(name="/zaibatsu rename", value="renames a mythic in the mythic bank")
+    embed.add_field(name="/zaibatsu sell", value="remove a mythic from the mythic bank")
+    embed.add_field(name="/zaibatsu view", value="view the data of a mythic in the mythic bank")
+    embed.add_field(name="/zaibatsu display", value="view the stats of a mythic if it has a saved wynntils string")
+    embed.add_field(name="/zaibatsu list", value="view all mythics in the bank")
+    embed.add_field(name="/zaibatsu invest", value="invest emeralds in the mythic bank")
+    embed.add_field(name="/zaibatsu withdraw", value ="withdraw emeralds from the mythic bank")
+    embed.add_field(name="/zaibatsu investmentlist", value="lists all emerald investments in the mythic bank")
+    
+    
+    await interaction.response.send_message(embed=embed)
 
 # Command: Choose a uniform rank
 @bot.tree.command(name="uniform")
