@@ -375,7 +375,9 @@ async def farplane_online():
         except FetchDataException as e:
             logging.error(f"Error: Failed to get online players from Wynncraft API. {e}")
 
-            messages = await channel.history(limit=200).flatten()
+            messages = []
+            async for message in channel.history(limit=200):
+                messages.append(message)
             for message in messages:
                 if message.author == bot.user:
                     await message.delete()
@@ -388,7 +390,9 @@ async def farplane_online():
         
         except GuildDataException as e:
             logging.debug(f"No online players found {e}")
-            messages = await channel.history(limit=200).flatten()
+            messages = []
+            async for message in channel.history(limit=200):
+                messages.append(message)
             for message in messages:
                 if message.author != bot.user:
                     pass
@@ -403,7 +407,9 @@ async def farplane_online():
             return
 
         # nothing went wrong somehow
-        messages = await channel.history(limit=200).flatten()
+        messages = []
+        async for message in channel.history(limit=200):
+            messages.append(message)
         for message in messages:
             if message.author != bot.user:
                 pass
