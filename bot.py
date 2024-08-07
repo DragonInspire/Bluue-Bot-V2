@@ -31,7 +31,7 @@ DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 if (not devFlag):
     XP_LEADERBOARD_CHANNEL_ID = int(os.getenv('XP_LEADERBOARD_CHANNEL_ID'))
     ONLINE_PLAYER_CHANNEL = int(os.getenv('ONLINE_PLAYER_CHANNEL'))
-    ONLINE_PLAYER_MESSAGE = int(os.getenv('ONLINE_PLAYER_MESSAGE'))
+    # ONLINE_PLAYER_MESSAGE = int(os.getenv('ONLINE_PLAYER_MESSAGE'))
 
 
 # Initialize the bot
@@ -365,7 +365,7 @@ async def farplane_online():
     try:
         try:
             channel = bot.get_channel(ONLINE_PLAYER_CHANNEL)
-            message = await channel.fetch_message(ONLINE_PLAYER_MESSAGE)
+            #message = await channel.fetch_message(ONLINE_PLAYER_MESSAGE)
         except (discord.Forbidden, discord.NotFound) as e:
             logging.error(f"Error: Failed to get channel or message. {e}")
             return
@@ -374,18 +374,41 @@ async def farplane_online():
             online_peoples = await get_online_players_with_data()
         except FetchDataException as e:
             logging.error(f"Error: Failed to get online players from Wynncraft API. {e}")
-            await message.edit(content="Failed to fetch online players from Wynncraft")
+
+            messages = await channel.history(limit=200).flatten()
+            for message in messages:
+                if message.author == bot.user:
+                    await message.delete()
+            embed = discord.Embed(
+                colour = discord.Colour.blue(),
+                title = "Failed to get online players from the Wynncraft API."
+            )
+            await channel.send(embed = embed)
             return
+        
         except GuildDataException as e:
             logging.debug(f"No online players found {e}")
+            messages = await channel.history(limit=200).flatten()
+            for message in messages:
+                if message.author != bot.user:
+                    pass
+                else:
+                    await message.delete()
             embed = discord.Embed(
                 colour = discord.Colour.blue(),
                 title = "Online members of The Farplane guild"
             )
             embed.add_field(name = "no players online", value = "")
-            embed.set_footer(text = "last updated " + datetime.now(timezone('EST')).strftime('%Y-%m-%d %H:%M:%S') + " EST")
-            await message.edit(embed = embed)
+            await channel.send(embed = embed)
             return
+
+        # nothing went wrong somehow
+        messages = await channel.history(limit=200).flatten()
+        for message in messages:
+            if message.author != bot.user:
+                pass
+            else:
+                await message.delete()
 
         embed = discord.Embed(
             colour = discord.Colour.blue(),
@@ -418,8 +441,7 @@ async def farplane_online():
             embed.add_field(name = f'World {world}', value = temp_message, inline = False)
             temp_message = ""
 
-        embed.set_footer(text = "last updated " + datetime.now(timezone('EST')).strftime('%Y-%m-%d %H:%M:%S') + " EST")
-        await message.edit(embed = embed)
+        await channel.send(embed = embed)
     except Exception as e:
         logging.exception(f"unhandled exception in farplane online {e}")
 
