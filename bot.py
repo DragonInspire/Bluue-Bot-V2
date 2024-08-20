@@ -362,12 +362,16 @@ async def uniform(interaction: discord.Interaction, username: str):
 # Background task: Fetch and display online players
 @tasks.loop(seconds=30)
 async def farplane_online():
+    channel = None
     try:
         try:
             channel = bot.get_channel(ONLINE_PLAYER_CHANNEL)
             #message = await channel.fetch_message(ONLINE_PLAYER_MESSAGE)
         except (discord.Forbidden, discord.NotFound) as e:
             logging.error(f"Error: Failed to get channel or message. {e}")
+            return
+        
+        if channel is None:
             return
 
         try:
