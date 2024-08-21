@@ -6,33 +6,8 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 
 DATA_FILE = "zaibatsu.json"
 
-def parsePrice(priceStr):
-    priceStr = priceStr.lower()
-    stxIdx = priceStr.find("stx")
-    if stxIdx == -1:
-        stx = 0
-    else:
-        stx = int(priceStr[:stxIdx])
-        priceStr = priceStr[stxIdx + 3:]
-
-    leIdx = priceStr.find("le")
-    if leIdx == -1:
-        le = 0
-    else:
-        le = int(priceStr[:leIdx])
-
-    return le + stx * 64
-    
-
-def toPriceStr(priceInt):
-    n = ""
-    if (priceInt < 0):
-        n = "-"
-        priceInt *= -1
-    le = priceInt % 64
-    stx = priceInt // 64
-    return f"{n}{stx} stx {n}{le} le"
-
+import molah
+from molah import parsePrice, toPriceStr
 
 def loadData():
     data = None
@@ -151,7 +126,7 @@ def view(playerName, mythicName, overall=""):
     
     return json.dumps(" ".join((playerName, mythicName, overall))) + " : " + json.dumps(data[" ".join((playerName, mythicName, overall))])
 
-def list(detailed=False):
+def listBank(detailed=False):
     data = loadData()
     out = {}
     mythics = sorted(data.keys())

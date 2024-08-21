@@ -15,7 +15,7 @@ import os
 from wynntils_parse import decode_item
 import requests
 import zaibatsu
-from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds
+from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds, parsePrice
 import random
 from mythicImage import mythicImage
 
@@ -90,54 +90,46 @@ async def on_ready():
         logging.exception(f"unhandled exception while starting tasks {e}")
 @zaibatsu_group.command(name="invest")
 @app_commands.describe(player_name="player name: ")
-@app_commands.describe(stack_invest="stack investment: ")
-@app_commands.describe(liquid_invest="liquid investment")
-@app_commands.describe(block_invest="block investment")
-@app_commands.describe(emerald_invest="emerald investment: ")
-async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, stack_invest: typing.Optional[int]=0, liquid_invest: typing.Optional[int]=0, block_invest: typing.Optional[int]=0, emerald_invest: typing.Optional[int]=0):
+@app_commands.describe(amount="stack and le invest #stx #le: ")
+async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
     try:
-        invest(player_name, [emerald_invest, block_invest, liquid_invest, stack_invest])
-        await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, block_invest, liquid_invest, stack_invest]} sucessful")
+        invest(player_name, amount)
+        await interaction.response.send_message(f"{player_name} investment of {amount} sucessful")
     except Exception as e:
         logging.info(e)
-        await interaction.response.send_message(f"{player_name} investment of {[emerald_invest, block_invest, liquid_invest, stack_invest]} failed")
+        raise e
+        await interaction.response.send_message(f"{player_name} investment of {amount} failed")
         
 @zaibatsu_group.command(name="withdraw")
 @app_commands.describe(player_name="player name: ")
-@app_commands.describe(stack_withdraw="stack withdraw: ")
-@app_commands.describe(liquid_withdraw="liquid withdraw")
-@app_commands.describe(block_withdraw="block withdraw")
-@app_commands.describe(emerald_withdraw="emerald withdraw: ")
-async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, stack_withdraw: typing.Optional[int]=0, liquid_withdraw: typing.Optional[int]=0, block_withdraw: typing.Optional[int]=0, emerald_withdraw: typing.Optional[int]=0):
+@app_commands.describe(amount="stack and le invest #stx #le: ")
+async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
     try:
-        withdraw(player_name, [emerald_withdraw, block_withdraw, liquid_withdraw, stack_withdraw])
-        await interaction.response.send_message(f"{player_name} withdraw of {[emerald_withdraw, block_withdraw, liquid_withdraw, stack_withdraw]} sucessful")
+        withdraw(player_name, amount)
+        await interaction.response.send_message(f"{player_name} withdraw of {amount} sucessful")
     except Exception as e:
         logging.info(e)
-        await interaction.response.send_message(f"{player_name} withdraw of {[emerald_withdraw, block_withdraw, liquid_withdraw, stack_withdraw]} failed")    
+        await interaction.response.send_message(f"{player_name} withdraw of {amount} failed")    
 
 @zaibatsu_group.command(name="investmentlist")
-async def zaibatsu_investment_list(interaction: discord.Interaction):
-    emerald_types = ["em", "eb", "le", "stx"]
+async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing.Optional[bool] = False, frozen: typing.Optional[bool] = False, initial: typing.Optional[bool] = False):
     #try:
-    investments = getInvestments()
+    cat = "raw"
+    if raw:
+        cat = "raw"
+    elif frozen:
+        cat = "frozen"
+    elif initial:
+        cat = "initial"
+    investments = getInvestments(cat)
     embed=discord.Embed(
         colour = discord.Colour.dark_teal(),
         title = "Mythic Bank Investments"
     )
-    out = ""
     embed.set_thumbnail(url="https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414")
     for player in investments.keys():
-        logging.debug(player)
-        if not (investments[player][0] == 0 and investments[player][1] == 0 and investments[player][2] == 0 and investments[player][3] == 0):
-            logging.debug(investments[player])
-            for i in reversed(range(4)):
-                logging.debug(investments[player][i])
-                out += str(investments[player][i]) + " " + emerald_types[i] + " "
+        embed.add_field(name=player, value=investments[player])
 
-            out += "\n" + f"{emeraldTypesToEmeralds(investments[player]):,}" + " raw em"
-            embed.add_field(name=player, value=out)
-            out = ""
     await interaction.response.send_message(embed=embed)
     #except Exception as e:
     #    await interaction.response.send_message("list failed")
@@ -211,7 +203,7 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
         title = "Mythic Bank"
     )
     embed.set_thumbnail(url="https://www.wynndata.tk/assets/images/items/v4/unidentified/mythic.png")
-    mythic_list = zaibatsu.list(detailed=detailed)
+    mythic_list = zaibatsu.listBank(detailed=detailed)
     for player in mythic_list.keys():
         embed.add_field(name=player, value=mythic_list[player], inline=False)
     embed.set_footer(text="be sure to include overall when using specific commands")
