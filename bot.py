@@ -111,6 +111,28 @@ async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, 
         logging.info(e)
         await interaction.response.send_message(f"{player_name} withdraw of {amount} failed")    
 
+@zaibatsu_group.command(name="addfrozen")
+@app_commands.describe(player_name="player name: ")
+@app_commands.describe(amount="stack and le invest #stx #le: ")
+async def zaibatsu_addfrozen(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
+    try:
+        invest(player_name, amount, categories=("frozen",))
+        await interaction.response.send_message(f"{player_name} addfrozen of {amount} sucessful")
+    except Exception as e:
+        logging.info(e)
+        await interaction.response.send_message(f"{player_name} addfrozen of {amount} failed")
+
+@zaibatsu_group.command(name="rmfrozen")
+@app_commands.describe(player_name="player name: ")
+@app_commands.describe(amount="stack and le invest #stx #le: ")
+async def zaibatsu_rmfrozen(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
+    try:
+        withdraw(player_name, amount, categories=("frozen",))
+        await interaction.response.send_message(f"{player_name} rmfrozen of {amount} sucessful")
+    except Exception as e:
+        logging.info(e)
+        await interaction.response.send_message(f"{player_name} rmfrozen of {amount} failed")
+
 @zaibatsu_group.command(name="investmentlist")
 async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing.Optional[bool] = False, frozen: typing.Optional[bool] = False, initial: typing.Optional[bool] = False):
     #try:
@@ -124,7 +146,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
     investments = getInvestments(cat)
     embed=discord.Embed(
         colour = discord.Colour.dark_teal(),
-        title = "Mythic Bank Investments"
+        title = f"Mythic Bank Investments {cat}"
     )
     embed.set_thumbnail(url="https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414")
     for player in investments.keys():

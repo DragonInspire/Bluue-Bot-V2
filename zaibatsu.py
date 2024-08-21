@@ -51,8 +51,14 @@ def bought(playerName, mythicName, overall="", cost="", status="in bank", notes=
     if " ".join((playerName, mythicName, overall)) in data:
         return "this mythic is already in bank"
     data[" ".join((playerName, mythicName, overall))] = { "cost": cost, "status": status, "notes": notes, "date": date, "wynntils": wynntils }
+    
+    priceInt = parsePrice(cost)
 
     writeData(data)
+
+    if playerName == "guild":
+        molah.spend(priceInt)
+
     return "added"
      
 def update(playerName, mythicName, overall="", cost=None, status=None, notes=None, date=None, wynntils=None):
@@ -113,9 +119,14 @@ def sold(playerName, mythicName, overall="", price=""):
 
     costInt = parsePrice(cost)
     priceInt = parsePrice(price)
-    profit = toPriceStr(priceInt - costInt)
+    profitInt = priceInt - costInt
+    profit = toPriceStr(profitInt)
 
     writeData(data)
+
+    if playerName == "guild":
+        molah.profit(priceInt, profitInt)
+
     return "profit: " + profit
 
 def view(playerName, mythicName, overall=""):

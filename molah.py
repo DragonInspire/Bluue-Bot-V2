@@ -1,5 +1,6 @@
 import json
 import logging
+import math
 
 DATA_FILE = "molah.json"
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
@@ -43,18 +44,18 @@ def writeData(data):
         # This block is executed if no exceptions occur
         logging.debug("File operations completed successfully")
 
-def invest(player, amount):
+def invest(player, amount, categories = ("initial", "raw")):
     data = loadData()
     amountLe = parsePrice(amount)
     if amountLe < 0:
         raise ValueError("negative money input")
     
     if player == "guild":
-        data["total"]["raw"] += amountLe
+        for cat in categories:
+            data["total"][cat] += amountLe
         writeData(data)
         return
 
-    categories = ["initial", "raw"]
     for cat in categories:
         player_money = 0
         
@@ -71,27 +72,26 @@ def invest(player, amount):
         player_money += amountLe
         data[player][cat] = player_money
     
-    data["total"]["raw"] += amountLe
+        data["total"][cat] += amountLe
     writeData(data)
 
-def withdraw(player, amount):
+def withdraw(player, amount, categories = ("initial", "raw")):
     data = loadData()
     amountLe = parsePrice(amount)
     if amountLe < 0:
         raise ValueError("negative money input")
     
     if player == "guild":
-        data["total"]["raw"] -= amountLe
-        guildEnd = guildAmountNoLoad(data, "raw")
-        if guildEnd < 0:
-            raise ValueError("negative money output")
+        for cat in categories:
+            data["total"][cat] -= amountLe
+            guildEnd = guildAmountNoLoad(data, cat)
+            if guildEnd < 0 and cat != "initial":
+                raise ValueError("negative money output")
         writeData(data)
         return
 
-    categories = ["initial", "raw"]
     for cat in categories:
         player_money = 0
-        
         
         if data is None:
             data = {}
@@ -104,13 +104,13 @@ def withdraw(player, amount):
         logging.debug(cat + " : " + toPriceStr(player_money))
         
         player_money -= amountLe
-        if player_money < 0 and cat == "raw":
+        if player_money < 0 and cat != "initial":
             raise ValueError("negative money output")
         if player_money < 0 and cat == "initial": # if someone withdraws all their initial and some profit, don't go to negative initial
             player_money = 0
         data[player][cat] = player_money
-    
-    data["total"]["raw"] -= amountLe
+
+        data["total"][cat] -= amountLe
     writeData(data)
 
 def guildAmountNoLoad(data, cat):
@@ -184,3 +184,90 @@ def toPriceStr(priceInt):
     le = priceInt % 64
     stx = priceInt // 64
     return f"{n}{stx} stx {n}{le} le"
+
+def profit(priceInt, profitInt):
+    data = loadData()
+    
+    frozenTotal = data["total"]["frozen"] # get total for fracs before adding profit
+    # add profit to bank frozen total
+    data["total"]["frozen"] += profitInt
+
+    # guild cut of profit or loss
+    guild_cut = 0
+    if profitInt > 0: # profit
+        guild_cut = 0.2
+    else: # loss
+        guild_cut = 0.2
+    profitInt *= 1.0 - guild_cut
+
+    # logging.info(f"profitInt {profitInt}")
+
+    # distribution of profit to player frozen
+    # guild isn't a player, its implicit in the frozen fraction as whats left over after adding every other player
+    for player in data:
+        if player != "total":
+            player_money_frozen = 1.0*data[player]["frozen"]
+            player_frac = player_money_frozen / frozenTotal
+            freeze = profitInt*player_frac
+            player_money_frozen += freeze
+
+            # logging.info(f"{player} frozen {player_money_frozen}")
+            # logging.info(f"{player} freeze {freeze}")
+            # logging.info(f"{player} player_frac {player_frac}")
+
+            data[player]["frozen"] = int(math.floor(player_money_frozen))
+
+    # distribution of sale price from frozen to raw
+    # guild isn't a player, its implicit in the frozen fraction as whats left over after adding every other player
+    frozenTotal = data["total"]["frozen"]
+    for player in data:
+        if player != "total":
+            player_money_frozen = 1.0*data[player]["frozen"]
+            player_money_raw = 1.0*data[player]["raw"]
+
+            player_frac = player_money_frozen / frozenTotal
+            unfreeze = priceInt*player_frac
+
+            player_money_frozen -= unfreeze
+            player_money_raw += unfreeze
+
+            # logging.info(f"{player} frozen {player_money_frozen}")
+            # logging.info(f"{player} raw {player_money_raw}")
+            # logging.info(f"{player} freeze {unfreeze}")
+            # logging.info(f"{player} player_frac {player_frac}")
+
+            data[player]["frozen"] = int(math.floor(player_money_frozen))
+            data[player]["raw"] = int(math.floor(player_money_raw))
+
+    data["total"]["frozen"] -= priceInt
+    data["total"]["raw"] += priceInt
+    writeData(data)
+
+
+def spend(priceInt):
+    data = loadData()
+    # distribution of buy price from raw to frozen
+    # guild isn't a player, its implicit in the frozen fraction as whats left over after adding every other player
+    rawTotal = data["total"]["raw"]
+    for player in data:
+        if player != "total":
+            player_money_frozen = 1.0*data[player]["frozen"]
+            player_money_raw = 1.0*data[player]["raw"]
+
+            player_frac = player_money_raw / rawTotal
+            freeze = priceInt*player_frac
+
+            # logging.info(f"{player} frozen {player_money_frozen}")
+            # logging.info(f"{player} raw {player_money_raw}")
+            # logging.info(f"{player} freeze {freeze}")
+            # logging.info(f"{player} player_frac {player_frac}")
+
+            player_money_frozen += freeze
+            player_money_raw -= freeze
+
+            data[player]["frozen"] = int(math.floor(player_money_frozen))
+            data[player]["raw"] = int(math.floor(player_money_raw))
+
+    data["total"]["frozen"] += priceInt
+    data["total"]["raw"] -= priceInt
+    writeData(data)
