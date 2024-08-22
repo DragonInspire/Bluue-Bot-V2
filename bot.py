@@ -15,7 +15,7 @@ import os
 from wynntils_parse import decode_item
 import requests
 import zaibatsu
-from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds, parsePrice
+from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds, parsePrice, getProfit
 import random
 from mythicImage import mythicImage
 
@@ -134,7 +134,7 @@ async def zaibatsu_rmfrozen(interaction: discord.Interaction, player_name: str, 
         await interaction.response.send_message(f"{player_name} rmfrozen of {amount} failed")
 
 @zaibatsu_group.command(name="investmentlist")
-async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing.Optional[bool] = False, frozen: typing.Optional[bool] = False, initial: typing.Optional[bool] = False):
+async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing.Optional[bool] = False, frozen: typing.Optional[bool] = False, initial: typing.Optional[bool] = False, profit: typing.Optional[bool] = False):
     #try:
     cat = "raw"
     if raw:
@@ -143,7 +143,13 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
         cat = "frozen"
     elif initial:
         cat = "initial"
-    investments = getInvestments(cat)
+
+    if profit:
+        cat = "profit"
+        investments = getProfit()
+    else:
+        investments = getInvestments(cat)
+
     embed=discord.Embed(
         colour = discord.Colour.dark_teal(),
         title = f"Mythic Bank Investments {cat}"

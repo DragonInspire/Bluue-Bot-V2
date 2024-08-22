@@ -58,6 +58,7 @@ def bought(playerName, mythicName, overall="", cost="", status="in bank", notes=
 
     if playerName == "guild":
         molah.spend(priceInt)
+        return "added to guild"
 
     return "added"
      
@@ -126,6 +127,7 @@ def sold(playerName, mythicName, overall="", price=""):
 
     if playerName == "guild":
         molah.profit(priceInt, profitInt)
+        return "guild sold for profit: " + profit
 
     return "profit: " + profit
 

@@ -131,18 +131,53 @@ def getInvestments(cat):
             out[player] += toPriceStr(data[player][cat])
             out[player] += "\n" + f"{emeraldTypesToEmeralds(data[player][cat])}" + " em"
 
-    if cat != "initial":
-        guildAmount = guildAmountNoLoad(data, cat)
-        logging.debug(guildAmount)
+
+    guildAmount = guildAmountNoLoad(data, cat)
+    logging.debug(guildAmount)
+    if guildAmount != 0:
         out["guild"] = ""
         out["guild"] += toPriceStr(guildAmount)
         out["guild"] += "\n" + f"{emeraldTypesToEmeralds(guildAmount)}" + " em"
 
-        totalAmount = data["total"][cat]
-        logging.debug(totalAmount)
-        out["total"] = ""
-        out["total"] += toPriceStr(totalAmount)
-        out["total"] += "\n" + f"{emeraldTypesToEmeralds(totalAmount)}" + " em"
+    totalAmount = data["total"][cat]
+    logging.debug(totalAmount)
+    out["total"] = ""
+    out["total"] += toPriceStr(totalAmount)
+    out["total"] += "\n" + f"{emeraldTypesToEmeralds(totalAmount)}" + " em"
+
+    return out
+
+def getProfit():
+    data = loadData()
+    out = {}
+    categories = {"initial": -1, "raw":1, "frozen":1}
+    
+    for player in data.keys():
+        logging.debug(player)
+        player_profit = 0
+        for cat, mult in categories.items():
+            player_profit += data[player][cat] * mult
+        if not player == "total":
+            logging.debug(player_profit)
+            out[player] = ""
+            out[player] += toPriceStr(player_profit)
+            out[player] += "\n" + f"{emeraldTypesToEmeralds(player_profit)}" + " em"
+
+    guildAmount = 0
+    for cat, mult in categories.items():
+        guildAmount += guildAmountNoLoad(data, cat) * mult
+    logging.debug(guildAmount)
+    out["guild"] = ""
+    out["guild"] += toPriceStr(guildAmount)
+    out["guild"] += "\n" + f"{emeraldTypesToEmeralds(guildAmount)}" + " em"
+
+    totalAmount = 0
+    for cat, mult in categories.items():
+        totalAmount += data["total"][cat] * mult
+    logging.debug(totalAmount)
+    out["total"] = ""
+    out["total"] += toPriceStr(totalAmount)
+    out["total"] += "\n" + f"{emeraldTypesToEmeralds(totalAmount)}" + " em"
 
     return out
             
@@ -185,20 +220,38 @@ def toPriceStr(priceInt):
     stx = priceInt // 64
     return f"{n}{stx} stx {n}{le} le"
 
-def profit(priceInt, profitInt):
+def profit(priceInt, profitIntOrig):
     data = loadData()
     
-    frozenTotal = data["total"]["frozen"] # get total for fracs before adding profit
+    frozenTotalDivisor = data["total"]["frozen"] # get total for fracs before adding guild profit if positive
+    guildFrozen = guildAmountNoLoad(data, "frozen")
+    guildRaw = guildAmountNoLoad(data, "raw")
     # add profit to bank frozen total
-    data["total"]["frozen"] += profitInt
-
+    data["total"]["frozen"] += profitIntOrig
+    profitInt = profitIntOrig
+    
     # guild cut of profit or loss
     guild_cut = 0
+    guild_cut_loss = 0
+    guild_cut_raw_loss = 0
     if profitInt > 0: # profit
         guild_cut = 0.2
+        profitInt *= 1.0 - guild_cut
     else: # loss
         guild_cut = 0.2
-    profitInt *= 1.0 - guild_cut
+        guild_cut_loss = -1*profitInt * guild_cut
+        if guild_cut_loss < guildFrozen:
+            profitInt += guild_cut_loss
+        else:
+            logging.info(f"guild cant afford loss of {guild_cut_loss} from frozen {guildFrozen}")
+            profitInt += guildFrozen
+            frozenTotalDivisor -= guildFrozen # without reducing the guild frozen that was used to pay for loss it will go negative
+            guild_cut_raw_loss = guild_cut_loss - guildFrozen
+            logging.info(f"guild cant afford loss of {guild_cut_raw_loss} from raw {guildRaw}")
+            if guild_cut_raw_loss > guildRaw:
+                logging.info(f"guild cant afford loss of {guild_cut_raw_loss} from raw {guildRaw}")
+                guild_cut_raw_loss = guildRaw
+            guild_cut_raw_loss = int(math.floor(guild_cut_raw_loss))
 
     # logging.info(f"profitInt {profitInt}")
 
@@ -207,7 +260,7 @@ def profit(priceInt, profitInt):
     for player in data:
         if player != "total":
             player_money_frozen = 1.0*data[player]["frozen"]
-            player_frac = player_money_frozen / frozenTotal
+            player_frac = player_money_frozen / frozenTotalDivisor
             freeze = profitInt*player_frac
             player_money_frozen += freeze
 
@@ -219,17 +272,19 @@ def profit(priceInt, profitInt):
 
     # distribution of sale price from frozen to raw
     # guild isn't a player, its implicit in the frozen fraction as whats left over after adding every other player
-    frozenTotal = data["total"]["frozen"]
+    frozenTotalDivisor = data["total"]["frozen"]
     for player in data:
         if player != "total":
             player_money_frozen = 1.0*data[player]["frozen"]
             player_money_raw = 1.0*data[player]["raw"]
 
-            player_frac = player_money_frozen / frozenTotal
+            player_frac = player_money_frozen / frozenTotalDivisor
             unfreeze = priceInt*player_frac
 
             player_money_frozen -= unfreeze
             player_money_raw += unfreeze
+
+            player_money_raw += guild_cut_raw_loss*player_frac # guild used raw to pay for cut of loss
 
             # logging.info(f"{player} frozen {player_money_frozen}")
             # logging.info(f"{player} raw {player_money_raw}")
