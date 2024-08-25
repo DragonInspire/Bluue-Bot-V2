@@ -370,8 +370,8 @@ async def wc(interaction: discord.Interaction, world: str):
     for player in the_world_players:
         message += "\n" + str(the_world_players[0]) + " " + stats
     if len(message) > 2000:
-        buffer = StringIO(text)
-        f = discord.File(buffer, filename="lyrics.txt")
+        buffer = StringIO(message)
+        f = discord.File(buffer, filename="playersonline.txt")
         await interaction.response.send_message(file = f)
         return
     await interaction.response.send_message(message)
