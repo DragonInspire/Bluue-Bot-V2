@@ -19,6 +19,7 @@ from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds
 import random
 from mythicImage import mythicImage
 from worldplayers import world_players
+from io import StringIO
 
 devFlag = False
 
@@ -368,7 +369,11 @@ async def wc(interaction: discord.Interaction, world: str):
     stats = str(the_world_players[1]) + " " + str(the_world_players[2]) + " " + str(the_world_players[3])
     for player in the_world_players:
         message += "\n" + str(the_world_players[0]) + " " + stats
-
+    if len(message) > 2000:
+        buffer = StringIO(text)
+        f = discord.File(buffer, filename="lyrics.txt")
+        await interaction.response.send_message(file = f)
+        return
     await interaction.response.send_message(message)
         
 
