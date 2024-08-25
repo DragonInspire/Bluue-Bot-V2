@@ -362,14 +362,14 @@ async def uniform(interaction: discord.Interaction, username: str):
 @bot.tree.command(name="wc")
 @app_commands.describe(world="world: ")
 async def wc(interaction: discord.Interaction, world: str):
-    world_players = world_players(world)
+    the_world_players = world_players(world)
     embed = discord.Embed(
         color = discord.Colour.yellow(),
         title = f"players online on WC{world}"
     )
-    stats = str(world_players[1]) + " " + str(world_players[2]) + " " + str(world_players[3])
-    for player in world_players:
-        embed.add_field(name = world_players[0], value = stats)
+    stats = str(the_world_players[1]) + " " + str(the_world_players[2]) + " " + str(the_world_players[3])
+    for player in the_world_players:
+        embed.add_field(name = the_world_players[0], value = stats)
 
     await interaction.response.send_message(embed = embed)
         
