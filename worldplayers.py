@@ -14,7 +14,7 @@ async def world_players(world):
         try:
             guild = player_data["guild"]["name"]
         except:
-            guild = "No Guild"
+            guild = "None"
         try:
             characters = player_data["characters"]
             highest_level = 0
@@ -24,7 +24,7 @@ async def world_players(world):
                     highest_level_name = characters[characteruuid]["type"]
         except: 
             highest_level = 0
-            highest_level_name = "No Characters"
+            highest_level_name = "None"
 
 
         players_data.append([player, guild, highest_level_name, highest_level])
