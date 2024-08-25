@@ -363,15 +363,13 @@ async def uniform(interaction: discord.Interaction, username: str):
 @app_commands.describe(world="world: ")
 async def wc(interaction: discord.Interaction, world: str):
     the_world_players = await world_players(world)
-    embed = discord.Embed(
-        color = discord.Colour.yellow(),
-        title = f"players online on WC{world}"
-    )
+
+    message = f"Players online on WC{world}"
     stats = str(the_world_players[1]) + " " + str(the_world_players[2]) + " " + str(the_world_players[3])
     for player in the_world_players:
-        embed.add_field(name = the_world_players[0], value = stats)
+        message += "\n" + the_world_players[0] + " " + stats
 
-    await interaction.response.send_message(embed = embed)
+    await interaction.response.send_message(text = message)
         
 
 # Background task: Fetch and display online players
