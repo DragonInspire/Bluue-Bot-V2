@@ -1,7 +1,7 @@
 from online import fetch_data
 def world_players(world):
     API_URL=f"https://beta-api.wynncraft.com/v3/player?server={world}"
-    reply = fetch_data(API_URL)
+    reply = await fetch_data(API_URL)
 
     players = reply["players"]
 
@@ -10,7 +10,7 @@ def world_players(world):
 
     players_data = []
     for player in player_list:
-        player_data = fetch_data(f"https://beta-api.wynncraft.com/v3/player/{player}?fullResult")
+        player_data = await fetch_data(f"https://beta-api.wynncraft.com/v3/player/{player}?fullResult")
         try:
             guild = player_data["guild"]["name"]
         except:
