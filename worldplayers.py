@@ -17,6 +17,8 @@ async def world_players(world):
             guild = "None"
         try:
             characters = player_data["characters"]
+            rank = player_data["rank"]
+            firstjoin = player_data[firstJoin]
             highest_level = 0
             for characteruuid in characters:
                 if characters[characteruuid]["level"] > highest_level:
@@ -27,16 +29,16 @@ async def world_players(world):
             highest_level_name = "None"
 
 
-        players_data.append([player, guild, highest_level_name, highest_level])
+        players_data.append([player, guild, highest_level_name, highest_level, rank, firstjoin])
 
     null_sorted_list = []
     for player in players_data:
-        if player[1] == "none":
+        if player[1] == "None":
             null_sorted_list.append(player)
 
     null_sorted_list = sorted(null_sorted_list, key = lambda player: player[3])
     for player in players_data:
-        if player[1] != "none":
+        if player[1] != "None":
             null_sorted_list.append(player)
 
 
