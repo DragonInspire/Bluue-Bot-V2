@@ -369,7 +369,7 @@ async def wc(interaction: discord.Interaction, world: str):
     await interaction.response.send_message("request acknowledged please wait")
     the_world_players = await world_players(world)
 
-    message = f" "\t" "\t" Players online on WC{world}"
+    message = f" "\t" + "\t" Players online on WC{world}"
     
     for player in the_world_players:
         message += "\n" + str(player[0]) + " "*(18-len(player[0])) + " " + str(player[1]) + " "*(30-len(player[1]))  + str(player[2]) + " "*(10-len(player[2])) + str(player[3]) 
