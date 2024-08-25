@@ -18,6 +18,7 @@ import zaibatsu
 from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds
 import random
 from mythicImage import mythicImage
+from worldplayers import world_players
 
 devFlag = False
 
@@ -358,6 +359,19 @@ async def uniform(interaction: discord.Interaction, username: str):
         logging.debug("Choose rank message sent")
     except Exception as e:
         logging.exception(f"unhandled exception in uniform {e}")
+@bot.tree.command(name="wc")
+@app_commands.describe(world="world: ")
+async def wc(interaction: discord.Interaction, world: str):
+    world_players = world_players(world):
+    embed = discord.Embed(
+        color = discord.Colour.yellow(),
+        title = f"players online on WC{world}"
+    )
+    for player in world_players:
+        embed.add_field(name = world_players[0], value = world_players[1] + " " world_players[2] + " " + world_players[3])
+
+    await interaction.response.send_message(embed = embed)
+        
 
 # Background task: Fetch and display online players
 @tasks.loop(seconds=30)
