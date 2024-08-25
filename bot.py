@@ -360,9 +360,13 @@ async def uniform(interaction: discord.Interaction, username: str):
         logging.debug("Choose rank message sent")
     except Exception as e:
         logging.exception(f"unhandled exception in uniform {e}")
+
+
 @bot.tree.command(name="wc")
 @app_commands.describe(world="world: ")
 async def wc(interaction: discord.Interaction, world: str):
+    channel = interaction.channel
+    await interaction.response.send_message("request acknowledged please wait")
     the_world_players = await world_players(world)
 
     message = f"Players online on WC{world}"
@@ -372,9 +376,11 @@ async def wc(interaction: discord.Interaction, world: str):
     if len(message) > 2000:
         buffer = StringIO(message)
         f = discord.File(buffer, filename="playersonline.txt")
-        await interaction.response.send_message(file = f)
+        
+        await channel.send(file = f)
         return
-    await interaction.response.send_message(message)
+        
+    await channel.send(message)
         
 
 # Background task: Fetch and display online players
