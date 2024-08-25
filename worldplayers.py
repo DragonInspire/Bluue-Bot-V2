@@ -36,7 +36,7 @@ async def world_players(world):
         if player[1] == "None":
             null_sorted_list.append(player)
 
-    null_sorted_list = sorted(null_sorted_list, key = lambda player: player[3])
+    null_sorted_list = reversed(sorted(null_sorted_list, key = lambda player: player[3]))
     for player in players_data:
         if player[1] != "None":
             null_sorted_list.append(player)
