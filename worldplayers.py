@@ -1,7 +1,7 @@
-import requests
+from online import fetch_data
 def world_players(world):
     API_URL=f"https://beta-api.wynncraft.com/v3/player?server={world}"
-    reply = requests.get(API_URL).json()
+    reply = fetch_data(API_URL)
 
     players = reply["players"]
 
@@ -10,7 +10,7 @@ def world_players(world):
 
     players_data = []
     for player in player_list:
-        player_data = requests.get(f"https://beta-api.wynncraft.com/v3/player/{player}?fullResult").json()
+        player_data = fetch_data(f"https://beta-api.wynncraft.com/v3/player/{player}?fullResult")
         try:
             guild = player_data["guild"]["name"]
         except:
