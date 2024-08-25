@@ -369,7 +369,7 @@ async def wc(interaction: discord.Interaction, world: str):
     for player in the_world_players:
         message += "\n" + str(the_world_players[0]) + " " + stats
 
-    await interaction.response.send_message(text = message)
+    await interaction.response.send_message(message)
         
 
 # Background task: Fetch and display online players
