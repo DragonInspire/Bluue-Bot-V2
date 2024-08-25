@@ -19,6 +19,8 @@ async def world_players(world):
             characters = player_data["characters"]
             try:
                 rank = player_data["supportRank"]
+                if rank == None:
+                    raise "AHHHH"
             except:
                 rank = "None"
             firstjoin = player_data["firstJoin"]
