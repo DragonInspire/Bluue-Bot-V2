@@ -17,7 +17,7 @@ async def world_players(world):
             guild = "None"
         try:
             characters = player_data["characters"]
-            rank = player_data["shortenedRank"]
+            rank = player_data["supportRank"]
             firstjoin = player_data["firstJoin"]
             highest_level = 0
             for characteruuid in characters:
