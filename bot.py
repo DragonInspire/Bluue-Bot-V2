@@ -362,7 +362,7 @@ async def uniform(interaction: discord.Interaction, username: str):
 @bot.tree.command(name="wc")
 @app_commands.describe(world="world: ")
 async def wc(interaction: discord.Interaction, world: str):
-    world_players = world_players(world):
+    world_players = world_players(world)
     embed = discord.Embed(
         color = discord.Colour.yellow(),
         title = f"players online on WC{world}"
