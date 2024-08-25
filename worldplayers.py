@@ -40,4 +40,4 @@ async def world_players(world):
             null_sorted_list.append(player)
 
 
-    return players_data
+    return null_sorted_list
