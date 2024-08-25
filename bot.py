@@ -372,7 +372,7 @@ async def wc(interaction: discord.Interaction, world: str):
     message = f" \t  \t  Players online on WC{world}"
     
     for player in the_world_players:
-        message += "\n" + str(player[0]) + " "*(18-len(player[0])) + " " + str(player[1]) + " "*(30-len(player[1]))  + str(player[2]) + " "*(10-len(player[2])) + str(player[3]) + " "*(4-len(player[3])  + str(player[4]) + + " "*(10-len(player[4]) +  str(player[5])
+        message += "\n" + str(player[0]) + " "*(18-len(player[0])) + " " + str(player[1]) + " "*(30-len(player[1]))  + str(player[2]) + " "*(10-len(player[2])) + str(player[3]) + " "*(4-len(player[3])  + str(player[4]) + " "*(10-len(player[4]) +  str(player[5])
     if len(message) > 2000:
         buffer = StringIO(message)
         f = discord.File(buffer, filename="playersonline.txt")
