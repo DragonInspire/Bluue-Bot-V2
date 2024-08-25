@@ -367,8 +367,9 @@ async def wc(interaction: discord.Interaction, world: str):
         color = discord.Colour.yellow(),
         title = f"players online on WC{world}"
     )
+    stats = str(world_players[1]) + " " str(world_players[2]) + " " + str(world_players[3])
     for player in world_players:
-        embed.add_field(name = world_players[0], value = world_players[1] + " " world_players[2] + " " + world_players[3])
+        embed.add_field(name = world_players[0], value = stats)
 
     await interaction.response.send_message(embed = embed)
         
