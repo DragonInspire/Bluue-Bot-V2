@@ -18,7 +18,7 @@ async def world_players(world):
         try:
             characters = player_data["characters"]
             rank = player_data["rank"]
-            firstjoin = player_data[firstJoin]
+            firstjoin = player_data["firstJoin"]
             highest_level = 0
             for characteruuid in characters:
                 if characters[characteruuid]["level"] > highest_level:
