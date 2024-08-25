@@ -370,8 +370,9 @@ async def wc(interaction: discord.Interaction, world: str):
     the_world_players = await world_players(world)
 
     message = f"Players online on WC{world}"
-    stats = str(the_world_players[1]) + " " + str(the_world_players[2]) + " " + str(the_world_players[3])
+    
     for player in the_world_players:
+        stats = str(the_world_players[1]) + " " + str(the_world_players[2]) + " " + str(the_world_players[3])
         message += "\n" + str(the_world_players[0]) + " " + stats
     if len(message) > 2000:
         buffer = StringIO(message)
