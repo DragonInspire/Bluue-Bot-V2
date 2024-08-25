@@ -29,7 +29,7 @@ async def world_players(world):
 
         players_data.append([player, guild, highest_level_name, highest_level])
 
-    null_sorted_list
+    null_sorted_list = []
     for player in player_data:
         if player_data[1] == "none":
             null_sorted_list.append(player)
