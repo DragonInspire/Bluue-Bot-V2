@@ -1,5 +1,5 @@
 from online import fetch_data
-def world_players(world):
+async def world_players(world):
     API_URL=f"https://beta-api.wynncraft.com/v3/player?server={world}"
     reply = await fetch_data(API_URL)
 
