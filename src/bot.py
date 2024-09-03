@@ -7,13 +7,10 @@ from discord.ui import Select, View
 from uniform import overlay_images
 from online import get_online_players_with_data, FetchDataException, GuildDataException, fetch_data
 from war import war_track, getWarData
-from datetime import datetime
-from pytz import timezone
 from xp_tracking import contributions
 from dotenv import load_dotenv
 import os
 from wynntils_parse import decode_item
-import requests
 import zaibatsu
 from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds, parsePrice, getProfit
 import random
