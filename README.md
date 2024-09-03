@@ -18,7 +18,7 @@ pip install -r requirements.txt
 You can run this discord bot using `python`:
 
 ```bash
-python bot.py
+python src/bot.py
 ```
 
 ## License
