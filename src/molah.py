@@ -9,7 +9,10 @@ def loadData():
     data = None
     try:
         with open(DATA_FILE, "r") as file:
-            data = json.load(file)
+            # read as string convert to lower case and then json. Don't break on old file when using new case insensitive code
+            data_str = file.read().lower()
+            data = json.loads(data_str)
+            # data = json.load(file)
     except FileNotFoundError as e:
         # Handle the case where the file doesn't exist
         logging.error(f"File not found: {e}")

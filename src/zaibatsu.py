@@ -13,7 +13,10 @@ def loadData():
     data = None
     try:
         with open(DATA_FILE, "r") as file:
-            data = json.load(file)
+            # read as string convert to lower case and then json. Don't break on old file when using new case insensitive code
+            data_str = file.read().lower()
+            data = json.loads(data_str)
+            # data = json.load(file)
     except FileNotFoundError as e:
         # Handle the case where the file doesn't exist
         logging.error(f"File not found: {e}")
@@ -54,13 +57,15 @@ def bought(playerName, mythicName, overall="", cost="", status="in bank", notes=
     
     priceInt = parsePrice(cost)
 
-    writeData(data)
-
+    out_message = "added"
     if playerName == "guild":
         molah.spend(priceInt)
-        return "added to guild"
+        out_message = "added to guild"
 
-    return "added"
+    # put write after moloh so if there is a crash don't write a partial update
+    writeData(data)
+
+    return out_message
      
 def update(playerName, mythicName, overall="", cost=None, status=None, notes=None, date=None, wynntils=None):
     data = loadData()
@@ -123,13 +128,16 @@ def sold(playerName, mythicName, overall="", price=""):
     profitInt = priceInt - costInt
     profit = toPriceStr(profitInt)
 
-    writeData(data)
+    out_msg = "profit: "
 
     if playerName == "guild":
         molah.profit(priceInt, profitInt)
-        return "guild sold for profit: " + profit
+        out_msg = "guild sold for profit: "
 
-    return "profit: " + profit
+    # put write after moloh so if there is a crash don't write a partial update
+    writeData(data)
+
+    return out_msg + profit
 
 def view(playerName, mythicName, overall=""):
     data = loadData()
@@ -137,7 +145,9 @@ def view(playerName, mythicName, overall=""):
     if " ".join((playerName, mythicName, overall)) not in data:
         return "this mythic is not in bank"
     
-    return json.dumps(" ".join((playerName, mythicName, overall))) + " : " + json.dumps(data[" ".join((playerName, mythicName, overall))])
+    mythic_data = data[" ".join((playerName, mythicName, overall))]
+    del mythic_data["wynntils"]
+    return json.dumps(" ".join((playerName, mythicName, overall))) + " : " + json.dumps(mythic_data)
 
 def listBank(detailed=False):
     data = loadData()

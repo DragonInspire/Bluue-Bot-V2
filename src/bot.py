@@ -92,7 +92,7 @@ async def on_ready():
 @app_commands.describe(amount="stack and le invest #stx #le: ")
 async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
     try:
-        invest(player_name, amount)
+        invest(player_name.lower(), amount.lower())
         await interaction.response.send_message(f"{player_name} investment of {amount} sucessful")
     except Exception as e:
         logging.info(e)
@@ -104,7 +104,7 @@ async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, am
 @app_commands.describe(amount="stack and le invest #stx #le: ")
 async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
     try:
-        withdraw(player_name, amount)
+        withdraw(player_name.lower(), amount.lower())
         await interaction.response.send_message(f"{player_name} withdraw of {amount} sucessful")
     except Exception as e:
         logging.info(e)
@@ -115,7 +115,7 @@ async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, 
 @app_commands.describe(amount="stack and le invest #stx #le: ")
 async def zaibatsu_addfrozen(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
     try:
-        invest(player_name, amount, categories=("frozen",))
+        invest(player_name.lower(), amount.lower(), categories=("frozen", "initial"))
         await interaction.response.send_message(f"{player_name} addfrozen of {amount} sucessful")
     except Exception as e:
         logging.info(e)
@@ -126,7 +126,7 @@ async def zaibatsu_addfrozen(interaction: discord.Interaction, player_name: str,
 @app_commands.describe(amount="stack and le invest #stx #le: ")
 async def zaibatsu_rmfrozen(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
     try:
-        withdraw(player_name, amount, categories=("frozen",))
+        withdraw(player_name.lower(), amount.lower(), categories=("frozen", "initial"))
         await interaction.response.send_message(f"{player_name} rmfrozen of {amount} sucessful")
     except Exception as e:
         logging.info(e)
@@ -135,10 +135,12 @@ async def zaibatsu_rmfrozen(interaction: discord.Interaction, player_name: str, 
 @zaibatsu_group.command(name="investmentlist")
 async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing.Optional[bool] = False, frozen: typing.Optional[bool] = False, initial: typing.Optional[bool] = False, profit: typing.Optional[bool] = False):
     #try:
+
     cat = "raw"
     if raw:
         cat = "raw"
     elif frozen:
+        
         cat = "frozen"
     elif initial:
         cat = "initial"
@@ -153,7 +155,12 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
         colour = discord.Colour.dark_teal(),
         title = f"Mythic Bank Investments {cat}"
     )
-    embed.set_thumbnail(url="https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414")
+
+    if frozen:
+        embed.set_thumbnail(url=mythicImage("UNID"))
+    else:
+        embed.set_thumbnail(url="https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414")
+    
     for player in investments.keys():
         embed.add_field(name=player, value=investments[player])
 
@@ -173,9 +180,14 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
 @app_commands.describe(notes="anything else")
 @app_commands.describe(wynntils="wynntils string")
 async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
-                          cost: typing.Optional[str] = "0", status: typing.Optional[str] = "in bank",
+                          cost: typing.Optional[str] = "0", status: typing.Optional[str] = "bank",
                            notes: typing.Optional[str] = "", wynntils: typing.Optional[str] = ""):
-    out = zaibatsu.bought(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes, wynntils=wynntils)
+    out = zaibatsu.bought(player_name.lower(), 
+                          mythic_name.lower(), 
+                          overall=overall.lower(), 
+                          cost=cost.lower(), 
+                          status=status.lower(), 
+                          notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
 @zaibatsu_group.command(name="update")
@@ -189,7 +201,12 @@ async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, playe
 async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                           cost: typing.Optional[str] = None, status: typing.Optional[str] = None,
                            notes: typing.Optional[str] = None, wynntils: typing.Optional[str] = None):
-    out = zaibatsu.update(player_name, mythic_name, overall=overall, cost=cost, status=status, notes=notes, wynntils=wynntils)
+    out = zaibatsu.update(player_name.lower(), 
+                          mythic_name.lower(), 
+                          overall=overall.lower(), 
+                          cost=cost.lower(), 
+                          status=status.lower(), 
+                          notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
 @zaibatsu_group.command(name="rename")
@@ -201,7 +218,19 @@ async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, pl
 @app_commands.describe(new_overall="item percent or other unique id")
 async def zaibatsu_rename(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                 new_mythic_name: typing.Optional[str] = None, new_player_name: typing.Optional[str] = None, new_overall: typing.Optional[str] = None):
-    out = zaibatsu.rename(player_name, mythic_name, overall=overall, new_mythic_name=new_mythic_name, new_player_name=new_player_name, new_overall=new_overall)
+    # can't use lower if its None, and None is different from empty string here in that it doesn't reassign the existing value
+    if new_mythic_name is not None:
+        new_mythic_name = new_mythic_name.lower()
+    if new_player_name is not None:
+        new_player_name = new_player_name.lower()
+    if new_overall is not None:
+        new_overall = new_overall.lower()
+    out = zaibatsu.rename(player_name.lower(),
+                          mythic_name.lower(),
+                          overall=overall.lower(),
+                          new_mythic_name=new_mythic_name,
+                          new_player_name=new_player_name,
+                          new_overall=new_overall)
     await interaction.response.send_message(out)
 
 @zaibatsu_group.command(name="sell")
@@ -211,7 +240,7 @@ async def zaibatsu_rename(interaction: discord.Interaction, mythic_name: str, pl
 @app_commands.describe(price="sell price")
 async def zaibatsu_sell(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", 
                           price: typing.Optional[str] = "0"):
-    out = zaibatsu.sold(player_name, mythic_name, overall=overall, price=price)
+    out = zaibatsu.sold(player_name.lower(), mythic_name.lower(), overall=overall.lower(), price=price.lower())
     await interaction.response.send_message(out)
 
 @zaibatsu_group.command(name="view")
@@ -219,7 +248,7 @@ async def zaibatsu_sell(interaction: discord.Interaction, mythic_name: str, play
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
 async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = ""):
-    out = zaibatsu.view(player_name, mythic_name, overall=overall)
+    out = zaibatsu.view(player_name.lower(), mythic_name.lower(), overall=overall.lower())
     await interaction.response.send_message(out)
 
 @zaibatsu_group.command(name="list")
@@ -253,7 +282,7 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
 @app_commands.describe(nori_command="check weigh pricecheck or any other nori command that takes wynntils string")
 async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, player_name: str, overall: typing.Optional[str] = "", nori_command: typing.Optional[str] = "weigh"):
     try:
-        wynntils = zaibatsu.getWynntils(player_name, mythic_name, overall=overall)
+        wynntils = zaibatsu.getWynntils(player_name.lower(), mythic_name.lower(), overall=overall.lower())
     except:
         await interaction.response.send_message("item not in mythic bank, make sure to be exact")
         return
