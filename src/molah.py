@@ -2,7 +2,7 @@ import json
 import logging
 import math
 
-DATA_FILE = "../data/molah.json"
+DATA_FILE = "./data/molah.json"
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
 def loadData():
