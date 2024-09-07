@@ -270,7 +270,7 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
     message += "\n"
     mythic_list = zaibatsu.listBank(detailed=detailed)
     for player in mythic_list.keys():
-        message += player + " " + mythic_list[player] + "\n"
+        message += str(player) + " " + str(mythic_list[player]) + "\n"
     message += "\n be sure to include overall when using specific commands"
     message += "```"
     await interaction.response.send_message(message)
