@@ -33,12 +33,12 @@ async def get_online_players_with_data():
     online_players_worlds = online_players_worlds.get("players")
     online_players = list(online_players_worlds.keys())
 
-    with open("../data/guild_members.json", "r") as file:
+    with open("./data/guild_members.json", "r") as file:
         guild_members = json.load(file)
 
     online_guild_players = [{"player": player.get("player"), "world": online_players_worlds.get(player.get("player")), "rank": player.get("rank") } for player in guild_members if player.get("player") in online_players]
 
-    with open("../data/guild_members_online.json", "w") as file:
+    with open("./data/guild_members_online.json", "w") as file:
         json.dump(online_guild_players, file)
 
     if not online_guild_players:
