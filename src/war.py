@@ -47,7 +47,7 @@ def war_track():
         listOfPlayers = [player for rank in members for player, data in members[rank].items() if data.get("online")]
 
         try:
-            with open("../data/guild_members.json", "w") as file:
+            with open("./data/guild_members.json", "w") as file:
                 player_list = []
                 for rank, rank_data in members.items():
                     for player, player_data in rank_data.items():
@@ -89,12 +89,12 @@ def war_track():
                     teritories_updated.append(territory[0])
 
         # Creates territories.json if it doesnt exist
-        with open("../data/territories.json", "a+"):
+        with open("./data/territories.json", "a+"):
             pass
             
         try:
             # Load the existing territory data from a JSON file
-            with open("../data/territories.json", "r") as old_territories:
+            with open("./data/territories.json", "r") as old_territories:
                 try:
                     data = json.load(old_territories)
                 except json.JSONDecodeError as e:
@@ -132,12 +132,12 @@ def war_track():
             logging.debug("File operations completed successfully")
 
         # Creates war_data.json if it doesnt exist
-        with open("../data/war_data.json", "a+"):
+        with open("./data/war_data.json", "a+"):
             pass
 
         try:
             # Load the existing war data from a JSON file
-            with open("../data/war_data.json", "r") as storedWarData:
+            with open("./data/war_data.json", "r") as storedWarData:
                 try:
                     data_1 = json.load(storedWarData)
                 except json.JSONDecodeError as e:
@@ -173,7 +173,7 @@ def war_track():
         
         try:
             # Update the war data in the JSON file
-            with open("../data/war_data.json", "w") as storedWarData:
+            with open("./data/war_data.json", "w") as storedWarData:
                 json.dump(data_1, storedWarData)
         except FileNotFoundError as e:
             # Handle the case where the file doesn't exist
@@ -192,6 +192,6 @@ def war_track():
         # Handle the error or raise an exception as needed.
 
 def getWarData():
-    with open("../data/war_data.json", "r") as file:
+    with open("./data/war_data.json", "r") as file:
         data = json.load(file)
     return data
