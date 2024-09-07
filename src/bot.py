@@ -225,16 +225,26 @@ async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, play
 @zaibatsu_group.command(name="list")
 @app_commands.describe(detailed="include data fields")
 async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
-    embed = discord.Embed(
-        colour = discord.Colour.purple(),
-        title = "Mythic Bank"
-    )
-    embed.set_thumbnail(url="https://www.wynndata.tk/assets/images/items/v4/unidentified/mythic.png")
+    # embed = discord.Embed(
+    #     colour = discord.Colour.purple(),
+    #     title = "Mythic Bank"
+    # )
+    # embed.set_thumbnail(url="https://www.wynndata.tk/assets/images/items/v4/unidentified/mythic.png")
+    # mythic_list = zaibatsu.listBank(detailed=detailed)
+    # for player in mythic_list.keys():
+    #     embed.add_field(name=player, value=mythic_list[player], inline=False)
+    # embed.set_footer(text="be sure to include overall when using specific commands")
+    # await interaction.response.send_message(embed=embed)
+    message = "```"
+    message += "Mythic Bank"
+    message += "\n"
     mythic_list = zaibatsu.listBank(detailed=detailed)
     for player in mythic_list.keys():
-        embed.add_field(name=player, value=mythic_list[player], inline=False)
-    embed.set_footer(text="be sure to include overall when using specific commands")
-    await interaction.response.send_message(embed=embed)
+        message += player + " " + mythic_list[player] + "\n"
+    message += "\n be sure to include overall when using specific commands"
+    message += "```"
+    await interaction.response.send_message(message)
+    
 
 @zaibatsu_group.command(name="display")
 @app_commands.describe(mythic_name="mythicName:")
