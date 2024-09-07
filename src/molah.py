@@ -160,7 +160,7 @@ def getProfit():
         player_profit = 0
         for cat, mult in categories.items():
             player_profit += data[player][cat] * mult
-        if not player == "total":
+        if player != "total" and player_profit != 0:
             logging.debug(player_profit)
             out[player] = ""
             out[player] += toPriceStr(player_profit)
@@ -170,9 +170,10 @@ def getProfit():
     for cat, mult in categories.items():
         guildAmount += guildAmountNoLoad(data, cat) * mult
     logging.debug(guildAmount)
-    out["guild"] = ""
-    out["guild"] += toPriceStr(guildAmount)
-    out["guild"] += "\n" + f"{emeraldTypesToEmeralds(guildAmount)}" + " em"
+    if guildAmount != 0:
+        out["guild"] = ""
+        out["guild"] += toPriceStr(guildAmount)
+        out["guild"] += "\n" + f"{emeraldTypesToEmeralds(guildAmount)}" + " em"
 
     totalAmount = 0
     for cat, mult in categories.items():
