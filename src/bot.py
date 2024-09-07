@@ -17,6 +17,7 @@ import random
 from mythicImage import mythicImage
 from worldplayers import world_players
 from io import StringIO
+from datetime import datetime
 
 devFlag = False
 
@@ -588,8 +589,13 @@ async def war_update():
     except Exception as e:
         logging.exception(f"unhandled exception in war update {e}")
 '''
-@tasks.loop(hours=24)
+@tasks.loop(minutes=1)
 async def xp_leaderboard():
+    now = datetime.now()
+    if now.hour != 24:
+        return
+    if now.minute != 0:
+        return
     try:
         daily_contributions = contributions()
         if len(daily_contributions) == 0:
@@ -615,7 +621,7 @@ async def xp_leaderboard():
 
 @tasks.loop(minutes=1)
 async def change_status():
-    messages = ["/uniform", "/zaibatsu"]
+    messages = ["/uniform", "/zaibatsu", "/wc"]
     choice = random.choice(messages)
     await bot.change_presence(activity=discord. Activity(type=discord.ActivityType.watching, name=choice))
 
