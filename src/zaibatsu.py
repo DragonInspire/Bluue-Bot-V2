@@ -4,7 +4,7 @@ from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
-DATA_FILE = "../data/zaibatsu.json"
+DATA_FILE = "./data/zaibatsu.json"
 
 import molah
 from molah import parsePrice, toPriceStr
