@@ -116,7 +116,7 @@ def war_track():
             logging.debug("File operations completed successfully")
         try:
             # Update the territory data in the JSON file
-            with open("../data/territories.json", "w") as old_territories:
+            with open("./data/territories.json", "w") as old_territories:
                 json.dump(teritories_updated, old_territories)
         except FileNotFoundError as e:
             # Handle the case where the file doesn't exist
