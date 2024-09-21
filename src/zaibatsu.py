@@ -128,16 +128,15 @@ def sold(playerName, mythicName, overall="", price=""):
     profitInt = priceInt - costInt
     profit = toPriceStr(profitInt)
 
-    out_msg = "profit: "
+    out_msg = "profit: " + profit
 
     if playerName == "guild":
-        molah.profit(priceInt, profitInt)
-        out_msg = "guild sold for profit: "
+        out_msg = molah.profit(priceInt, profitInt)
 
     # put write after moloh so if there is a crash don't write a partial update
     writeData(data)
 
-    return out_msg + profit
+    return out_msg
 
 def view(playerName, mythicName, overall=""):
     data = loadData()

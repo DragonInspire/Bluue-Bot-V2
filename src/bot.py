@@ -138,29 +138,30 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
     #try:
 
     cat = "raw"
+    colour = discord.Colour.dark_teal()
+    img_link = "https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414"
     if raw:
         cat = "raw"
     elif frozen:
-        
         cat = "frozen"
+        colour = discord.Colour.dark_purple()
+        img_link = mythicImage("UNID")
     elif initial:
         cat = "initial"
+        colour = discord.Colour.dark_blue()
 
     if profit:
         cat = "profit"
+        colour = discord.Colour.dark_gold()
         investments = getProfit()
     else:
         investments = getInvestments(cat)
 
     embed=discord.Embed(
-        colour = discord.Colour.dark_teal(),
+        colour = colour,
         title = f"Mythic Bank Investments {cat}"
     )
-
-    if frozen:
-        embed.set_thumbnail(url=mythicImage("UNID"))
-    else:
-        embed.set_thumbnail(url="https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414")
+    embed.set_thumbnail(url=img_link)
     
     for player in investments.keys():
         embed.add_field(name=player, value=investments[player])
