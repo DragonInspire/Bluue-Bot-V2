@@ -138,29 +138,30 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
     #try:
 
     cat = "raw"
+    colour = discord.Colour.dark_teal()
+    img_link = "https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414"
     if raw:
         cat = "raw"
     elif frozen:
-        
         cat = "frozen"
+        colour = discord.Colour.dark_purple()
+        img_link = mythicImage("UNID")
     elif initial:
         cat = "initial"
+        colour = discord.Colour.dark_blue()
 
     if profit:
         cat = "profit"
+        colour = discord.Colour.dark_gold()
         investments = getProfit()
     else:
         investments = getInvestments(cat)
 
     embed=discord.Embed(
-        colour = discord.Colour.dark_teal(),
+        colour = colour,
         title = f"Mythic Bank Investments {cat}"
     )
-
-    if frozen:
-        embed.set_thumbnail(url=mythicImage("UNID"))
-    else:
-        embed.set_thumbnail(url="https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414")
+    embed.set_thumbnail(url=img_link)
     
     for player in investments.keys():
         embed.add_field(name=player, value=investments[player])
@@ -252,6 +253,13 @@ async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, play
     out = zaibatsu.view(player_name.lower(), mythic_name.lower(), overall=overall.lower())
     await interaction.response.send_message(out)
 
+async def interaction_respond_or_follow(interaction: discord.Interaction, message):
+    responded = interaction.response.is_done()
+    if not responded:
+        await interaction.response.send_message(message)
+    else:
+        await interaction.followup.send(content=message)
+
 @zaibatsu_group.command(name="list")
 @app_commands.describe(detailed="include data fields")
 async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
@@ -268,12 +276,21 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
     message = "```"
     message += "Mythic Bank"
     message += "\n"
+    msg_rows = 1
+    max_msg_rows = 10 if detailed else 30
     mythic_list = zaibatsu.listBank(detailed=detailed)
     for player in mythic_list.keys():
         message += str(player) + " " + str(mythic_list[player]) + "\n"
-    message += "\n be sure to include overall when using specific commands"
+        msg_rows += 1
+        if msg_rows >= max_msg_rows:
+            message += "```"
+            await interaction_respond_or_follow(interaction, message)
+            message = "```"
+            msg_rows = 0
+
+    message += "\nBe sure to include overall when using specific commands"
     message += "```"
-    await interaction.response.send_message(message)
+    await interaction_respond_or_follow(interaction, message)
     
 
 @zaibatsu_group.command(name="display")

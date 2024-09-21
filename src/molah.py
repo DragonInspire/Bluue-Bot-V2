@@ -235,17 +235,26 @@ def profit(priceInt, profitIntOrig):
     profitInt = profitIntOrig
     
     # guild cut of profit or loss
-    guild_cut = 0
+    guild_cut_for_profit = 0.2
+    guild_cut_for_loot = 0.05
+
+    guild_cut = guild_cut_for_profit
+    if priceInt == profitIntOrig: # loot has cost of 0, so full price is profit use 5% cut instead
+        guild_cut = guild_cut_for_loot
+
+    # temp values
     guild_cut_loss = 0
     guild_cut_raw_loss = 0
+    return_msg = ""
+
     if profitInt > 0: # profit
-        guild_cut = 0.2
         profitInt *= 1.0 - guild_cut
+        return_msg = f"Guild {guild_cut*100}% cut of profit {toPriceStr(int(math.floor(profitIntOrig - profitInt)))}"
     else: # loss
-        guild_cut = 0.2
         guild_cut_loss = -1*profitInt * guild_cut
         if guild_cut_loss < guildFrozen:
             profitInt += guild_cut_loss
+            return_msg = f"Guild {guild_cut*100}% cut of loss {toPriceStr(int(math.floor(guild_cut_loss)))}"
         else:
             logging.info(f"guild cant afford loss of {guild_cut_loss} from frozen {guildFrozen}")
             profitInt += guildFrozen
@@ -256,6 +265,7 @@ def profit(priceInt, profitIntOrig):
                 logging.info(f"guild cant afford loss of {guild_cut_raw_loss} from raw {guildRaw}")
                 guild_cut_raw_loss = guildRaw
             guild_cut_raw_loss = int(math.floor(guild_cut_raw_loss))
+            return_msg = f"Guild {guild_cut*100}% cut of loss {toPriceStr(guildFrozen)} in frozen and {toPriceStr(guild_cut_raw_loss)} in raw"
 
     # logging.info(f"profitInt {profitInt}")
 
@@ -301,6 +311,8 @@ def profit(priceInt, profitIntOrig):
     data["total"]["frozen"] -= priceInt
     data["total"]["raw"] += priceInt
     writeData(data)
+
+    return return_msg
 
 
 def spend(priceInt):
