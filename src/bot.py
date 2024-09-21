@@ -609,7 +609,7 @@ async def war_update():
 @tasks.loop(minutes=1)
 async def xp_leaderboard():
     now = datetime.now()
-    if now.hour != 24:
+    if now.hour != 0:
         return
     if now.minute != 0:
         return
