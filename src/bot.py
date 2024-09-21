@@ -253,6 +253,13 @@ async def zaibatsu_view(interaction: discord.Interaction, mythic_name: str, play
     out = zaibatsu.view(player_name.lower(), mythic_name.lower(), overall=overall.lower())
     await interaction.response.send_message(out)
 
+async def interaction_respond_or_follow(interaction: discord.Interaction, message):
+    responded = interaction.response.is_done()
+    if not responded:
+        await interaction.response.send_message(message)
+    else:
+        await interaction.followup.send(content=message)
+
 @zaibatsu_group.command(name="list")
 @app_commands.describe(detailed="include data fields")
 async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
@@ -269,12 +276,21 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
     message = "```"
     message += "Mythic Bank"
     message += "\n"
+    msg_rows = 1
+    max_msg_rows = 10 if detailed else 30
     mythic_list = zaibatsu.listBank(detailed=detailed)
     for player in mythic_list.keys():
         message += str(player) + " " + str(mythic_list[player]) + "\n"
-    message += "\n be sure to include overall when using specific commands"
+        msg_rows += 1
+        if msg_rows >= max_msg_rows:
+            message += "```"
+            await interaction_respond_or_follow(interaction, message)
+            message = "```"
+            msg_rows = 0
+
+    message += "\nBe sure to include overall when using specific commands"
     message += "```"
-    await interaction.response.send_message(message)
+    await interaction_respond_or_follow(interaction, message)
     
 
 @zaibatsu_group.command(name="display")
