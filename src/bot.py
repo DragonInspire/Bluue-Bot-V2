@@ -139,7 +139,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
 
     cat = "raw"
     colour = discord.Colour.dark_teal()
-    img_link = "https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414"
+    img_link = mythicImage("Raw")
     if raw:
         cat = "raw"
     elif frozen:
@@ -152,6 +152,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
 
     if profit:
         cat = "profit"
+        img_link = mythicImage("GoldRaw")
         colour = discord.Colour.dark_gold()
         investments = getProfit()
     else:
