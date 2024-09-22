@@ -49,7 +49,10 @@ mythic_adress = {"Convergence": "https://www.wynndata.tk/assets/images/items/v4/
                 "Apocalypse": "https://www.wynndata.tk/assets/images/items/v4//spear/spear--fire3.png",
                 "Archangel": "https://www.wynndata.tk/assets/images/items/v4//spear/spear--air3.png",
                 "Pure": "https://www.wynndata.tk/assets/images/items/v4//wand/wand--generic1.png",
-                "Unknown": "https://www.wynndata.tk/assets/images/items/v4/unidentified/mythic.png"}
+                "Unknown": "https://www.wynndata.tk/assets/images/items/v4/unidentified/mythic.png",
+                # other
+                "Raw": "https://static.wikia.nocookie.net/wynncraft_gamepedia_en/images/8/8c/Experience_bottle.png/revision/latest/scale-to-width-down/100?cb=20190118234414",
+                "GoldRaw": "https://media.discordapp.net/attachments/1242626657190281270/1287192494374916150/Experience_bottle3.png?ex=66f14fad&is=66effe2d&hm=8b9d2d59fcc107ef067961f6f50c7bca79eaa1d22991a2b1a139ffa84bb57e4c&"}
 
 def mythicImage(mythic_name):
   try:
