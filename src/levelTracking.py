@@ -1,4 +1,4 @@
-import grequests
+import aiohttp
 import json
 import logging
 
@@ -10,27 +10,27 @@ GUILD_MEMBERS_URL = f"https://api.wynncraft.com/v3/guild/{GUILD_NAME}"
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
 async def fetch_data(url_list):
-    requests = (grequests.get(url) for url in url_list)
-    responses = grequests.map(requests)
-    readable_data = []
-    for response in responses:
-        try:
-            if response.status_code == 200:
-                data = response.json()
-                readable_data.append(data)
-            else:
-                raise Exception('Request failed with status code:', response.status_code) 
-        except Exception as e:
-            logging.error(e)
-    return readable_data
-    
+        responses = []
+        async with aiohttp.ClientSession() as session:
+            try:
+                for url in url_list:
+                    try:
+                        async with session.get(url) as response:
+                            response.raise_for_status()
+                            responses.append(await response.json())
+                    except Exception as e:
+                        logging.error(e)
+            except aiohttp.ClientError as e:
+                logging.error(f"Error fetching data from {url}: {e}")
+            return responses
+
 async def track_guild_members():
     new_players = []
     old_players = []
     left_players = []
     try:
-        my_response = await fetch_data([GUILD_MEMBERS_URL])
-        members = my_response[0].get("members")
+        my_request = await fetch_data([GUILD_MEMBERS_URL])
+        members = my_request[0].get("members")
         members.pop("total")
 
         with open("./data/guild_members.json", "r") as file:
@@ -38,15 +38,21 @@ async def track_guild_members():
 
         old_player_list = [player["player"] for player in guild_list]
 
+        change_name = {"Reptain94": "Repta1n", "RhodieCub": "RhodyCub", "_Dl3G0_": "Neodym__", "SpeedyDrago": "GalacticCalamity", "ReasonWhy": "ReasOS", "Aceshigh2007": "Cycle_Overloaded"}
+        remove_list = ["TheNameIsBuch", "SaxTheSaxophone", "_ClaudzHero4", "OhAnny"]
+
         player_list = []
         for rank, rank_data in members.items():
             for player, player_data in rank_data.items():
-                world = player_data.get("server")
-                player_list.append({"player": player, "world": world, "rank": rank})
-                if player in old_player_list:
-                    old_players.append(player)
-                else:
-                    new_players.append(player)   
+                if player not in remove_list:
+                    if player in change_name:
+                        player = change_name[player]
+                    world = player_data.get("server")
+                    player_list.append({"player": player, "world": world, "rank": rank})
+                    if player in old_player_list:
+                        old_players.append(player)
+                    else:
+                        new_players.append(player)   
 
         with open("./data/guild_members.json", "w") as file:             
             json.dump(player_list, file)
@@ -54,11 +60,10 @@ async def track_guild_members():
         for my_player in old_player_list:
             if my_player not in old_players and my_player not in new_players:
                 left_players.append(my_player)
-
-        return {"newPlayers": new_players, "leftPlayers": left_players}
         
     except Exception as e:
         logging.error(e)
+    return {"newPlayers": new_players, "leftPlayers": left_players}
     
     
 
@@ -102,6 +107,7 @@ async def level_tracking():
                 player_class_levels.append(my_dict)
         except Exception as e: 
             logging.error(e)
+            logging.error("the player object it died on was " + str(player))
 
     with open("./data/player_data.json", "w") as file:
         json.dump(player_class_levels, file)
