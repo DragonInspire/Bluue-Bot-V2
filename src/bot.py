@@ -630,7 +630,7 @@ async def leveling():
         channel.send(f"{player} left the guild")
     
     for level_up in level_ups:
-        channel.send(f"{level_up["username"]} reached {level_up["type"]} {level_up["milestone"]} on {level_up["class"]}")
+        channel.send(level_up["username"] + " reached " + level_up["type"] + " " + level_up["milestone"] + " on " + level_up["class"])
 
 @tasks.loop(minutes=1)
 async def xp_leaderboard():
