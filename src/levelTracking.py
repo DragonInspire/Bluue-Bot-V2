@@ -29,7 +29,8 @@ async def track_guild_members():
     old_players = []
     left_players = []
     try:
-        members = await fetch_data([GUILD_MEMBERS_URL])[0].get("members")
+        my_response = await fetch_data([GUILD_MEMBERS_URL])
+        members = my_response[0].get("members")
         members.pop("total")
 
         with open("./data/guild_members.json", "r") as file:
