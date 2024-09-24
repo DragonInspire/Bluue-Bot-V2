@@ -618,19 +618,24 @@ async def farplane_online():
 @tasks.loop(minutes=10)
 async def leveling():
     channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
-    player_update = await track_guild_members()
-    new_players = player_update["newPlayers"]
-    left_players = player_update["leftPlayers"]
+    try:
+        player_update = await track_guild_members()
+        new_players = player_update["newPlayers"]
+        left_players = player_update["leftPlayers"]
+        for player in new_players:
+            await channel.send(f"{player} joined the guild")
+        for player in left_players:
+            await channel.send(f"{player} left the guild")
+    except Exception as e:
+        logging.error("BAD THINGS HAPPENED player update is " + str(player_update) + " " + str(e))
 
-    level_ups = await level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
+    try:
+        level_ups = await level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
 
-    for player in new_players:
-        channel.send(f"{player} joined the guild")
-    for player in left_players:
-        channel.send(f"{player} left the guild")
-    
-    for level_up in level_ups:
-        channel.send(level_up["username"] + " reached " + level_up["type"] + " " + level_up["milestone"] + " on " + level_up["class"])
+        for level_up in level_ups:
+            await channel.send(level_up["username"] + " reached " + level_up["type"] + " " + level_up["milestone"] + " on " + level_up["class"])
+    except Exception as e:
+        logging.error("EVEN MORE BAD THINGS HAPPENED levelups is " + str(level_ups) + " " + str(e))
 
 @tasks.loop(minutes=1)
 async def xp_leaderboard():
