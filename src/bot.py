@@ -6,7 +6,7 @@ from discord import app_commands
 from discord.ui import Select, View
 from uniform import overlay_images
 from online import get_online_players_with_data, FetchDataException, GuildDataException, fetch_data
-from war import war_track, getWarData
+#from war import war_track, getWarData
 from xp_tracking import contributions
 from dotenv import load_dotenv
 import os
@@ -18,6 +18,7 @@ from mythicImage import mythicImage
 from worldplayers import world_players
 from io import StringIO
 from datetime import datetime
+from levelTracking import track_guild_members, level_tracking
 
 devFlag = False
 
@@ -69,18 +70,24 @@ async def on_ready():
             logging.info("Farplane online task started")
         else:
             logging.info("farplane online already started")
-        if not war_tracking.is_running() and not devFlag:
-            war_tracking.start()
-            logging.info("War tracking task started")
+
+        if not leveling.is_running() and not devFlag:
+            leveling.start()
+            logging.info("leveling started")
         else:
-            logging.info("war tracking already started")
-        '''
-        if not war_update.is_running():
-            war_update.start()
-            logging.info("War update task started")
-        else:
-            logging.info("war update already started")
-        '''
+            logging.info("leveling already started")
+        # if not war_tracking.is_running() and not devFlag:
+        #     war_tracking.start()
+        #     logging.info("War tracking task started")
+        # else:
+        #     logging.info("war tracking already started")
+        # '''
+        # if not war_update.is_running():
+        #     war_update.start()
+        #     logging.info("War update task started")
+        # else:
+        #     logging.info("war update already started")
+        # '''
         if not xp_leaderboard.is_running() and not devFlag:
             xp_leaderboard.start()
             logging.info("xp leaderboard task started")
@@ -551,62 +558,80 @@ async def farplane_online():
     except Exception as e:
         logging.exception(f"unhandled exception in farplane online {e}")
 
-# Background task: Track wars
-@tasks.loop(minutes=10)
-async def war_tracking():
-    try:
-        war_track()
-    except Exception as e:
-        logging.error(f"unhandled exception in war tracking {e}")
-'''
-# Background task: Update war data
-@tasks.loop(minutes=10)
-async def war_update():
-    try:
-        try:
-            channel = bot.get_channel(1131996950548467782)  # Need to send a message to update
-            message = await channel.fetch_message(1170050710948294687)
-        except (discord.Forbidden, discord.NotFound) as e:
-            logging.error(f"Error: Failed to get channel or message. {e}")
-            return
+# # Background task: Track wars
+# @tasks.loop(minutes=10)
+# async def war_tracking():
+#     try:
+#         war_track()
+#     except Exception as e:
+#         logging.error(f"unhandled exception in war tracking {e}")
+# '''
+# # Background task: Update war data
+# @tasks.loop(minutes=10)
+# async def war_update():
+#     try:
+#         try:
+#             channel = bot.get_channel(1131996950548467782)  # Need to send a message to update
+#             message = await channel.fetch_message(1170050710948294687)
+#         except (discord.Forbidden, discord.NotFound) as e:
+#             logging.error(f"Error: Failed to get channel or message. {e}")
+#             return
         
-        try:
-            data = getWarData()
-        except FileNotFoundError as e:
-            # Handle the case where the file doesn't exist
-            logging.error(f"File not found: {e}")
-            await message.edit(content="Error: File not found")
-            return
-        except IOError as e:
-            # Handle other input/output errors
-            logging.error(f"IO Error: {e}")
-            await message.edit(content="Error: Output error from file")
-            return
-        except Exception as e:
-            # Handle other exceptions
-            logging.error(f"An error occurred: {e}")
-            await message.edit(content="Error: An unknown error occurred")
-        else:
-            # This block is executed if no exceptions occur
-            logging.debug("File operations completed successfully")
+#         try:
+#             data = getWarData()
+#         except FileNotFoundError as e:
+#             # Handle the case where the file doesn't exist
+#             logging.error(f"File not found: {e}")
+#             await message.edit(content="Error: File not found")
+#             return
+#         except IOError as e:
+#             # Handle other input/output errors
+#             logging.error(f"IO Error: {e}")
+#             await message.edit(content="Error: Output error from file")
+#             return
+#         except Exception as e:
+#             # Handle other exceptions
+#             logging.error(f"An error occurred: {e}")
+#             await message.edit(content="Error: An unknown error occurred")
+#         else:
+#             # This block is executed if no exceptions occur
+#             logging.debug("File operations completed successfully")
 
-        sorted_data = sorted(data, key=lambda x: x[1][0])
-        if len(sorted_data) > 10:
-            sorted_data = sorted_data[:10]
+#         sorted_data = sorted(data, key=lambda x: x[1][0])
+#         if len(sorted_data) > 10:
+#             sorted_data = sorted_data[:10]
         
-        printable_message = "**Farplane War Leaderboard**$```$"
+#         printable_message = "**Farplane War Leaderboard**$```$"
 
-        for player in sorted_data:
-            printable_message += player
-            printable_message += f" | successful wars {data[player][0]} | " 
-            printable_message += f"total wars {data[player][1]}$"
+#         for player in sorted_data:
+#             printable_message += player
+#             printable_message += f" | successful wars {data[player][0]} | " 
+#             printable_message += f"total wars {data[player][1]}$"
         
-        printable_message += f"```$Last update at {datetime.now()} UTC time"
-        printable_message = printable_message.replace("$", "\n")
-        await message.edit(content=printable_message)
-    except Exception as e:
-        logging.exception(f"unhandled exception in war update {e}")
-'''
+#         printable_message += f"```$Last update at {datetime.now()} UTC time"
+#         printable_message = printable_message.replace("$", "\n")
+#         await message.edit(content=printable_message)
+#     except Exception as e:
+#         logging.exception(f"unhandled exception in war update {e}")
+# '''
+
+@tasks.loop(minutes=10)
+async def leveling():
+    channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
+    player_update = track_guild_members()
+    new_players = player_update["newPlayers"]
+    left_players = player_update["leftPlayers"]
+
+    level_ups = level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
+
+    for player in new_players:
+        channel.send(f"{player} joined the guild")
+    for player in left_players:
+        channel.send(f"{player} left the guild")
+    
+    for level_up in level_ups:
+        channel.send(f"{level_up["username"]} reached {level_up["type"]} {level_up["milestone"]} on {level_up["class"]}")
+
 @tasks.loop(minutes=1)
 async def xp_leaderboard():
     now = datetime.now()
