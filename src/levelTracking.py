@@ -9,7 +9,7 @@ GUILD_MEMBERS_URL = f"https://api.wynncraft.com/v3/guild/{GUILD_NAME}"
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
-def fetch_data(url_list):
+async def fetch_data(url_list):
     requests = (grequests.get(url) for url in url_list)
     responses = grequests.map(requests)
     readable_data = []
@@ -24,12 +24,12 @@ def fetch_data(url_list):
             logging.error(e)
     return readable_data
     
-def track_guild_members():
+async def track_guild_members():
     new_players = []
     old_players = []
     left_players = []
     try:
-        members = fetch_data([GUILD_MEMBERS_URL])[0].get("members")
+        members = await fetch_data([GUILD_MEMBERS_URL])[0].get("members")
         members.pop("total")
 
         with open("./data/guild_members.json", "r") as file:
@@ -61,13 +61,13 @@ def track_guild_members():
     
     
 
-def level_tracking():
+async def level_tracking():
     with open("./data/guild_members.json", "r") as file:
         guild_list = json.load(file)
     
     my_player_list = [player["player"] for player in guild_list]
     my_urls = [f"https://api.wynncraft.com/v3/player/{player}?fullResult" for player in my_player_list]
-    player_data_list = fetch_data(my_urls)
+    player_data_list = await fetch_data(my_urls)
 
     prof_milestones = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130]
     player_milestones = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 103, 105, 106]

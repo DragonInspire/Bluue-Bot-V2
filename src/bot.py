@@ -618,11 +618,11 @@ async def farplane_online():
 @tasks.loop(minutes=10)
 async def leveling():
     channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
-    player_update = track_guild_members()
+    player_update = await track_guild_members()
     new_players = player_update["newPlayers"]
     left_players = player_update["leftPlayers"]
 
-    level_ups = level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
+    level_ups = await level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
 
     for player in new_players:
         channel.send(f"{player} joined the guild")
