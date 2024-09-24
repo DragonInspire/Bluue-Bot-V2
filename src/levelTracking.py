@@ -100,7 +100,7 @@ def level_tracking():
                     my_dict[profession] = professions[profession]["level"]
                 player_class_levels.append(my_dict)
         except Exception as e: 
-           logging.error(e)
+            logging.error(e)
 
     with open("./data/player_data.json", "w") as file:
         json.dump(player_class_levels, file)
