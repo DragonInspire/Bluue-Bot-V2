@@ -32,7 +32,7 @@ def track_guild_members():
         members = fetch_data([GUILD_MEMBERS_URL])[0].get("members")
         members.pop("total")
 
-        with open(".\data\guild_members.json", "r") as file:
+        with open("./data/guild_members.json", "r") as file:
             guild_list = json.load(file)
 
         old_player_list = [player["player"] for player in guild_list]
@@ -47,7 +47,7 @@ def track_guild_members():
                 else:
                     new_players.append(player)   
 
-        with open(".\data\guild_members.json", "w") as file:             
+        with open("./data/guild_members.json", "w") as file:             
             json.dump(player_list, file)
 
         for my_player in old_player_list:
@@ -62,7 +62,7 @@ def track_guild_members():
     
 
 def level_tracking():
-    with open(".\data\guild_members.json", "r") as file:
+    with open("./data/guild_members.json", "r") as file:
         guild_list = json.load(file)
     
     my_player_list = [player["player"] for player in guild_list]
@@ -74,7 +74,7 @@ def level_tracking():
     
     level_ups = []
 
-    with open(".\data\player_data.json", "r") as file:
+    with open("./data/player_data.json", "r") as file:
         stored_player_data = json.load(file)
 
     player_class_levels = []
@@ -106,5 +106,3 @@ def level_tracking():
         json.dump(player_class_levels, file)
     
     return level_ups
-
-print(level_tracking())
