@@ -2,8 +2,6 @@ import grequests
 import json
 import logging
 
-# note change the json locations back to ./data/location before pushing to repo
-
 GUILD_NAME = "The Farplane"
 GUILD_MEMBERS_URL = f"https://api.wynncraft.com/v3/guild/{GUILD_NAME}"
 
@@ -32,11 +30,11 @@ def track_guild_members():
         old_players = []
         left_players = []
 
-        with open("Bluue-Bot-V2\data\guild_members.json", "r") as file:
+        with open(".\data\guild_members.json", "r") as file:
             guild_list = json.load(file)
             old_player_list = [player["player"] for player in guild_list]
 
-        with open("Bluue-Bot-V2\data\guild_members.json", "w") as file:
+        with open(".\data\guild_members.json", "w") as file:
             player_list = []
             for rank, rank_data in members.items():
                 for player, player_data in rank_data.items():
@@ -61,7 +59,7 @@ def track_guild_members():
     
 
 def level_tracking():
-    with open("Bluue-Bot-V2\data\guild_members.json", "r") as file:
+    with open(".\data\guild_members.json", "r") as file:
         guild_list = json.load(file)
     
     my_player_list = [player["player"] for player in guild_list]
@@ -73,7 +71,7 @@ def level_tracking():
     
     level_ups = []
 
-    with open("Bluue-Bot-V2\data\player_data.json", "r") as file:
+    with open(".\data\player_data.json", "r") as file:
         stored_player_data = json.load(file)
 
     player_class_levels = []
@@ -101,7 +99,7 @@ def level_tracking():
         except Exception as e: 
            logging.error(e)
 
-    with open("Bluue-Bot-V2/data/player_data.json", "w") as file:
+    with open("./data/player_data.json", "w") as file:
         json.dump(player_class_levels, file)
     
     return level_ups
