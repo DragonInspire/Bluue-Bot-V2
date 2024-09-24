@@ -2,6 +2,8 @@ import grequests
 import json
 import logging
 
+# note change the json locations back to ./data/location before pushing to repo
+
 GUILD_NAME = "The Farplane"
 GUILD_MEMBERS_URL = f"https://api.wynncraft.com/v3/guild/{GUILD_NAME}"
 
@@ -23,34 +25,35 @@ def fetch_data(url_list):
     return readable_data
     
 def track_guild_members():
+    new_players = []
+    old_players = []
+    left_players = []
     try:
         members = fetch_data([GUILD_MEMBERS_URL])[0].get("members")
         members.pop("total")
-        new_players = []
-        old_players = []
-        left_players = []
 
         with open(".\data\guild_members.json", "r") as file:
             guild_list = json.load(file)
-            old_player_list = [player["player"] for player in guild_list]
 
-        with open(".\data\guild_members.json", "w") as file:
-            player_list = []
-            for rank, rank_data in members.items():
-                for player, player_data in rank_data.items():
-                    world = player_data.get("server")
-                    player_list.append({"player": player, "world": world, "rank": rank})
-                    if player in old_player_list:
-                        old_players.append(player)
-                    else:
-                        new_players.append(player)
-                    
-                        
-                            
+        old_player_list = [player["player"] for player in guild_list]
+
+        player_list = []
+        for rank, rank_data in members.items():
+            for player, player_data in rank_data.items():
+                world = player_data.get("server")
+                player_list.append({"player": player, "world": world, "rank": rank})
+                if player in old_player_list:
+                    old_players.append(player)
+                else:
+                    new_players.append(player)   
+
+        with open(".\data\guild_members.json", "w") as file:             
             json.dump(player_list, file)
-        for my_player in guild_list:
-            if my_player.get("player") not in old_players and my_player.get("player") not in new_players:
+
+        for my_player in old_player_list:
+            if my_player not in old_players and my_player not in new_players:
                 left_players.append(my_player)
+
         return {"newPlayers": new_players, "leftPlayers": left_players}
         
     except Exception as e:
@@ -103,3 +106,5 @@ def level_tracking():
         json.dump(player_class_levels, file)
     
     return level_ups
+
+print(level_tracking())
