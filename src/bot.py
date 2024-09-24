@@ -615,7 +615,7 @@ async def farplane_online():
 #         logging.exception(f"unhandled exception in war update {e}")
 # '''
 
-@tasks.loop(minutes=10)
+@tasks.loop(minutes=2)
 async def leveling():
     channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
     try:
@@ -633,7 +633,7 @@ async def leveling():
         level_ups = await level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
 
         for level_up in level_ups:
-            await channel.send(level_up["username"] + " reached " + level_up["type"] + " " + level_up["milestone"] + " on " + level_up["class"])
+            await channel.send(str(level_up["username"]) + " reached " + str(level_up["type"]) + " " + str(level_up["milestone"]) + " on " + str(level_up["class"]))
     except Exception as e:
         logging.error("EVEN MORE BAD THINGS HAPPENED levelups is " + str(level_ups) + " " + str(e))
 
