@@ -33,6 +33,19 @@ async def track_guild_members():
         members = my_request[0].get("members")
         members.pop("total")
 
+        guild_level = my_request[0]["level"]
+
+        with open("./data/guild_level.json", "r") as file:
+            old_guild_level = guild_list = json.load(file)[0]
+
+        if guild_level > old_guild_level:
+            guild_levelup = guild_level
+        else:
+            guild_levelup = -1
+
+        with open("./data/guild_level.json", "w") as file:
+            json.dump([guild_level], file)
+
         with open("./data/guild_members.json", "r") as file:
             guild_list = json.load(file)
 
@@ -63,7 +76,7 @@ async def track_guild_members():
         
     except Exception as e:
         logging.error(e)
-    return {"newPlayers": new_players, "leftPlayers": left_players}
+    return {"newPlayers": new_players, "leftPlayers": left_players, "guildLevelup": guild_levelup}
     
     
 
@@ -100,7 +113,7 @@ async def level_tracking():
                                 level_ups.append({"username": player["username"], "class": characters[characteruuid]["type"], "type": "combat", "milestone": milestone})
                         for profession in professions:
                             for milestone in prof_milestones:
-                                if professions[profession]["level"] >= level and stored_class[profession] < level:
+                                if professions[profession]["level"] >= milestone and stored_class[profession] < milestone:
                                     level_ups.append({"username": player["username"], "class": characters[characteruuid]["type"], "type": profession, "milestone": milestone})
                 for profession in professions:
                     my_dict[profession] = professions[profession]["level"]
