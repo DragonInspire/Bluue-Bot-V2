@@ -640,7 +640,7 @@ async def leveling():
                 if level_class == "shaman" or level_class == "skyseer":
                     class_image = emoji_map["relik"]
                 file = discord.File(fp = get_head(username), filename=f"{username}_head.png")
-                embed.add_field(name = username, value = f"has reached {level_type} {emoji_map[level_type.lower()]} {milestone} on {level_class}{class_image} congratulations!", inline = False)
+                embed.add_field(name = username, value = f"has reached {emoji_map[level_type.lower()]}{level_type}  {milestone} on {class_image}{level_class} :tada:", inline = False)
                 embed.set_thumbnail(url=f"attachment://{username}_head.png")
                 await channel.send(embed=embed, file=file)
         except Exception as e:
