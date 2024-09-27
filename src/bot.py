@@ -619,6 +619,7 @@ async def farplane_online():
 async def leveling():
     channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
     now = datetime.now()
+    emoji_map = {"wand": "<:wand:1289276211863879791>", "tailoring": "<:tailoring:1289276201931636766>", "spear": "<:spear:1289276191852859413>", "scribing" :"<:scribing:1289276181539065908>", "relik":"<:relik:1289276166523457578>", "mining":"<:mining:1289276156092088433>", "jeweling": "<:jeweling:1289276145342218301>", "fishing": "<:farming:1289276124630749204>", "dagger": "<:dagger:1289276105970421814>", "cooking": "<:cooking:1289276095295787028>", "combat": "<:combat:1289276085766324395>", "bow" : "<:bow:1289276073296527450>", "armoring": "<:armoring:1289276062664228906>", "alchemism": "<:alchemism:1289276044049776720>"}
     if now.minute % 2 == 0:
         try:
             level_ups = await level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
@@ -629,23 +630,23 @@ async def leveling():
                 milestone = int(level_up["milestone"])
                 level_class = str(level_up["class"]).lower()
                 if level_class == "mage" or level_class == "darkwizard":
-                    class_image = mythicImage("wand")
+                    class_image = emoji_map["wand"]
                 if level_class == "warrior" or level_class == "knight":
-                    class_image = mythicImage("spear")
+                    class_image = emoji_map["spear"]
                 if level_class == "archer" or level_class == "hunter":
-                    class_image = mythicImage("bow")
+                    class_image = emoji_map["bow"]
                 if level_class == "assassin" or level_class == "ninja":
-                    class_image = mythicImage("dagger")
+                    class_image = emoji_map["dagger"]
                 if level_class == "shaman" or level_class == "skyseer":
-                    class_image = mythicImage("relik")
+                    class_image = emoji_map["relik"]
                 file = discord.File(fp = get_head(username), filename=f"{username}_head.png")
-                embed.add_field(name = "", value = f"{username} reached {level_type}![image]{mythicImage(level_type.lower())} {milestone} on {level_class}![image]{class_image} congratulations!", inline = False)
+                embed.add_field(name = username, value = f"has reached {level_type} {emoji_map[level_type.lower()]} {milestone} on {level_class}{class_image} congratulations!", inline = False)
                 embed.set_thumbnail(url=f"attachment://{username}_head.png")
                 await channel.send(embed=embed, file=file)
         except Exception as e:
             logging.error("EVEN MORE BAD THINGS HAPPENED levelups is " + str(level_ups) + " " + str(e))
     if now.minute % 10 == 0:
-        try:
+        try: 
             player_update = await track_guild_members()
             new_players = player_update["newPlayers"]
             left_players = player_update["leftPlayers"]
@@ -653,18 +654,18 @@ async def leveling():
             for player in new_players:
                 embed = discord.Embed(colour = discord.Colour.blurple())
                 file = discord.File(fp = get_head(player), filename=f"{player}_head.png")
-                embed.add_field(value = f"{player} joined the guild!")
+                embed.add_field(name = player, value = "has joined the guild!")
                 embed.set_thumbnail(url=f"attachment://{player}_head.png")
                 await channel.send(embed=embed, file=file)
             for player in left_players:
                 embed = discord.Embed(colour = discord.Colour.blurple())
                 file = discord.File(fp = get_head(player), filename=f"{player}_head.png")
-                embed.add_field(value = f"{player} left the guild!")
+                embed.add_field(name = player, value = "has left the guild!")
                 embed.set_thumbnail(url=f"attachment://{player}_head.png")
                 await channel.send(embed=embed, file=file)
             if guild_levelup != -1:
                 embed = discord.Embed(colour = discord.Colour.blurple())
-                embed.add_field(name = "", value = f"The Farplane leveled up to level {guild_levelup}! :tada:")
+                embed.add_field(name = "The Farplane", value = f"has leveled up to level {guild_levelup}! :tada:")
                 channel.send(embed=embed)
         except Exception as e:
             logging.error("BAD THINGS HAPPENED player update is " + str(player_update) + " " + str(e))
