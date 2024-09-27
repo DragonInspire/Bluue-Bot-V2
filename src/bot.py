@@ -4,7 +4,7 @@ import discord
 import logging
 from discord import app_commands
 from discord.ui import Select, View
-from uniform import overlay_images
+from uniform import overlay_images, get_head
 from online import get_online_players_with_data, FetchDataException, GuildDataException, fetch_data
 #from war import war_track, getWarData
 from xp_tracking import contributions
@@ -619,6 +619,33 @@ async def farplane_online():
 async def leveling():
     channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
     now = datetime.now()
+    msg_send = False
+    if now.minute % 2 == 0:
+        embed = discord.Embed(
+            colour = discord.Colour.blurple(),
+        )
+        try:
+            level_ups = await level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
+
+            for level_up in level_ups:
+                msg_send = True
+                username = str(level_up["username"])
+                level_type = str(level_up["type"])
+                milestone = int(level_up["milestone"])
+                level_class = str(level_up["class"]).lower()
+                if level_class == "mage" or level_class == "darkwizard":
+                    class_image = mythicImage("wand")
+                if level_class == "warrior" or level_class == "knight":
+                    class_image = mythicImage("spear")
+                if level_class == "archer" or level_class == "hunter":
+                    class_image = mythicImage("bow")
+                if level_class == "assassin" or level_class == "ninja":
+                    class_image = mythicImage("dagger")
+                if level_class == "shaman" or level_class == "skyseer":
+                    class_image = mythicImage("relik")
+                embed.add_field(value = f"![image]{get_head(username)} {username} reached {level_type}![image]{mythicImage(level_type.lower())} {milestone} on {level_class}![image]{class_image} congratulations!", inline = False)
+        except Exception as e:
+            logging.error("EVEN MORE BAD THINGS HAPPENED levelups is " + str(level_ups) + " " + str(e))
     if now.minute % 10 == 0:
         try:
             player_update = await track_guild_members()
@@ -626,21 +653,19 @@ async def leveling():
             left_players = player_update["leftPlayers"]
             guild_levelup = player_update["guildLevelup"]
             for player in new_players:
-                await channel.send(f"{player} joined the guild")
+                msg_send = True
+                embed.add_field(value = f"![image]{get_head(player)} {player} joined the guild!")
             for player in left_players:
-                await channel.send(f"{player} left the guild")
+                msg_send = True
+                embed.add_field(value = f"![image]{get_head(player)} {player} left the guild!")
             if guild_levelup != -1:
-                await channel.send(f"The Farplane leveled up to level {guild_levelup}")
+                embed.add_field(value = f"The Farplane leveled up to level {guild_levelup}! :tada:")
         except Exception as e:
             logging.error("BAD THINGS HAPPENED player update is " + str(player_update) + " " + str(e))
-    if now.minute % 2 == 0:
-        try:
-            level_ups = await level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
-
-            for level_up in level_ups:
-                await channel.send(str(level_up["username"]) + " reached " + str(level_up["type"]) + " " + str(level_up["milestone"]) + " on " + str(level_up["class"]))
-        except Exception as e:
-            logging.error("EVEN MORE BAD THINGS HAPPENED levelups is " + str(level_ups) + " " + str(e))
+        
+    if msg_send:
+        await channel.send(embed=embed)
+    
 
 @tasks.loop(minutes=1)
 async def xp_leaderboard():

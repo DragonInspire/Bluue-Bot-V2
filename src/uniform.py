@@ -103,3 +103,13 @@ def save_image(image, filename):
         image.save(filename, format="PNG")
     except Exception as e:
         logging.error(f"Error saving image to file: {e}")
+
+def get_head(username):
+    skin = get_skin_image(username)
+    base = skin.crop((8, 8, 16, 16))
+    overlay = skin.crop((40,8,48,16))
+    result = Image.new("RGBA", base.size)
+    result.paste(base)
+    result.paste(overlay, (0,0), overlay)
+
+    return result
