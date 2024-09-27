@@ -112,4 +112,8 @@ def get_head(username):
     result.paste(base)
     result.paste(overlay, (0,0), overlay)
 
-    return result
+    image_stream = BytesIO()
+    result.save(image_stream, format="PNG")
+    image_stream.seek(0)
+
+    return image_stream

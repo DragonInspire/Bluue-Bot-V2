@@ -619,16 +619,11 @@ async def farplane_online():
 async def leveling():
     channel = bot.get_channel(XP_LEADERBOARD_CHANNEL_ID)
     now = datetime.now()
-    msg_send = False
     if now.minute % 2 == 0:
-        embed = discord.Embed(
-            colour = discord.Colour.blurple(),
-        )
         try:
             level_ups = await level_tracking() # {"username": <username>, "class": <class>, "type": <type>, "milestone": <level>}
-
             for level_up in level_ups:
-                msg_send = True
+                embed = discord.Embed(colour = discord.Colour.blurple())
                 username = str(level_up["username"])
                 level_type = str(level_up["type"])
                 milestone = int(level_up["milestone"])
@@ -643,7 +638,10 @@ async def leveling():
                     class_image = mythicImage("dagger")
                 if level_class == "shaman" or level_class == "skyseer":
                     class_image = mythicImage("relik")
-                embed.add_field(value = f"![image]{get_head(username)} {username} reached {level_type}![image]{mythicImage(level_type.lower())} {milestone} on {level_class}![image]{class_image} congratulations!", inline = False)
+                file = discord.File(fp = get_head(username), filename=f"{username}_head.png")
+                embed.add_field(name = "", value = f"{username} reached {level_type}![image]{mythicImage(level_type.lower())} {milestone} on {level_class}![image]{class_image} congratulations!", inline = False)
+                embed.set_thumbnail(url=f"attachment://{username}_head.png")
+                await channel.send(embed=embed, file=file)
         except Exception as e:
             logging.error("EVEN MORE BAD THINGS HAPPENED levelups is " + str(level_ups) + " " + str(e))
     if now.minute % 10 == 0:
@@ -653,18 +651,23 @@ async def leveling():
             left_players = player_update["leftPlayers"]
             guild_levelup = player_update["guildLevelup"]
             for player in new_players:
-                msg_send = True
-                embed.add_field(value = f"![image]{get_head(player)} {player} joined the guild!")
+                embed = discord.Embed(colour = discord.Colour.blurple())
+                file = discord.File(fp = get_head(player), filename=f"{player}_head.png")
+                embed.add_field(value = f"{player} joined the guild!")
+                embed.set_thumbnail(url=f"attachment://{player}_head.png")
+                await channel.send(embed=embed, file=file)
             for player in left_players:
-                msg_send = True
-                embed.add_field(value = f"![image]{get_head(player)} {player} left the guild!")
+                embed = discord.Embed(colour = discord.Colour.blurple())
+                file = discord.File(fp = get_head(player), filename=f"{player}_head.png")
+                embed.add_field(value = f"{player} left the guild!")
+                embed.set_thumbnail(url=f"attachment://{player}_head.png")
+                await channel.send(embed=embed, file=file)
             if guild_levelup != -1:
-                embed.add_field(value = f"The Farplane leveled up to level {guild_levelup}! :tada:")
+                embed = discord.Embed(colour = discord.Colour.blurple())
+                embed.add_field(name = "", value = f"The Farplane leveled up to level {guild_levelup}! :tada:")
+                channel.send(embed=embed)
         except Exception as e:
             logging.error("BAD THINGS HAPPENED player update is " + str(player_update) + " " + str(e))
-        
-    if msg_send:
-        await channel.send(embed=embed)
     
 
 @tasks.loop(minutes=1)
