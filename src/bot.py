@@ -94,7 +94,7 @@ async def on_ready():
             logging.info("xp leaderboard already running")
     except Exception as e:
         logging.exception(f"unhandled exception while starting tasks {e}")
-@zaibatsu_group.command(name="invest")
+@zaibatsu_group.command(name="invest", description="invest emeralds in the mythic bank")
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(amount="stack and le invest #stx #le: ")
 async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
@@ -106,7 +106,7 @@ async def zaibatsu_invest(interaction: discord.Interaction, player_name: str, am
         raise e
         await interaction.response.send_message(f"{player_name} investment of {amount} failed")
         
-@zaibatsu_group.command(name="withdraw")
+@zaibatsu_group.command(name="withdraw", description="withdraw emeralds from the mythic bank")
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(amount="stack and le invest #stx #le: ")
 async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
@@ -117,7 +117,7 @@ async def zaibatsu_withdraw(interaction: discord.Interaction, player_name: str, 
         logging.info(e)
         await interaction.response.send_message(f"{player_name} withdraw of {amount} failed")    
 
-@zaibatsu_group.command(name="addfrozen")
+@zaibatsu_group.command(name="addfrozen", description="freeze invested emeralds that have been spent on a mythic")
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(amount="stack and le invest #stx #le: ")
 async def zaibatsu_addfrozen(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
@@ -128,7 +128,7 @@ async def zaibatsu_addfrozen(interaction: discord.Interaction, player_name: str,
         logging.info(e)
         await interaction.response.send_message(f"{player_name} addfrozen of {amount} failed")
 
-@zaibatsu_group.command(name="rmfrozen")
+@zaibatsu_group.command(name="rmfrozen", description="remove frozen emeralds when a guild mythic is sold")
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(amount="stack and le invest #stx #le: ")
 async def zaibatsu_rmfrozen(interaction: discord.Interaction, player_name: str, amount: typing.Optional[str] = "0"):
@@ -139,7 +139,7 @@ async def zaibatsu_rmfrozen(interaction: discord.Interaction, player_name: str, 
         logging.info(e)
         await interaction.response.send_message(f"{player_name} rmfrozen of {amount} failed")
 
-@zaibatsu_group.command(name="investmentlist")
+@zaibatsu_group.command(name="investmentlist", description="list of investments")
 async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing.Optional[bool] = False, frozen: typing.Optional[bool] = False, initial: typing.Optional[bool] = False, profit: typing.Optional[bool] = False):
     #try:
 
@@ -180,7 +180,7 @@ async def zaibatsu_investment_list(interaction: discord.Interaction, raw: typing
     
 
 
-@zaibatsu_group.command(name="buy")
+@zaibatsu_group.command(name="buy", description="add a mythic to the mythic bank")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -199,7 +199,7 @@ async def zaibatsu_buy(interaction: discord.Interaction, mythic_name: str, playe
                           notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
-@zaibatsu_group.command(name="update")
+@zaibatsu_group.command(name="update", description="updates a mythic in the mythic bank")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -218,7 +218,7 @@ async def zaibatsu_update(interaction: discord.Interaction, mythic_name: str, pl
                           notes=notes, wynntils=wynntils)
     await interaction.response.send_message(out)
 
-@zaibatsu_group.command(name="rename")
+@zaibatsu_group.command(name="rename", description="changes owner, name, overall for a mythic in the mythic bank")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -242,7 +242,7 @@ async def zaibatsu_rename(interaction: discord.Interaction, mythic_name: str, pl
                           new_overall=new_overall)
     await interaction.response.send_message(out)
 
-@zaibatsu_group.command(name="sell")
+@zaibatsu_group.command(name="sell", description="remove a mythic from the mythic bank")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -252,7 +252,7 @@ async def zaibatsu_sell(interaction: discord.Interaction, mythic_name: str, play
     out = zaibatsu.sold(player_name.lower(), mythic_name.lower(), overall=overall.lower(), price=price.lower())
     await interaction.response.send_message(out)
 
-@zaibatsu_group.command(name="view")
+@zaibatsu_group.command(name="view", description="view the data of a mythic in the mythic bank")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -267,7 +267,7 @@ async def interaction_respond_or_follow(interaction: discord.Interaction, messag
     else:
         await interaction.followup.send(content=message)
 
-@zaibatsu_group.command(name="list")
+@zaibatsu_group.command(name="list", description="view all mythics in the bank")
 @app_commands.describe(detailed="include data fields")
 async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optional[bool] = False):
     # embed = discord.Embed(
@@ -300,7 +300,7 @@ async def zaibatsu_list(interaction: discord.Interaction, detailed: typing.Optio
     await interaction_respond_or_follow(interaction, message)
     
 
-@zaibatsu_group.command(name="display")
+@zaibatsu_group.command(name="display", description="view the stats of a mythic if it has a saved wynntils string")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -370,7 +370,7 @@ async def zaibatsu_display(interaction: discord.Interaction, mythic_name: str, p
         
     
 
-@zaibatsu_group.command(name="wynntils")
+@zaibatsu_group.command(name="wynntils", description="get the wynntils string of a mythic")
 @app_commands.describe(mythic_name="mythicName:")
 @app_commands.describe(player_name="playerName:")
 @app_commands.describe(overall="item percent or other unique id")
@@ -382,7 +382,7 @@ async def zaibatsu_wynntils(interaction: discord.Interaction, mythic_name: str, 
         await interaction.response.send_message("mythic not in mythic bank")
 
 # Command: Display help information
-@bot.tree.command(name="help")
+@bot.tree.command(name="help", description="list of commands")
 async def help(interaction: discord.Interaction):
     embed = discord.Embed(
         colour = discord.Colour.blue(),
@@ -410,27 +410,27 @@ async def help(interaction: discord.Interaction):
     
     await interaction.response.send_message(embed=embed)
 
-@farplane_group.command(name="animatedcape")
+@farplane_group.command(name="animatedcape", description="get the animated farplane cape for use by wynntils donators!")
 async def animatedcape(interaction: discord.Interaction):
     await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995416359669845/farplane_cape.gif?ex=66fad95a&is=66f987da&hm=63d3cf28137564d13acec7f9433613ae58e879baf5769278ced0b77e3961daca&=")
 
-@farplane_group.command(name="cape")
+@farplane_group.command(name="cape", description="get the farplane wynntils cape!")
 async def cape(interaction: discord.Interaction):
     await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995359866720266/BM9zG6u.png?ex=66fad94c&is=66f987cc&hm=b61e927b519ebf3f3a68dc4b0479fbd1252b2e187a1e996af8ba626b36f95a4d&=&format=webp&quality=lossless")
 
-@farplane_group.command(name="excursioncape")
+@farplane_group.command(name="excursioncape", description="get the farplane excursion animated cape for use by wynntils donators!")
 async def excursioncape(interaction: discord.Interaction):
     await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995392896729211/excursion_cape.gif?ex=66fad954&is=66f987d4&hm=157949db84bb43ea89ad4821a01cf16e3a13e92993b20d3648404625510f39f9&=")
 
-@farplane_group.command(name="pocketbook")
+@farplane_group.command(name="pocketbook", description="see the farplane pocketbook with useful information!")
 async def pocketbook(interaction: discord.Interaction):
     await interaction.response.send_message("https://drive.google.com/file/d/11UyguBCkemsKOKTyn3LrpT81HnxHwFDK/view")
 
-@farplane_group.command(name="timeline")
+@farplane_group.command(name="timeline", description="get to know the history of the farplane guild with some dramatic flair")
 async def timeline(interaction: discord.Interaction):
     await interaction.response.send_message("https://docs.google.com/document/d/1KtCntwPyaEaaEe8VVc3a-_pmuV6argoi2m2gun53EDE/edit")
 
-@farplane_group.command(name="signature")
+@farplane_group.command(name="signature", description="get the farplane signature for use on the wynncraft forums")
 async def signature(interaction: discord.Interaction, year: typing.Literal["2020", "2021", "2022", "2023"]):
     years = {"2020": "https://media.discordapp.net/attachments/1289229656666406924/1290001922547257405/farplane2020.gif?ex=66fadf69&is=66f98de9&hm=0804ae573967656f0ee42fd82f89acc3a03bebf6e05c11cc0fe5e7cab71d8807&=",
             "2021": "https://media.discordapp.net/attachments/1289229656666406924/1290001945938886770/farplane2021.gif?ex=66fadf6e&is=66f98dee&hm=c693de21c6d1fec40b06cfa3245d407ddbf767e8cf567a8199cb6d93fbde6b53&=",
@@ -442,7 +442,7 @@ async def signature(interaction: discord.Interaction, year: typing.Literal["2020
         await interaction.response.send_message(f"{year} does not have a farplane forum signature")
 
 # Command: Choose a uniform rank
-@farplane_group.command(name="uniform")
+@farplane_group.command(name="uniform", description="your minecraft skin with your farplane uniform!")
 @app_commands.describe(username="Username:")
 async def uniform(interaction: discord.Interaction, username: str, rank: typing.Literal["resident", "buke", "bushi", "shogun", "yako"]):
     try:
@@ -452,7 +452,7 @@ async def uniform(interaction: discord.Interaction, username: str, rank: typing.
         await interaction.response.send_message(f"sorry either {username} or {rank} were invalid please check your capitalization.")
 
 
-@bot.tree.command(name="wc")
+@bot.tree.command(name="wc", description="get online players in a world")
 @app_commands.describe(world="world: ")
 async def wc(interaction: discord.Interaction, world: str):
     channel = interaction.channel
