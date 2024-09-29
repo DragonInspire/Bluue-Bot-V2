@@ -435,7 +435,6 @@ async def timeline(interaction: discord.Interaction):
     await interaction.response.send_message("https://docs.google.com/document/d/1KtCntwPyaEaaEe8VVc3a-_pmuV6argoi2m2gun53EDE/edit")
 
 @farplane_group.command(name="signature")
-@app_commands.describe(year="year:")
 async def signature(interaction: discord.Interaction, year: str):
     years = {"2020": "https://media.discordapp.net/attachments/1289229656666406924/1290001922547257405/farplane2020.gif?ex=66fadf69&is=66f98de9&hm=0804ae573967656f0ee42fd82f89acc3a03bebf6e05c11cc0fe5e7cab71d8807&=",
             "2021": "https://media.discordapp.net/attachments/1289229656666406924/1290001945938886770/farplane2021.gif?ex=66fadf6e&is=66f98dee&hm=c693de21c6d1fec40b06cfa3245d407ddbf767e8cf567a8199cb6d93fbde6b53&=",
