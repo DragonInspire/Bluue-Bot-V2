@@ -452,10 +452,10 @@ async def signature(interaction: discord.Interaction, year: str):
         choice = select.values[0]
         
         # Generate the uniform image and create a Discord file
-        file = discord.File(years[choice], filename="signature.png")
+        link = years[choice]
         
         # Send a message with the uniform image
-        await interaction.response.send_message(f"Here is the {choice}, forum signature", file=file)
+        await interaction.response.send_message(f"Here is the {choice}, forum signature" + link)
 
 
     # Set the callback for the Select component
