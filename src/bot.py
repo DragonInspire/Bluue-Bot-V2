@@ -19,7 +19,6 @@ from worldplayers import world_players
 from io import StringIO
 from datetime import datetime
 from levelTracking import track_guild_members, level_tracking
-import requests
 
 devFlag = False
 
