@@ -432,12 +432,12 @@ async def timeline(interaction: discord.Interaction):
 
 @farplane_group.command(name="signature")
 @app_commands.choices(year=[
-    Choice(name='2020', value=0),
-    Choice(name='2021', value=1),
-    Choice(name='2022', value=2),
-    Choice(name='2023', value=3)
+    discord.app_commands.Choice(name='2020', value=0),
+    discord.app_commands.Choice(name='2021', value=1),
+    discord.app_commands.Choice(name='2022', value=2),
+    discord.app_commands.Choice(name='2023', value=3)
 ])
-async def signature(interaction: discord.Interaction, year: Choice[int]):
+async def signature(interaction: discord.Interaction, year: discord.app_commands.ChoiceChoice[int]):
     years = ["https://media.discordapp.net/attachments/1289229656666406924/1290001922547257405/farplane2020.gif?ex=66fadf69&is=66f98de9&hm=0804ae573967656f0ee42fd82f89acc3a03bebf6e05c11cc0fe5e7cab71d8807&=",
             "https://media.discordapp.net/attachments/1289229656666406924/1290001945938886770/farplane2021.gif?ex=66fadf6e&is=66f98dee&hm=c693de21c6d1fec40b06cfa3245d407ddbf767e8cf567a8199cb6d93fbde6b53&=",
             "https://media.discordapp.net/attachments/1289229656666406924/1290001969695555644/farplane2022signature.gif?ex=66fadf74&is=66f98df4&hm=c44a6dc6ad96acae13c8ece0c8cc35bfbc4b3ece750916297a01ebe691189f92&=",
@@ -452,13 +452,13 @@ ranks = ["resident", "buke", "bushi", "shogun", "yako"]
 @farplane_group.command(name="uniform")
 @app_commands.describe(username="Username:")
 @app_commands.choices(year=[
-    Choice(name="resident", value="resident"),
-    Choice(name="buke", value="buke"),
-    Choice(name="bushi", value="bushi"),
-    Choice(name="shogun", value="shogun"),
-    Choice(name="yako", value="yako")
+    discord.app_commands.Choice(name="resident", value="resident"),
+    discord.app_commands.Choice(name="buke", value="buke"),
+    discord.app_commands.Choice(name="bushi", value="bushi"),
+    discord.app_commands.Choice(name="shogun", value="shogun"),
+    discord.app_commands.Choice(name="yako", value="yako")
 ])
-async def uniform(interaction: discord.Interaction, username: str, rank: Choice[str]):
+async def uniform(interaction: discord.Interaction, username: str, rank: discord.app_commands.Choice[str]):
     file = discord.File(overlay_images(username, rank), filename="uniform.png")
     await interaction.response.send_message(f"Hey {username}, here is your {rank} uniform", file=file)
 
