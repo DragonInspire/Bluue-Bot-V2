@@ -19,6 +19,7 @@ from worldplayers import world_players
 from io import StringIO
 from datetime import datetime
 from levelTracking import track_guild_members, level_tracking
+import requests
 
 devFlag = False
 
@@ -397,6 +398,8 @@ async def help(interaction: discord.Interaction):
     embed.add_field(name="/farplane cape", value = "get the farplane wynntils cape!", inline=False)
     embed.add_field(name="/farplane animatedcape", value = "get the animated farplane cape for use by wynntils donators!", inline=False)
     embed.add_field(name="/farplane excursioncape", value = "get the farplane excursion animated cape for use by wynntils donators!", inline=False)
+    embed.add_field(name="/farplane timeline", value = "get to know the history of the farplane guild with some dramatic flair", inline=False)
+    embed.add_field(name="/farplane signature", value = "get the farplane signature for use on the wynncraft forums", inline=False)
     embed.add_field(name="/zaibatsu buy", value = "add a mythic to the mythic bank", inline=False)
     embed.add_field(name="/zaibatsu update", value="updates a mythic in the mythic bank", inline=False)
     embed.add_field(name="/zaibatsu rename", value="changes owner, name, overall for a mythic in the mythic bank", inline=False)
@@ -426,6 +429,45 @@ async def excursioncape(interaction: discord.Interaction):
 @farplane_group.command(name="pocketbook")
 async def pocketbook(interaction: discord.Interaction):
     await interaction.response.send_message("https://drive.google.com/file/d/11UyguBCkemsKOKTyn3LrpT81HnxHwFDK/view")
+
+@farplane_group.command(name="timeline")
+async def timeline(interaction: discord.Interaction):
+    await interaction.response.send_message("https://docs.google.com/document/d/1KtCntwPyaEaaEe8VVc3a-_pmuV6argoi2m2gun53EDE/edit")
+
+@farplane_group.command(name="signature")
+@app_commands.describe(year="year:")
+async def signature2020(interaction: discord.Interaction, year: str):
+    years = {"2020": "https://media.discordapp.net/attachments/1289229656666406924/1290001922547257405/farplane2020.gif?ex=66fadf69&is=66f98de9&hm=0804ae573967656f0ee42fd82f89acc3a03bebf6e05c11cc0fe5e7cab71d8807&=",
+            "2021": "https://media.discordapp.net/attachments/1289229656666406924/1290001945938886770/farplane2021.gif?ex=66fadf6e&is=66f98dee&hm=c693de21c6d1fec40b06cfa3245d407ddbf767e8cf567a8199cb6d93fbde6b53&=",
+            "2022": "https://media.discordapp.net/attachments/1289229656666406924/1290001969695555644/farplane2022signature.gif?ex=66fadf74&is=66f98df4&hm=c44a6dc6ad96acae13c8ece0c8cc35bfbc4b3ece750916297a01ebe691189f92&=",
+            "2023": "https://media.discordapp.net/attachments/1289229656666406924/1290001993758408764/farplane2023signature.gif?ex=66fadf7a&is=66f98dfa&hm=a43c76e834fb7a4bbf8d60842a62c6c3f97d190bbc9192711b85c9a9739ccd6b&="}
+    optionList = list(map(lambda year: discord.SelectOption(label=year), years.keys()))
+        
+    # Create a Select component with the options
+    select = Select(options=optionList)
+    
+    # Callback function for the selection
+    async def my_callback(interaction):
+        # Get the selected rank from the Select component
+        choice = select.values[0]
+        
+        # Generate the uniform image and create a Discord file
+        file = discord.File(years[choice], filename="signature.png")
+        
+        # Send a message with the uniform image
+        await interaction.response.send_message(f"Here is the {choice}, forum signature", file=file)
+
+
+    # Set the callback for the Select component
+    select.callback = my_callback
+    
+    # Create a View with the Select component
+    view = View()
+    view.add_item(select)
+    
+    # Send a message with the Select component to choose a rank
+    await interaction.response.send_message("Select which year you want", view=view)
+    
 
 # Command: Choose a uniform rank
 @farplane_group.command(name="uniform")
