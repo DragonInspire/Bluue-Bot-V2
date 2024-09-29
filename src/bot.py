@@ -19,6 +19,7 @@ from worldplayers import world_players
 from io import StringIO
 from datetime import datetime
 from levelTracking import track_guild_members, level_tracking
+import requests
 
 devFlag = False
 
@@ -45,6 +46,8 @@ ranks = ["resident", "buke", "bushi", "shogun", "yako"]
 
 zaibatsu_group = app_commands.Group(name="zaibatsu", description="mythic bank related commands")
 bot.tree.add_command(zaibatsu_group)
+farplane_group = app_commands.Group(name="farplane", description="the farplane related commands")
+bot.tree.add_command(farplane_group)
 
 # Event: Bot is ready
 @bot.event
@@ -390,7 +393,11 @@ async def help(interaction: discord.Interaction):
         title = "commands"
     )
     embed.add_field(name="/help", value="shows this list", inline=False)
-    embed.add_field(name="/uniform", value = "your minecraft skin with your farplane uniform!", inline=False)
+    embed.add_field(name="/farplane uniform", value = "your minecraft skin with your farplane uniform!", inline=False)
+    embed.add_field(name="/farplane pocketbook", value = "see the farplane pocketbook with useful information!", inline=False)
+    embed.add_field(name="/farplane cape", value = "get the farplane wynntils cape!", inline=False)
+    embed.add_field(name="/farplane animatedcape", value = "get the animated farplane cape for use by wynntils donators!", inline=False)
+    embed.add_field(name="/farplane excursioncape", value = "get the farplane excursion animated cape for use by wynntils donators!", inline=False)
     embed.add_field(name="/zaibatsu buy", value = "add a mythic to the mythic bank", inline=False)
     embed.add_field(name="/zaibatsu update", value="updates a mythic in the mythic bank", inline=False)
     embed.add_field(name="/zaibatsu rename", value="changes owner, name, overall for a mythic in the mythic bank", inline=False)
@@ -405,8 +412,24 @@ async def help(interaction: discord.Interaction):
     
     await interaction.response.send_message(embed=embed)
 
+@farplane_group.command(name="animatedcape")
+async def animatedcape(interaction: discord.Interaction):
+    await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995416359669845/farplane_cape.gif?ex=66fad95a&is=66f987da&hm=63d3cf28137564d13acec7f9433613ae58e879baf5769278ced0b77e3961daca&=")
+
+@farplane_group.command(name="cape")
+async def cape(interaction: discord.Interaction):
+    await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995359866720266/BM9zG6u.png?ex=66fad94c&is=66f987cc&hm=b61e927b519ebf3f3a68dc4b0479fbd1252b2e187a1e996af8ba626b36f95a4d&=&format=webp&quality=lossless")
+
+@farplane_group.command(name="excursioncape")
+async def excursioncape(interaction: discord.Interaction):
+    await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995392896729211/excursion_cape.gif?ex=66fad954&is=66f987d4&hm=157949db84bb43ea89ad4821a01cf16e3a13e92993b20d3648404625510f39f9&=")
+
+@farplane_group.command(name="pocketbook")
+async def pocketbook(interaction: discord.Interaction):
+    await interaction.response.send_message("https://drive.google.com/file/d/11UyguBCkemsKOKTyn3LrpT81HnxHwFDK/view")
+
 # Command: Choose a uniform rank
-@bot.tree.command(name="uniform")
+@farplane_group.command(name="uniform")
 @app_commands.describe(username="Username:")
 async def uniform(interaction: discord.Interaction, username: str):
     try:
