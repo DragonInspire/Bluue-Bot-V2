@@ -437,7 +437,7 @@ async def timeline(interaction: discord.Interaction):
     discord.app_commands.Choice(name='2022', value=2),
     discord.app_commands.Choice(name='2023', value=3)
 ])
-async def signature(interaction: discord.Interaction, year: discord.app_commands.ChoiceChoice[int]):
+async def signature(interaction: discord.Interaction, year: discord.app_commands.Choice[int]):
     years = ["https://media.discordapp.net/attachments/1289229656666406924/1290001922547257405/farplane2020.gif?ex=66fadf69&is=66f98de9&hm=0804ae573967656f0ee42fd82f89acc3a03bebf6e05c11cc0fe5e7cab71d8807&=",
             "https://media.discordapp.net/attachments/1289229656666406924/1290001945938886770/farplane2021.gif?ex=66fadf6e&is=66f98dee&hm=c693de21c6d1fec40b06cfa3245d407ddbf767e8cf567a8199cb6d93fbde6b53&=",
             "https://media.discordapp.net/attachments/1289229656666406924/1290001969695555644/farplane2022signature.gif?ex=66fadf74&is=66f98df4&hm=c44a6dc6ad96acae13c8ece0c8cc35bfbc4b3ece750916297a01ebe691189f92&=",
