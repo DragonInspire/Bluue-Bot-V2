@@ -431,36 +431,25 @@ async def timeline(interaction: discord.Interaction):
     await interaction.response.send_message("https://docs.google.com/document/d/1KtCntwPyaEaaEe8VVc3a-_pmuV6argoi2m2gun53EDE/edit")
 
 @farplane_group.command(name="signature")
-@app_commands.choices(year=[
-    discord.app_commands.Choice(name='2020', value=0),
-    discord.app_commands.Choice(name='2021', value=1),
-    discord.app_commands.Choice(name='2022', value=2),
-    discord.app_commands.Choice(name='2023', value=3)
-])
-async def signature(interaction: discord.Interaction, year: discord.app_commands.Choice[int]):
-    years = ["https://media.discordapp.net/attachments/1289229656666406924/1290001922547257405/farplane2020.gif?ex=66fadf69&is=66f98de9&hm=0804ae573967656f0ee42fd82f89acc3a03bebf6e05c11cc0fe5e7cab71d8807&=",
-            "https://media.discordapp.net/attachments/1289229656666406924/1290001945938886770/farplane2021.gif?ex=66fadf6e&is=66f98dee&hm=c693de21c6d1fec40b06cfa3245d407ddbf767e8cf567a8199cb6d93fbde6b53&=",
-            "https://media.discordapp.net/attachments/1289229656666406924/1290001969695555644/farplane2022signature.gif?ex=66fadf74&is=66f98df4&hm=c44a6dc6ad96acae13c8ece0c8cc35bfbc4b3ece750916297a01ebe691189f92&=",
-            "https://media.discordapp.net/attachments/1289229656666406924/1290001993758408764/farplane2023signature.gif?ex=66fadf7a&is=66f98dfa&hm=a43c76e834fb7a4bbf8d60842a62c6c3f97d190bbc9192711b85c9a9739ccd6b&="]
-   
-    await interaction.response.send_message(f"Here is the {year}, forum signature" + years[year])
+async def signature(interaction: discord.Interaction, year: typing.Literal["2020", "2021", "2022", "2023"]):
+    years = ["2020": "https://media.discordapp.net/attachments/1289229656666406924/1290001922547257405/farplane2020.gif?ex=66fadf69&is=66f98de9&hm=0804ae573967656f0ee42fd82f89acc3a03bebf6e05c11cc0fe5e7cab71d8807&=",
+            "2021": "https://media.discordapp.net/attachments/1289229656666406924/1290001945938886770/farplane2021.gif?ex=66fadf6e&is=66f98dee&hm=c693de21c6d1fec40b06cfa3245d407ddbf767e8cf567a8199cb6d93fbde6b53&=",
+            "2022": "https://media.discordapp.net/attachments/1289229656666406924/1290001969695555644/farplane2022signature.gif?ex=66fadf74&is=66f98df4&hm=c44a6dc6ad96acae13c8ece0c8cc35bfbc4b3ece750916297a01ebe691189f92&=",
+            "2023": "https://media.discordapp.net/attachments/1289229656666406924/1290001993758408764/farplane2023signature.gif?ex=66fadf7a&is=66f98dfa&hm=a43c76e834fb7a4bbf8d60842a62c6c3f97d190bbc9192711b85c9a9739ccd6b&="]
+    try:
+        await interaction.response.send_message(f"Here is the {year}, forum signature" + years[year])
+    except:
+        await interaction.response.send_message(f"{year} does not have a farplane forum signature")
 
-    
-# Define rank options
-ranks = ["resident", "buke", "bushi", "shogun", "yako"]
 # Command: Choose a uniform rank
 @farplane_group.command(name="uniform")
 @app_commands.describe(username="Username:")
-@app_commands.choices(year=[
-    discord.app_commands.Choice(name="resident", value="resident"),
-    discord.app_commands.Choice(name="buke", value="buke"),
-    discord.app_commands.Choice(name="bushi", value="bushi"),
-    discord.app_commands.Choice(name="shogun", value="shogun"),
-    discord.app_commands.Choice(name="yako", value="yako")
-])
-async def uniform(interaction: discord.Interaction, username: str, rank: discord.app_commands.Choice[str]):
-    file = discord.File(overlay_images(username, rank), filename="uniform.png")
-    await interaction.response.send_message(f"Hey {username}, here is your {rank} uniform", file=file)
+async def uniform(interaction: discord.Interaction, username: str, rank: typing.Literal["resident", "buke", "bushi", "shogun", "yako"]):
+    try:
+        file = discord.File(overlay_images(username, rank), filename="uniform.png")
+        await interaction.response.send_message(f"Hey {username}, here is your {rank} uniform", file=file)
+    except:
+        await interaction.response.send_message(f"sorry either {username} or {rank} were invalid please check your capitalization.")
 
 
 @bot.tree.command(name="wc")
