@@ -49,16 +49,17 @@ sticker_map = {"fluid": "<:Fluid:1291807115492589650>",
                 "yin wave": "<:YinWave:1291807676199604347>"}
 
 sticker_list = list(sticker_map.keys())
-DATA_FILE = "./data/stickers.json"
+STICKERS_FILE = "./data/stickers.json"
+PLAYER_FILE = "./data/rolls.json"
 
-def loadData():
+def loadData(DATA_FILE):
     data = None
     with open(DATA_FILE, "r") as file:
         data_str = file.read()
         data = json.loads(data_str)
     return data
 
-def writeData(data):
+def writeData(DATA_FILE, data):
     with open(DATA_FILE, "w") as file:
         json.dump(data, file)
 
@@ -68,11 +69,11 @@ def time_until(target_date):
     return time_difference
 
 def validate_roll(uuid):
-    rolls = loadData()
+    rolls = loadData(PLAYER_FILE)
     current_date = datetime.now()
     if uuid not in rolls:
         rolls[uuid] = current_date
-        writeData(rolls)
+        writeData(PLAYER_FILE, rolls)
         return [True, None]
     
     stored_date = rolls[uuid]
@@ -97,10 +98,10 @@ def roll_stickers(uuid):
         return f"sorry please wait {days}d {hours}h {minutes}m {seconds}s"
     sticker = choice(sticker_list)
 
-    player_sticker_lists = loadData()
+    player_sticker_lists = loadData(STICKERS_FILE)
     if uuid not in player_sticker_lists.keys():
         player_sticker_lists[uuid] = [sticker]
-        writeData(player_sticker_lists)
+        writeData(STICKERS_FILE, player_sticker_lists)
         return f"congrats on your first sticker! you rolled {sticker} {sticker_map[sticker]}!"
 
     player_stickers = player_sticker_lists[uuid]
@@ -109,8 +110,8 @@ def roll_stickers(uuid):
         return f"unfortunately you got a dupe! you rolled {sticker} {sticker_map[sticker]}!"
     
     player_sticker_lists[uuid].append(sticker)
-    writeData(player_sticker_lists)
-    return "you got a new sticker! you rolled {sticker} {sticker_map[sticker]}!"
+    writeData(STICKERS_FILE, player_sticker_lists)
+    return f"you got a new sticker! you rolled {sticker} {sticker_map[sticker]}!"
 
 def stickers_list():
     num_total_stickers = len(sticker_list)
@@ -122,7 +123,7 @@ def stickers_list():
     return message
 
 def my_stickers(uuid):
-    player_sticker_lists = loadData()
+    player_sticker_lists = loadData(STICKERS_FILE)
     player_stickers = player_sticker_lists[uuid]
 
     num_player_stickers = len(player_stickers)
