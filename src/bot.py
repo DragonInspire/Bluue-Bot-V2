@@ -6,20 +6,19 @@ from discord import app_commands
 from discord.ui import Select, View
 from uniform import overlay_images, get_head
 from online import get_online_players_with_data, FetchDataException, GuildDataException, fetch_data
-#from war import war_track, getWarData
 from xp_tracking import contributions
 from dotenv import load_dotenv
 import os
 from wynntils_parse import decode_item
 import zaibatsu
-from molah import invest, withdraw, getInvestments, emeraldTypesToEmeralds, parsePrice, getProfit
+from molah import invest, withdraw, getInvestments, getProfit
 import random
 from mythicImage import mythicImage
 from worldplayers import world_players
 from io import StringIO
 from datetime import datetime
 from levelTracking import track_guild_members, level_tracking
-import requests
+from stickers import stickers_list, my_stickers, roll_stickers
 
 devFlag = False
 
@@ -44,7 +43,8 @@ zaibatsu_group = app_commands.Group(name="zaibatsu", description="mythic bank re
 bot.tree.add_command(zaibatsu_group)
 farplane_group = app_commands.Group(name="farplane", description="the farplane related commands")
 bot.tree.add_command(farplane_group)
-
+sticker_group = app_commands.Group(name="sticker", description="sticker related commands")
+bot.tree.add_command(sticker_group)
 # Event: Bot is ready
 @bot.event
 async def on_ready():
@@ -94,6 +94,22 @@ async def on_ready():
             logging.info("xp leaderboard already running")
     except Exception as e:
         logging.exception(f"unhandled exception while starting tasks {e}")
+
+
+@sticker_group_command(name="stickers_list", description="get a list of all stickers")
+async def stickers(interaction: discord.Interaction):
+    await interaction.response.send_message(f"```{stickers_list()}```")
+
+@sticker_group_command(name="my_stickers", description="see your sticker collection")
+async def stickers_2(interaction: discord.Interaction):
+    uuid = interaction.user.id
+    await interaction.response.send_message(f"```{stickers_list(my_stickers(uuid))}```")
+
+@sticker_group_command(name="roll_stickers", description="see your sticker collection")
+async def stickers_3(interaction: discord.Interaction):
+    uuid = interaction.user.id
+    await interaction.response.send_message(f"```{stickers_list(roll_stickers(uuid))}```")
+
 @zaibatsu_group.command(name="invest", description="invest emeralds in the mythic bank")
 @app_commands.describe(player_name="player name: ")
 @app_commands.describe(amount="stack and le invest #stx #le: ")
