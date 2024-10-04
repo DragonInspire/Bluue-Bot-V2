@@ -97,16 +97,16 @@ async def on_ready():
 
 
 @resident_group.command(name="stickers_list", description="get a list of all stickers")
-async def stickers(interaction: discord.Interaction):
+async def stickerlist(interaction: discord.Interaction):
     await interaction.response.send_message(f"```{stickers_list()}```")
 
 @resident_group.command(name="my_stickers", description="see your sticker collection")
-async def stickers_2(interaction: discord.Interaction):
+async def mystickers(interaction: discord.Interaction):
     uuid = interaction.user.id
     await interaction.response.send_message(f"```{stickers_list(my_stickers(uuid))}```")
 
 @resident_group.command(name="roll_stickers", description="see your sticker collection")
-async def stickers_3(interaction: discord.Interaction):
+async def rollstickers(interaction: discord.Interaction):
     uuid = interaction.user.id
     await interaction.response.send_message(f"```{stickers_list(roll_stickers(uuid))}```")
 
