@@ -713,7 +713,7 @@ async def xp_leaderboard():
 
 @tasks.loop(minutes=1)
 async def change_status():
-    messages = ["/uniform", "/zaibatsu", "/wc"]
+    messages = ["/farplane", "/zaibatsu", "/wc", "/help"]
     choice = random.choice(messages)
     await bot.change_presence(activity=discord. Activity(type=discord.ActivityType.watching, name=choice))
 
