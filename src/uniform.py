@@ -7,11 +7,11 @@ import logging
 
 # Constants for skin URLs
 SKIN_URLS = {
-    "resident": "https://media.discordapp.net/attachments/1289229656666406924/1290004324415443065/mailmanresident.png?ex=66fae1a6&is=66f99026&hm=79dca9feb71ae620ab2455945693aae06a7a3aa27175cd31494ebf953c686680&=&format=webp&quality=lossless",
-    "buke": "https://media.discordapp.net/attachments/1289229656666406924/1290004392434733191/mailmanbuke.png?ex=66fae1b6&is=66f99036&hm=d79a9f614dab9c6199ff149b7f8bde484e072eaeb48b6bef9d7ac4c282e72ca4&=&format=webp&quality=lossless",
-    "bushi": "https://media.discordapp.net/attachments/1289229656666406924/1290004368531263539/mailmanbushi.png?ex=66fae1b0&is=66f99030&hm=a4fa4b5d962ad025bf78b74df547e9c0dc5212f8dcf103f34778336a3950b543&=&format=webp&quality=lossless",
-    "shogun": "https://media.discordapp.net/attachments/1289229656666406924/1290004347484110982/mailmanshogun.png?ex=66fae1ab&is=66f9902b&hm=c9d8fdd5df87983ee44c5abab0af3ddca8921530ea14ee63bc6359e67d32b503&=&format=webp&quality=lossless",
-    "yako": "https://media.discordapp.net/attachments/1289229656666406924/1290004513012453376/mailmanyako.png?ex=66fae1d3&is=66f99053&hm=cc8c948afeb06161740581121903468df2ec795233537bf135c14970de6068dd&=&format=webp&quality=lossless",
+    "resident": "https://dragoninspire.github.io/farplane-assets/mailmanresident.png",
+    "buke": "https://dragoninspire.github.io/farplane-assets/mailmanbuke.png",
+    "bushi": "https://dragoninspire.github.io/farplane-assets/mailmanbushi.png",
+    "shogun": "https://dragoninspire.github.io/farplane-assets/mailmanshogun.png",
+    "yako": "https://dragoninspire.github.io/farplane-assets/mailmanyako.png",
 }
 
 # Logging setup
