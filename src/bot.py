@@ -428,15 +428,15 @@ async def help(interaction: discord.Interaction):
 
 @farplane_group.command(name="animatedcape", description="get the animated farplane cape for use by wynntils donators!")
 async def animatedcape(interaction: discord.Interaction):
-    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/farplane_cape.gif")
+    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/capes/farplane_cape.gif")
 
 @farplane_group.command(name="cape", description="get the farplane wynntils cape!")
 async def cape(interaction: discord.Interaction):
-    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/farplane_cape_pixel.png")
+    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/capes/farplane_cape_pixel.png")
 
 @farplane_group.command(name="excursioncape", description="get the farplane excursion animated cape for use by wynntils donators!")
 async def excursioncape(interaction: discord.Interaction):
-    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/excursion_cape.gif")
+    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/capes/excursion_cape.gif")
 
 @farplane_group.command(name="pocketbook", description="see the farplane pocketbook with useful information!")
 async def pocketbook(interaction: discord.Interaction):
@@ -448,12 +448,12 @@ async def timeline(interaction: discord.Interaction):
 
 @farplane_group.command(name="signature", description="get the farplane signature for use on the wynncraft forums")
 async def signature(interaction: discord.Interaction, year: typing.Literal["2020", "2021", "2022", "2023", "2020 halloween", "2020 alt"]):
-    years = {"2020": "https://dragoninspire.github.io/farplane-assets/farplane2020.gif",
-            "2021": "https://dragoninspire.github.io/farplane-assets/farplane2021.gif",
-            "2022": "https://dragoninspire.github.io/farplane-assets/farplane2022signature.gif",
-            "2023": "https://dragoninspire.github.io/farplane-assets/farplane2023signature.gif",
-            "2020 halloween": "https://dragoninspire.github.io/farplane-assets/halloweensignature.gif",
-            "2020 alt": "https://dragoninspire.github.io/farplane-assets/signature2.gif"}
+    years = {"2020": "https://dragoninspire.github.io/farplane-assets/signatures/farplane2020.gif",
+            "2021": "https://dragoninspire.github.io/farplane-assets/signatures/farplane2021.gif",
+            "2022": "https://dragoninspire.github.io/farplane-assets/signatures/farplane2022signature.gif",
+            "2023": "https://dragoninspire.github.io/farplane-assets/signatures/farplane2023signature.gif",
+            "2020 halloween": "https://dragoninspire.github.io/farplane-assets/signatures/halloweensignature.gif",
+            "2020 alt": "https://dragoninspire.github.io/farplane-assets/signatures/signature2.gif"}
     try:
         await interaction.response.send_message(f"Here is the {year}, forum signature {years[year]}")
     except:
