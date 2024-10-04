@@ -7,11 +7,11 @@ import logging
 
 # Constants for skin URLs
 SKIN_URLS = {
-    "resident": "https://dragoninspire.github.io/farplane-assets/mailmanresident.png",
-    "buke": "https://dragoninspire.github.io/farplane-assets/mailmanbuke.png",
-    "bushi": "https://dragoninspire.github.io/farplane-assets/mailmanbushi.png",
-    "shogun": "https://dragoninspire.github.io/farplane-assets/mailmanshogun.png",
-    "yako": "https://dragoninspire.github.io/farplane-assets/mailmanyako.png",
+    "resident": "https://dragoninspire.github.io/farplane-assets/uniforms/mailmanresident.png",
+    "buke": "https://dragoninspire.github.io/farplane-assets/uniforms/mailmanbuke.png",
+    "bushi": "https://dragoninspire.github.io/farplane-assets/uniforms/mailmanbushi.png",
+    "shogun": "https://dragoninspire.github.io/farplane-assets/uniforms/mailmanshogun.png",
+    "yako": "https://dragoninspire.github.io/farplane-assets/uniforms/mailmanyako.png",
 }
 
 # Logging setup
