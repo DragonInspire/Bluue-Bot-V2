@@ -428,15 +428,15 @@ async def help(interaction: discord.Interaction):
 
 @farplane_group.command(name="animatedcape", description="get the animated farplane cape for use by wynntils donators!")
 async def animatedcape(interaction: discord.Interaction):
-    await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995416359669845/farplane_cape.gif?ex=66fad95a&is=66f987da&hm=63d3cf28137564d13acec7f9433613ae58e879baf5769278ced0b77e3961daca&=")
+    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/farplane_cape.gif")
 
 @farplane_group.command(name="cape", description="get the farplane wynntils cape!")
 async def cape(interaction: discord.Interaction):
-    await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995359866720266/BM9zG6u.png?ex=66fad94c&is=66f987cc&hm=b61e927b519ebf3f3a68dc4b0479fbd1252b2e187a1e996af8ba626b36f95a4d&=&format=webp&quality=lossless")
+    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/farplane_cape_pixel.png")
 
 @farplane_group.command(name="excursioncape", description="get the farplane excursion animated cape for use by wynntils donators!")
 async def excursioncape(interaction: discord.Interaction):
-    await interaction.response.send_message("https://media.discordapp.net/attachments/1289229656666406924/1289995392896729211/excursion_cape.gif?ex=66fad954&is=66f987d4&hm=157949db84bb43ea89ad4821a01cf16e3a13e92993b20d3648404625510f39f9&=")
+    await interaction.response.send_message("https://dragoninspire.github.io/farplane-assets/excursion_cape.gif")
 
 @farplane_group.command(name="pocketbook", description="see the farplane pocketbook with useful information!")
 async def pocketbook(interaction: discord.Interaction):
