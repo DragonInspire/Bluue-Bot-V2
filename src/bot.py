@@ -455,7 +455,7 @@ async def signature(interaction: discord.Interaction, year: typing.Literal["2020
             "2020 halloween": "https://dragoninspire.github.io/farplane-assets/halloweensignature.gif",
             "2020 alt": "https://dragoninspire.github.io/farplane-assets/signature2.gif"}
     try:
-        await interaction.response.send_message(f"Here is the {year}, forum signature" + years[year])
+        await interaction.response.send_message(f"Here is the {year}, forum signature {years[year]}")
     except:
         await interaction.response.send_message(f"{year} does not have a farplane forum signature")
 
