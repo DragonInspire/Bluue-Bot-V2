@@ -43,8 +43,8 @@ zaibatsu_group = app_commands.Group(name="zaibatsu", description="mythic bank re
 bot.tree.add_command(zaibatsu_group)
 farplane_group = app_commands.Group(name="farplane", description="the farplane related commands")
 bot.tree.add_command(farplane_group)
-sticker_group = app_commands.Group(name="sticker", description="sticker related commands")
-bot.tree.add_command(sticker_group)
+resident_group = app_commands.Group(name="resident", description="resident related commands")
+bot.tree.add_command(resident_group)
 # Event: Bot is ready
 @bot.event
 async def on_ready():
@@ -96,16 +96,16 @@ async def on_ready():
         logging.exception(f"unhandled exception while starting tasks {e}")
 
 
-@sticker_group.command(name="stickers_list", description="get a list of all stickers")
+@resident_group.command(name="stickers_list", description="get a list of all stickers")
 async def stickers(interaction: discord.Interaction):
     await interaction.response.send_message(f"```{stickers_list()}```")
 
-@sticker_group.command(name="my_stickers", description="see your sticker collection")
+@resident_group.command(name="my_stickers", description="see your sticker collection")
 async def stickers_2(interaction: discord.Interaction):
     uuid = interaction.user.id
     await interaction.response.send_message(f"```{stickers_list(my_stickers(uuid))}```")
 
-@sticker_group.command(name="roll_stickers", description="see your sticker collection")
+@resident_group.command(name="roll_stickers", description="see your sticker collection")
 async def stickers_3(interaction: discord.Interaction):
     uuid = interaction.user.id
     await interaction.response.send_message(f"```{stickers_list(roll_stickers(uuid))}```")
