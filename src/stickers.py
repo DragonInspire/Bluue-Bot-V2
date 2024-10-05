@@ -86,7 +86,11 @@ def validate_roll(uuid):
     else:
         return [False, stored_date + timedelta(days=7)]
 
-def roll_stickers(uuid):
+def roll_stickers(Embed, uuid):
+  embed = Embed(
+    colour = "0x206694",
+    title = "roll"
+  )
     validation = validate_roll()
     if not validation[0]:
         wait_time = time_until(validation[1])
@@ -95,34 +99,42 @@ def roll_stickers(uuid):
         hours = seconds // 3600
         minutes = (seconds % 3600) // 60
         seconds = seconds % 60
-        return f"sorry please wait {days}d {hours}h {minutes}m {seconds}s"
+        embed.add_field(name="sorry please wait before your next roll", value = f"{days}d {hours}h {minutes}m {seconds}s")
+        return embed
     sticker = choice(sticker_list)
 
     player_sticker_lists = loadData(STICKERS_FILE)
     if uuid not in player_sticker_lists.keys():
         player_sticker_lists[uuid] = [sticker]
         writeData(STICKERS_FILE, player_sticker_lists)
-        return f"congrats on your first sticker! you rolled {sticker} {sticker_map[sticker]}!"
+        embed.add_field(name="congrats on your first sticker!", value=f"you rolled {sticker} {sticker_map[sticker]}!")
+        return embed
 
     player_stickers = player_sticker_lists[uuid]
 
     if sticker in player_stickers:
-        return f"unfortunately you got a dupe! you rolled {sticker} {sticker_map[sticker]}!"
+        embed.add_field(name="unfortunately you got a dupe!", value="you rolled {sticker} {sticker_map[sticker]}!")
+        return embed
     
     player_sticker_lists[uuid].append(sticker)
     writeData(STICKERS_FILE, player_sticker_lists)
-    return f"you got a new sticker! you rolled {sticker} {sticker_map[sticker]}!"
+    embed.add_field(name="you got a new sticker!", value=f"you rolled {sticker} {sticker_map[sticker]}!")
+    return embed
 
-def stickers_list():
+def stickers_list(Embed):
+    embed = Embed(
+      colour = "0x206694",
+      title = f"sticker list! {num_total_stickers} stickers"
+    )
     num_total_stickers = len(sticker_list)
-    message = f"{num_total_stickers} stickers \n"
 
-    for name, sticker in sticker_map.items():
-        message += f"{sticker} {name} \n"
+    for sticker_name, sticker in sticker_map.items():
+        embed.add_field(name=sticker_name, value=sticker)
 
-    return message
+    return embed
 
-def my_stickers(uuid):
+def my_stickers(Embed, uuid):
+    
     player_sticker_lists = loadData(STICKERS_FILE)
     player_stickers = player_sticker_lists[uuid]
 
@@ -130,9 +142,12 @@ def my_stickers(uuid):
     num_total_stickers = len(sticker_list)
     percent = round((num_player_stickers/num_total_stickers) * 100, 2)
 
-    message = f"{num_player_stickers}/{num_total_stickers} {percent}% \n"
+    embed = Embed(
+        colour = "0x206694",
+        title = f"you have these stickers! {num_player_stickers}/{num_total_stickers} {percent}%"
+    )
 
     for sticker in player_stickers:
-        message += f"{sticker_map[sticker]} sticker \n"
+        embed.add_field(name=sticker, value=sticker_map[sticker])
 
-    return message
+    return embed
