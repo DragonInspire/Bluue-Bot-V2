@@ -117,7 +117,7 @@ def stickers_list():
     num_total_stickers = len(sticker_list)
     message = f"{num_total_stickers} stickers \n"
 
-    for name, sticker in sticker_map:
+    for name, sticker in sticker_map.items():
         message += f"{sticker} {name} \n"
 
     return message
