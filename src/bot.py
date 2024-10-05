@@ -98,17 +98,17 @@ async def on_ready():
 
 @resident_group.command(name="stickers_list", description="get a list of all stickers")
 async def stickerlist(interaction: discord.Interaction):
-    await interaction.response.send_message(f"```{stickers_list()}```")
+    await interaction.response.send_message(embed = stickers_list(discord.Embed))
 
 @resident_group.command(name="my_stickers", description="see your sticker collection")
 async def mystickers(interaction: discord.Interaction):
     uuid = interaction.user.id
-    await interaction.response.send_message(f"```{stickers_list(my_stickers(uuid))}```")
+    await interaction.response.send_message(embed = my_stickers(discord.Embed, uuid))
 
 @resident_group.command(name="roll_stickers", description="see your sticker collection")
 async def rollstickers(interaction: discord.Interaction):
     uuid = interaction.user.id
-    await interaction.response.send_message(f"```{stickers_list(roll_stickers(uuid))}```")
+    await interaction.response.send_message(embed = roll_stickers(discord.Embed, uuid))
 
 @zaibatsu_group.command(name="invest", description="invest emeralds in the mythic bank")
 @app_commands.describe(player_name="player name: ")
