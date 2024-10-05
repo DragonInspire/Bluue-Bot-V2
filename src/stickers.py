@@ -87,10 +87,10 @@ def validate_roll(uuid):
         return [False, stored_date + timedelta(days=7)]
 
 def roll_stickers(Embed, uuid):
-  embed = Embed(
-    colour = "0x206694",
-    title = "roll"
-  )
+    embed = Embed(
+      colour = "0x206694",
+      title = "roll"
+    )
     validation = validate_roll()
     if not validation[0]:
         wait_time = time_until(validation[1])
