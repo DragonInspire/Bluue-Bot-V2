@@ -122,11 +122,11 @@ def roll_stickers(Embed, uuid):
     return embed
 
 def stickers_list(Embed):
-    embed = Embed(
-      colour = "0x206694",
-      title = f"sticker list! {num_total_stickers} stickers"
-    )
     num_total_stickers = len(sticker_list)
+    embed = Embed(
+        colour = "0x206694",
+        title = f"sticker list! {num_total_stickers} stickers"
+    )
 
     for sticker_name, sticker in sticker_map.items():
         embed.add_field(name=sticker_name, value=sticker)
