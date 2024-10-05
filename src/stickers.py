@@ -88,7 +88,7 @@ def validate_roll(uuid):
 
 def roll_stickers(Embed, uuid):
     embed = Embed(
-      colour = "0x206694",
+      colour = 3,
       title = "roll"
     )
     validation = validate_roll()
@@ -124,7 +124,7 @@ def roll_stickers(Embed, uuid):
 def stickers_list(Embed):
     num_total_stickers = len(sticker_list)
     embed = Embed(
-        colour = "0x206694",
+        colour = 3,
         title = f"sticker list! {num_total_stickers} stickers"
     )
 
@@ -143,7 +143,7 @@ def my_stickers(Embed, uuid):
     percent = round((num_player_stickers/num_total_stickers) * 100, 2)
 
     embed = Embed(
-        colour = "0x206694",
+        colour = 3,
         title = f"you have these stickers! {num_player_stickers}/{num_total_stickers} {percent}%"
     )
 
