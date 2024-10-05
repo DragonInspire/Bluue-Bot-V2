@@ -144,12 +144,13 @@ def stickers_list(Embed):
     return embed
 
 def my_stickers(Embed, uuid):
+    num_total_stickers = len(sticker_list)
     try:
       player_sticker_lists = loadData(STICKERS_FILE)
       player_stickers = player_sticker_lists[uuid]
 
       num_player_stickers = len(player_stickers)
-      num_total_stickers = len(sticker_list)
+      
       percent = round((num_player_stickers/num_total_stickers) * 100, 2)
 
       embed = Embed(
