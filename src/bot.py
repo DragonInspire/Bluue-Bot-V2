@@ -18,7 +18,7 @@ from worldplayers import world_players
 from io import StringIO
 from datetime import datetime
 from levelTracking import track_guild_members, level_tracking
-from stickers import stickers_list, my_stickers, roll_stickers
+from stickers import stickers_list, my_stickers, roll_stickers, missing_stickers
 
 devFlag = False
 
@@ -99,6 +99,11 @@ async def on_ready():
 @resident_group.command(name="stickers_list", description="get a list of all stickers")
 async def stickerlist(interaction: discord.Interaction):
     await interaction.response.send_message(embed = stickers_list(discord.Embed))
+
+@resident_group.command(name="missing_stickers", description="get a list of the stickers you're missing")
+async def missingstickers(interaction: discord.Interaction):
+    uuid = interaction.user.id
+    await interaction.response.send_message(embed = missing_stickers(discord.Embed, uuid))
 
 @resident_group.command(name="my_stickers", description="see your sticker collection")
 async def mystickers(interaction: discord.Interaction):
