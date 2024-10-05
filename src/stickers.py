@@ -163,10 +163,12 @@ def stickers_list(Embed):
     return embed
 
 def my_stickers(Embed, uuid):
+    uuid = str(uuid)
     num_total_stickers = len(sticker_list)
     try:
       player_sticker_lists = loadData(STICKERS_FILE)
       player_stickers = player_sticker_lists[uuid]
+      logging.debug(player_stickers)
 
       num_player_stickers = len(player_stickers)
       
@@ -191,3 +193,4 @@ def my_stickers(Embed, uuid):
 
 if __name__ == "__main__":
     logging.debug(roll_stickers(Embed, 4))
+    logging.debug(my_stickers(Embed, 4))
