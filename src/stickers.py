@@ -134,20 +134,26 @@ def stickers_list(Embed):
     return embed
 
 def my_stickers(Embed, uuid):
-    
-    player_sticker_lists = loadData(STICKERS_FILE)
-    player_stickers = player_sticker_lists[uuid]
+    try:
+      player_sticker_lists = loadData(STICKERS_FILE)
+      player_stickers = player_sticker_lists[uuid]
 
-    num_player_stickers = len(player_stickers)
-    num_total_stickers = len(sticker_list)
-    percent = round((num_player_stickers/num_total_stickers) * 100, 2)
+      num_player_stickers = len(player_stickers)
+      num_total_stickers = len(sticker_list)
+      percent = round((num_player_stickers/num_total_stickers) * 100, 2)
 
-    embed = Embed(
-        colour = 3,
-        title = f"you have these stickers! {num_player_stickers}/{num_total_stickers} {percent}%"
-    )
+      embed = Embed(
+          colour = 3,
+          title = f"you have these stickers! {num_player_stickers}/{num_total_stickers} {percent}%"
+      )
 
-    for sticker in player_stickers:
-        embed.add_field(name=sticker, value=sticker_map[sticker])
+      for sticker in player_stickers:
+          embed.add_field(name=sticker, value=sticker_map[sticker])
 
-    return embed
+      return embed
+    except:
+      embed = Embed(
+          colour = 3,
+          title = f"you have no stickers! 0/{num_total_stickers} 0%"
+      )
+      return embed
