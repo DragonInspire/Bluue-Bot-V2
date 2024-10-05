@@ -71,7 +71,7 @@ def time_until(target_date):
 def validate_roll(uuid):
     rolls = loadData(PLAYER_FILE)
     current_date = datetime.now()
-    if uuid not in rolls:
+    if uuid not in rolls.keys():
         rolls[uuid] = str(current_date)
         writeData(PLAYER_FILE, rolls)
         return [True, None]
