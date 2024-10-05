@@ -129,10 +129,10 @@ def stickers_list(Embed):
     )
     emojis = ""
     emojis_names = ""
-    i = 0
+    i = 1
     for sticker_name, sticker in sticker_map.items():
       emojis += sticker
-      emojis_names += sticker_name + " "
+      emojis_names += sticker_name + "\n"
       if i > 4:
         i = 0
         embed.add_field(name=emojis_names, value=emojis)
