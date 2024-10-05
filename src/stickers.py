@@ -2,10 +2,15 @@
 # roll stickers once a week
 # display your stickers
 # have a profile to display your fav sticker + % of stickers collected
+if __name__ == '__main__':
+    from discord import Embed
 
 from random import choice
 import json
 from datetime import datetime, timedelta
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
 sticker_map = {"fluid": "<:Fluid:1291807115492589650>",
                 "fluid fanfare": "<:FluidFanfare:1291807128146677871>",
@@ -49,8 +54,14 @@ sticker_map = {"fluid": "<:Fluid:1291807115492589650>",
                 "yin wave": "<:YinWave:1291807676199604347>"}
 
 sticker_list = list(sticker_map.keys())
-STICKERS_FILE = "./data/stickers.json"
-PLAYER_FILE = "./data/rolls.json"
+
+if __name__ != "__main__":
+    STICKERS_FILE = "./data/stickers.json"
+    PLAYER_FILE = "./data/rolls.json"
+else:
+    STICKERS_FILE = "Bluue-Bot-V2\\data\\stickers.json"
+    PLAYER_FILE = "Bluue-Bot-V2\\data\\rolls.json"
+
 
 def loadData(DATA_FILE):
     data = None
@@ -71,7 +82,10 @@ def time_until(target_date):
 def validate_roll(uuid):
     rolls = loadData(PLAYER_FILE)
     current_date = datetime.now()
-    if uuid not in rolls.keys():
+    uuid = str(uuid)
+    logging.debug(uuid)
+    logging.debug(list(rolls.keys()))
+    if uuid not in list(rolls.keys()):
         rolls[uuid] = str(current_date)
         writeData(PLAYER_FILE, rolls)
         return [True, None]
@@ -84,7 +98,7 @@ def validate_roll(uuid):
         rolls[uuid] = str(current_date)
         return [True, None]
     else:
-        return [False, str(stored_date + timedelta(days=7))]
+        return [False, stored_date + timedelta(days=7)]
 
 def roll_stickers(Embed, uuid):
     embed = Embed(
@@ -99,26 +113,30 @@ def roll_stickers(Embed, uuid):
         hours = seconds // 3600
         minutes = (seconds % 3600) // 60
         seconds = seconds % 60
+        logging.debug("on cooldown")
         embed.add_field(name="sorry please wait before your next roll", value = f"{days}d {hours}h {minutes}m {seconds}s")
         return embed
     sticker = choice(sticker_list)
 
     player_sticker_lists = loadData(STICKERS_FILE)
-    print(player_sticker_lists)
+    logging.debug(player_sticker_lists)
     if uuid not in player_sticker_lists.keys():
         player_sticker_lists[uuid] = [sticker]
         writeData(STICKERS_FILE, player_sticker_lists)
+        logging.debug("first sticker")
         embed.add_field(name="congrats on your first sticker!", value=f"you rolled {sticker} {sticker_map[sticker]}!")
         return embed
 
     player_stickers = player_sticker_lists[uuid]
 
     if sticker in player_stickers:
+        logging.debug("dupe")
         embed.add_field(name="unfortunately you got a dupe!", value="you rolled {sticker} {sticker_map[sticker]}!")
         return embed
     
     player_sticker_lists[uuid].append(sticker)
     writeData(STICKERS_FILE, player_sticker_lists)
+    logging.debug("new sticker")
     embed.add_field(name="you got a new sticker!", value=f"you rolled {sticker} {sticker_map[sticker]}!")
     return embed
 
@@ -169,3 +187,7 @@ def my_stickers(Embed, uuid):
           title = f"you have no stickers! 0/{num_total_stickers} 0%"
       )
       return embed
+
+
+if __name__ == "__main__":
+    logging.debug(roll_stickers(Embed, 4))
