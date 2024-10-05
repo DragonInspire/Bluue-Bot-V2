@@ -104,6 +104,7 @@ def roll_stickers(Embed, uuid):
     sticker = choice(sticker_list)
 
     player_sticker_lists = loadData(STICKERS_FILE)
+    print(player_sticker_lists)
     if uuid not in player_sticker_lists.keys():
         player_sticker_lists[uuid] = [sticker]
         writeData(STICKERS_FILE, player_sticker_lists)
