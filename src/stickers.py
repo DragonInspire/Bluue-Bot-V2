@@ -91,7 +91,7 @@ def roll_stickers(Embed, uuid):
       colour = 3,
       title = "roll"
     )
-    validation = validate_roll()
+    validation = validate_roll(uuid)
     if not validation[0]:
         wait_time = time_until(validation[1])
         days = wait_time.days
