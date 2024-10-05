@@ -199,10 +199,7 @@ def my_stickers(Embed, uuid):
       return embed
 
 def missing_stickers(Embed, uuid):
-    embed = Embed(
-        colour = 3,
-        title = "Missing stickers"
-    )
+    
     uuid = str(uuid)
     data = loadData(STICKERS_FILE)
     if uuid in list(data.keys()):
@@ -212,9 +209,14 @@ def missing_stickers(Embed, uuid):
                 missing_stickers.append(sticker)
     else:
         missing_stickers = sticker_list
-    
+    percent = round((len(sticker_list)-len(missing_stickers))/len(sticker_list) * 100,2)
+    embed = Embed(
+        colour = 3,
+        title = f"Missing stickers, you have {len(sticker_list)-len(missing_stickers)}/{len(sticker_list)} stickers {percent}%"
+    )
     stickers = ""
     eojis = ""
+    i = 0
     for sticker in missing_stickers:
           stickers += sticker + "\n"
           eojis += sticker_map[sticker]
