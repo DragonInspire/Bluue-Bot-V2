@@ -72,19 +72,19 @@ def validate_roll(uuid):
     rolls = loadData(PLAYER_FILE)
     current_date = datetime.now()
     if uuid not in rolls:
-        rolls[uuid] = current_date
+        rolls[uuid] = str(current_date)
         writeData(PLAYER_FILE, rolls)
         return [True, None]
     
-    stored_date = rolls[uuid]
+    stored_date = datetime.strptime(rolls[uuid], "%Y-%m-%d %H:%M:%S.%f")
 
     date_difference = current_date - stored_date
 
     if date_difference >= timedelta(days=7):
-        rolls[uuid] = current_date
+        rolls[uuid] = str(current_date)
         return [True, None]
     else:
-        return [False, stored_date + timedelta(days=7)]
+        return [False, str(stored_date + timedelta(days=7))]
 
 def roll_stickers(Embed, uuid):
     embed = Embed(
