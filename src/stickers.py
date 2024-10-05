@@ -1,7 +1,6 @@
-# what can you do
-# roll stickers once a week
-# display your stickers
-# have a profile to display your fav sticker + % of stickers collected
+# work on
+# missing
+# profile
 if __name__ == '__main__':
     from discord import Embed
 
@@ -178,9 +177,18 @@ def my_stickers(Embed, uuid):
           colour = 3,
           title = f"you have these stickers! {num_player_stickers}/{num_total_stickers} {percent}%"
       )
-
+      stickers = ""
+      eojis = ""
+      i = 1
       for sticker in player_stickers:
-          embed.add_field(name=sticker, value=sticker_map[sticker])
+          stickers += sticker + "\n"
+          eojis += sticker_map[sticker]
+          if i > 4:
+            embed.add_field(name=eojis, value=stickers)
+            i = 0
+            stickers = ""
+            eojis = ""
+          i += 1
 
       return embed
     except:
@@ -189,6 +197,36 @@ def my_stickers(Embed, uuid):
           title = f"you have no stickers! 0/{num_total_stickers} 0%"
       )
       return embed
+
+def missing_stickers(Embed, uuid):
+    embed = Embed(
+        colour = 3,
+        title = "Missing stickers"
+    )
+    uuid = str(uuid)
+    data = loadData(STICKERS_FILE)
+    if uuid in list(data.keys()):
+        missing_stickers = []
+        for sticker in sticker_list:
+            if sticker not in data[uuid]:
+                missing_stickers.append(sticker)
+    else:
+        missing_stickers = sticker_list
+    
+    stickers = ""
+    eojis = ""
+    for sticker in missing_stickers:
+          stickers += sticker + "\n"
+          eojis += sticker_map[sticker]
+          if i > 4:
+            embed.add_field(name=eojis, value=stickers)
+            i = 0
+            stickers = ""
+            eojis = ""
+          i += 1
+        
+    return embed
+
 
 
 if __name__ == "__main__":
