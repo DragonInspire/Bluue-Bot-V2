@@ -235,7 +235,7 @@ def profit(priceInt, profitIntOrig):
     profitInt = profitIntOrig
     
     # guild cut of profit or loss
-    guild_cut_for_profit = 0.2
+    guild_cut_for_profit = 0.1
     guild_cut_for_loot = 0.05
 
     guild_cut = guild_cut_for_profit
