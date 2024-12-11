@@ -678,7 +678,11 @@ async def leveling():
             logging.error("EVEN MORE BAD THINGS HAPPENED levelups is " + str(level_ups) + " " + str(e))
     if now.minute % 10 == 0:
         try: 
-            await channel.send()
+            player_update = ""
+            try:
+                await channel.send()
+            except discord.errors.HTTPException as e:
+                logging.debug(e)
             player_update = await track_guild_members()
             new_players = player_update["newPlayers"]
             left_players = player_update["leftPlayers"]
