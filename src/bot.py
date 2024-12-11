@@ -678,6 +678,7 @@ async def leveling():
             logging.error("EVEN MORE BAD THINGS HAPPENED levelups is " + str(level_ups) + " " + str(e))
     if now.minute % 10 == 0:
         try: 
+            await channel.send()
             player_update = await track_guild_members()
             new_players = player_update["newPlayers"]
             left_players = player_update["leftPlayers"]
@@ -697,7 +698,7 @@ async def leveling():
             if guild_levelup != -1:
                 embed = discord.Embed(colour = discord.Colour.blurple())
                 embed.add_field(name = "The Farplane", value = f"has leveled up to level {guild_levelup}! :tada:")
-                channel.send(embed=embed)
+                await channel.send(embed=embed)
         except Exception as e:
             logging.error("BAD THINGS HAPPENED player update is " + str(player_update) + " " + str(e))
     
